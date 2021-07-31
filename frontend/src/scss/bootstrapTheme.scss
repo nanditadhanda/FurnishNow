@@ -1,8 +1,26 @@
 /*Custom Bootstrap Theme for Furnish Now Project*/
 
-$color: yellow;
-
-$primary: yellow;
+$primary: #fdc557;
+$success: #14a1a8;
 $danger: #ff4136;
 
+$min-contrast-ratio: 1.85;
+
+// Fonts
+
+// stylelint-disable value-keyword-case
+$font-family-sans-serif: -apple-system, Roboto, "Helvetica Neue", Arial,
+  "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+  "Segoe UI Symbol", "Noto Color Emoji" !default;
+$font-family-serif: Georgia, Cambria, "Times New Roman", Times, serif !default;
+// stylelint-enable
+
 @import "../../node_modules/bootstrap/scss/bootstrap";
+
+//override
+
+.dropdown-toggle {
+  &:after {
+    vertical-align: middle;
+  }
+}
