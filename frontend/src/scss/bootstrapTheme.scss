@@ -1,6 +1,6 @@
 /*Custom Bootstrap Theme for Furnish Now Project*/
 
-$primary: #fdc557;
+$primary: #fcb72d;
 $success: #14a1a8;
 $danger: #ff4136;
 
@@ -19,8 +19,16 @@ $font-family-serif: Georgia, Cambria, "Times New Roman", Times, serif !default;
 
 //override
 
+body {
+  color: $gray-700;
+}
+
 .dropdown-toggle {
   &:after {
     vertical-align: middle;
   }
+}
+.btn {
+  border-radius: 19px;
+  color: $white;
 }

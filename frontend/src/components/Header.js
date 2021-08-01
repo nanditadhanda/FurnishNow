@@ -8,10 +8,10 @@ import {TiShoppingCart} from 'react-icons/ti'
 const Header = () => {
     return (
         <header >
-            <Navbar variant="dark" bg="dark" className="p-l-4" collapseOnSelect  expand="lg">
+            <Navbar variant="dark" bg="dark" className="p-l-4 p-1" collapseOnSelect  expand="lg">
                 <Container fluid>
                     <div className="d-flex">
-                        <Navbar.Brand>FurnishNow</Navbar.Brand> 
+                        <Navbar.Brand><img alt="Furnish Now" src="/logo.svg" width="150px"/></Navbar.Brand> 
                         <NavDropdown title="Products" id="basic-nav-dropdown">
                             <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
