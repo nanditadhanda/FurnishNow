@@ -1,7 +1,7 @@
-// Litera 5.0.2
+// Materia 5.0.2
 // Bootswatch
 
-$theme: "litera" !default;
+$theme: "materia" !default;
 
 //
 // Color system
@@ -9,29 +9,29 @@ $theme: "litera" !default;
 
 $white:    #fff !default;
 $gray-100: #f8f9fa !default;
-$gray-200: #e9ecef !default;
-$gray-300: #ddd !default;
+$gray-200: #eee !default;
+$gray-300: #dee2e6 !default;
 $gray-400: #ced4da !default;
-$gray-500: #adb5bd !default;
-$gray-600: #868e96 !default;
-$gray-700: #495057 !default;
-$gray-800: #343a40 !default;
-$gray-900: #212529 !default;
+$gray-500: #bbb !default;
+$gray-600: #666 !default;
+$gray-700: #444 !default;
+$gray-800: #222 !default;
+$gray-900: #212121 !default;
 $black:    #000 !default;
 
-$blue:    #4582ec !default;
+$blue:    #2196f3 !default;
 $indigo:  #6610f2 !default;
 $purple:  #6f42c1 !default;
 $pink:    #e83e8c !default;
-$red:     #d9534f !default;
+$red:     #e51c23 !default;
 $orange:  #fd7e14 !default;
-$yellow:  #f0ad4e !default;
-$green:   #02b875 !default;
+$yellow:  #ff9800 !default;
+$green:   #4caf50 !default;
 $teal:    #20c997 !default;
-$cyan:    #17a2b8 !default;
+$cyan:    #9c27b0 !default;
 
 $primary:       $blue !default;
-$secondary:     $gray-500 !default;
+$secondary:     $white !default;
 $success:       $green !default;
 $info:          $cyan !default;
 $warning:       $yellow !default;
@@ -39,62 +39,76 @@ $danger:        $red !default;
 $light:         $gray-100 !default;
 $dark:          $gray-800 !default;
 
-$min-contrast-ratio:   1.85 !default;
+$min-contrast-ratio:   2.15 !default;
+
+$enable-gradients: true !default;
 
 // Body
 
-$body-color:                $gray-800 !default;
+$body-color:    $gray-700 !default;
 
 // Fonts
 
-// stylelint-disable value-keyword-case
-$font-family-sans-serif:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
-$font-family-serif:           Georgia, Cambria, "Times New Roman", Times, serif !default;
-// stylelint-enable
-
-$font-size-base:              1.1rem !default;
-$headings-font-weight:        700 !default;
-
-// Tables
-
-$table-border-color:          rgba(0, 0, 0, .1) !default;
-
-$table-bg-scale:              0 !default;
+// stylelint-disable-next-line value-keyword-case
+$font-family-sans-serif:    Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif !default;
+$font-size-base:            1rem !default;
+$font-weight-base:          400 !default;
 
 // Buttons
 
-$input-btn-padding-y:         .5rem !default;
-$input-btn-padding-x:         1.1rem !default;
-$btn-font-family:             $font-family-sans-serif !default;
-$btn-font-size:               .875rem !default;
-$btn-font-size-sm:            .688rem !default;
-
-$btn-border-radius:           1.078em !default;
-$btn-border-radius-lg:        2.688em !default;
-$btn-border-radius-sm:        .844em !default;
+$input-btn-padding-y:       .8rem !default;
+$input-btn-padding-x:       1rem !default;
 
 // Forms
 
-$input-border-color:                    rgba(0, 0, 0, .1) !default;
-$input-group-addon-bg:                  $gray-200 !default !default;
+$input-padding-y:                1rem !default;
+$input-padding-x:                0 !default;
+$input-padding-y-sm:             0 !default;
+$input-padding-x-sm:             0 !default;
+$input-padding-y-lg:             ($font-size-base * 1.25) !default;
+$input-padding-x-lg:             0 !default;
+$input-bg:                       transparent !default;
+$input-disabled-bg:              transparent !default;
+$input-color:                    $gray-600 !default;
+$input-border-color:             transparent !default;
+$input-border-width:             0 !default;
+$input-border-radius:            0 !default;
+$input-border-radius-lg:         0 !default;
+$input-border-radius-sm:         0 !default;
+$input-placeholder-color:        rgba(0, 0, 0, .4) !default;
+$input-group-addon-bg:           transparent !default;
+
+// Navs
+
+$nav-link-disabled-color:       $gray-500 !default;
+$nav-tabs-border-color:         transparent !default;
 
 // Navbar
 
-$navbar-dark-color:                 rgba($white, .6) !default;
+$navbar-padding-y:                  1rem !default;
+$navbar-dark-color:                 rgba($white, .75) !default;
 $navbar-dark-hover-color:           $white !default;
-$navbar-light-hover-color:          $body-color !default;
-$navbar-light-active-color:         $body-color !default;
+
+// Cards
+
+$card-border-width:                 0 !default;
+$card-border-color:                 transparent !default;
 
 // Tooltips
 
-$tooltip-font-size:                 11px !default;
+$tooltip-bg:                        $gray-700 !default;
 
-// Badges
+// Modals
 
-$badge-font-weight:                 400 !default;
-$badge-padding-y:                   .6em !default;
-$badge-padding-x:                   1.2em !default;
+$modal-content-border-color:        transparent !default;
 
-// Alerts
+// Progress bars
 
-$alert-border-width:                0 !default;
+$progress-height:               .375rem !default;
+$progress-border-radius:        0 !default;
+
+// Close
+
+$btn-close-color:            $white !default;
+$btn-close-opacity:          .6 !default;
+$btn-close-hover-opacity:    1 !default;

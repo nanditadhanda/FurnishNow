@@ -1,5 +1,7 @@
 /*Custom Bootstrap Theme for Furnish Now Project*/
 
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+
 $primary: #fcb72d;
 $success: #14a1a8;
 $danger: #ff4136;
@@ -9,7 +11,7 @@ $min-contrast-ratio: 1.85;
 // Fonts
 
 // stylelint-disable value-keyword-case
-$font-family-sans-serif: -apple-system, Roboto, "Helvetica Neue", Arial,
+$font-family-sans-serif: -apple-system, "Roboto", "Helvetica Neue", Arial,
   "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
   "Segoe UI Symbol", "Noto Color Emoji" !default;
 $font-family-serif: Georgia, Cambria, "Times New Roman", Times, serif !default;
@@ -30,5 +32,68 @@ body {
 }
 .btn {
   border-radius: 19px;
-  color: $white;
+}
+
+//header
+header {
+  nav {
+    .search {
+      height: 36px;
+
+      input {
+        width: 35vw;
+        border-radius: 19px 0 0 19px;
+      }
+      button {
+        border-radius: 0 19px 19px 0;
+        line-height: 0.75;
+      }
+    }
+  }
+}
+
+//body
+main {
+  min-height: calc(100vh - 124px);
+}
+
+.svg {
+  font-size: 22px;
+}
+
+//typography
+
+h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+a {
+  color: $success;
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: darken($success, 8%);
+  }
+}
+//product
+
+.product.card {
+  border-color: transparent;
+  a {
+    color: $gray-700;
+    text-decoration: none;
+
+    &:hover {
+      color: $gray-800;
+    }
+  }
+
+  &:hover,
+  &:focus {
+    border: 1px solid $gray-400;
+    box-shadow: 0px 2px 5px $gray-400;
+  }
 }

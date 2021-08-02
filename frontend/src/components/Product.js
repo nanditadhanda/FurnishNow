@@ -3,27 +3,31 @@
 //import components
 import React from 'react'
 import {Card, Button} from 'react-bootstrap'
+import Rating from './Rating'
+import { Link } from 'react-router-dom'
 
 //product function
 function Product({product}) {
     return (
-        <Card className="my-3 rounded">
-            <a href={`/product/${product._id}`}>
+        <Card className="my-3 rounded product">
+            <Link to={`/product/${product._id}`}>
                 {/* product image */}
-                <Card.Img variant="top" src={product.image}/> 
+                <Card.Img src={product.image}/> 
 
                 {/* product details */}
                 <Card.Body>
-                    <Card.Title>{product.name}</Card.Title>
-                    <Card.Text> {product.rating} from {product.numReviews} reviews</Card.Text>
-                    <Card.Text as="h4" className="fw-bold">${product.price}</Card.Text>
+                    <Card.Title className="fw-normal" as="h5">{product.name}</Card.Title>
+                    <Card.Text> 
+                        <Rating value={product.rating} text={`${product.numReviews} reviews`} color="text-primary"/>
+                    </Card.Text>
+                    
+                    <Card.Text as="h4" className="fw-bold ">${product.price}</Card.Text>
                     {/* do add to cart function */}
                     <div className="d-grid">
-                        <Button variant="outline-primary">Add To Cart</Button>  
-                    </div>
-                                 
+                        <Button variant="outline-success">Add To Cart</Button>  
+                    </div>                         
                 </Card.Body>
-            </a>
+            </Link>
             
         </Card>
     )

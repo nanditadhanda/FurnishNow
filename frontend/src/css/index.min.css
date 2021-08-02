@@ -1,2 +1,2 @@
-header nav .search{height:36px}header nav .search input{width:35vw;border-radius:19px 0 0 19px}header nav .search button{border-radius:0 19px 19px 0;line-height:0.75}main{min-height:calc(100vh - 124px)}.svg{font-size:22px}a{color:initial;text-decoration:none}
+@import url("../../node_modules/bootstrap/scss/variables")
 /*# sourceMappingURL=index.min.css.map */

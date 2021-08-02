@@ -1,24 +1,51 @@
 //header component 
-
+import { LinkContainer } from 'react-router-bootstrap'
 import {Container, Navbar, Nav, NavDropdown} from 'react-bootstrap'
 import Search from './Search'
+import products from '../products'
+
+//icons
 import {MdPerson} from 'react-icons/md'
 import {TiShoppingCart} from 'react-icons/ti'
+
+
+
 //header function
 const Header = () => {
+    const categories = [];
+    products.map(product => {
+        if (categories.indexOf(product.category) === -1){
+            categories.push(product.category)
+        }
+    });
+
     return (
-        <header >
+        <header className="sticky-top">
             <Navbar variant="dark" bg="dark" className="p-l-4 p-1" collapseOnSelect  expand="lg">
                 <Container fluid>
                     <div className="d-flex">
-                        <Navbar.Brand><img alt="Furnish Now" src="/logo.svg" width="150px"/></Navbar.Brand> 
-                        <NavDropdown title="Products" id="basic-nav-dropdown">
-                            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                        </NavDropdown>         
+                        <LinkContainer to="/">
+                            <Navbar.Brand><img alt="Furnish Now" src="/logo.svg" width="150px"/></Navbar.Brand> 
+                        </LinkContainer>
+                        <LinkContainer to="/Products">
+                            <NavDropdown title="Products" id="basic-nav-dropdown">
+                                <LinkContainer to="/products">
+                                    <NavDropdown.Item>All Products</NavDropdown.Item>
+                                </LinkContainer>
+                                <NavDropdown.Divider />
+                                    {categories.map(category => {
+                                        <LinkContainer to={`/products/${category}`}>
+                                            <NavDropdown.Item >{category}</NavDropdown.Item>
+                                        </LinkContainer>
+                                    })}
+                                        
+                                        
+                                   
+                        
+                                </NavDropdown>      
+
+                        </LinkContainer>
+                            
                     </div>
                 <Search />
                 
@@ -29,9 +56,12 @@ const Header = () => {
                     style={{ maxHeight: '100px' }}
                     navbarScroll
                     >
-                    <Nav.Link href="/login"><MdPerson className="fs-2 pe-1 mb-1"/>Account</Nav.Link>
-                    <Nav.Link href="/cart"><TiShoppingCart className="fs-2 pe-1 mb-1" />Cart</Nav.Link>
-                
+                        <LinkContainer to="/login">
+                            <Nav.Link ><MdPerson className="fs-2 pe-1 mb-1"/>Account</Nav.Link>
+                        </LinkContainer>
+                        <LinkContainer to="/cart">
+                            <Nav.Link><TiShoppingCart className="fs-2 pe-1 mb-1" />Cart</Nav.Link>                   
+                        </LinkContainer>           
                     </Nav>
                     </Navbar.Collapse>
                 </div>
