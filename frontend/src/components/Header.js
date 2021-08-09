@@ -14,7 +14,7 @@ import {TiShoppingCart} from 'react-icons/ti'
 const Header = () => {
     const categories = [];
     products.map(product => {
-        if (categories.indexOf(product.category) === -1){
+        if (categories.indexOf(product.id) === -1){
             categories.push(product.category)
         }
     });
