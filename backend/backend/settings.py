@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'base.apps.BaseConfig',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -76,6 +77,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
+# customer usermodel declaration
+AUTH_USER_MODEL = 'accounts.User'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
