@@ -128,15 +128,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-MEDIA_URL = '/images/'
 
 # configure static directory for images, css and js files
+# STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIR = [
     BASE_DIR / 'static'
 ]
 
 # directory to upload media files
-MEDIA_ROOT = 'static/images'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = 'static/media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
