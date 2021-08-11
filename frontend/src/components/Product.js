@@ -21,7 +21,7 @@ function Product({product}) {
                         <Rating value={product.rating} text={`${product.numReviews} reviews`} color="text-primary"/>
                     </Card.Text>
                     
-                    <Card.Text as="h4" className="fw-bold ">${product.price}</Card.Text>
+                    <Card.Text as="h4" className="fw-bold ">${product.salePrice}</Card.Text>
                     {/* do add to cart function */}
                     <div className="d-grid">
                         <Button variant="outline-success">Add To Cart</Button>  

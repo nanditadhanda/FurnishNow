@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom'
-import {Row, Col,Breadcrumb, Image, ListGroup, Button, Card, ListGroupItem} from 'react-bootstrap'
+import {Row, Col,Breadcrumb, Image, ListGroup, Button, ListGroupItem} from 'react-bootstrap'
 import Rating from '../components/Rating'
 // import products from '../products'
 
@@ -12,6 +12,7 @@ const ProductScreen = ({match}) => {
 
     //useEffect is triggered when component loads
     useEffect(() => {
+        //get product from backend API
         async function fetchProduct(){
             const { data } = await axios.get(`/api/products/${match.params.id}`)
             setProduct(data)
@@ -46,7 +47,7 @@ const ProductScreen = ({match}) => {
                         <Rating value={product.rating} color='text-primary' text={`${product.numReviews} reviews`}/>
                     </ListGroup.Item>
                     <ListGroupItem>
-                        <h2 className="fw-bold my-3 ">${product.price}</h2>
+                        <h2 className="fw-bold my-3 ">${product.salePrice}</h2>
                     </ListGroupItem>
                     <ListGroupItem>
                         <h6 className="pt-3 pb-2">Product Details:</h6>
