@@ -8,13 +8,13 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 #import models
-from .models import Product
+from .models import Category, Product
 
 # import serializers (models converted to JSON format)
 from .serializers import ProductSerializer
 
 #import products
-from .products import products
+# from .products import products
 
 
 # function to get routes
@@ -23,6 +23,7 @@ from .products import products
 def getRoutes(request):
     routes = [
         '/api/products/',
+        '/api/products/<category>',
         '/api/products/create',
         '/api/products/upload',
         '/api/products/<id>/reviews',
@@ -58,6 +59,7 @@ def getProduct(request, pk):
     product = Product.objects.get(_id=pk)
     # serialize into json format
     serializer = ProductSerializer(product, many=False)
+
     # return serialized data
     return Response(serializer.data)
 

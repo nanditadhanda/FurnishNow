@@ -1,3 +1,4 @@
+import React from 'react'
 //header component 
 import { LinkContainer } from 'react-router-bootstrap'
 import {Container, Navbar, Nav, NavDropdown} from 'react-bootstrap'

@@ -1,4 +1,6 @@
-# Models are classes used to create database tables
+# Models are classes used to create database tables.
+# Attributes defined in each class will be the fields of the database table
+
 from django.db import models
 
 # import custom User model
