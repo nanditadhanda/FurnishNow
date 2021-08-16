@@ -1,26 +1,29 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 //header component 
 import { LinkContainer } from 'react-router-bootstrap'
 import {Container, Navbar, Nav, NavDropdown} from 'react-bootstrap'
 import Search from './Search'
-import products from '../products'
 
 //icons
 import {MdPerson} from 'react-icons/md'
 import {TiShoppingCart} from 'react-icons/ti'
 
-
+import axios from 'axios'
 
 //header function
 const Header = () => {
-    const categories = [];
-    products.map(product => {
-        if (categories.indexOf(product.id) === -1){
-            categories.push(product.category)
-        }
-    });
+    const [categories, setCategories] = useState([])
+
+    useEffect(()=> {
+        async function fetchCategories(){
+            const {data} = await axios.get('/api/categories/')
+            setCategories(data)
+        }   
+        fetchCategories()
+    }, [])
 
     return (
+
         <header className="sticky-top">
             <Navbar variant="dark" bg="dark" className="p-l-4 p-1" collapseOnSelect  expand="lg">
                 <Container fluid>
@@ -34,11 +37,14 @@ const Header = () => {
                                     <NavDropdown.Item>All Products</NavDropdown.Item>
                                 </LinkContainer>
                                 <NavDropdown.Divider />
-                                    {categories.map(category => {
-                                        <LinkContainer to={`/products/${category}`}>
-                                            <NavDropdown.Item >{category}</NavDropdown.Item>
-                                        </LinkContainer>
-                                    })}
+                                {categories.map(category => (
+                                    <LinkContainer key={category._id} to={`/products/${category.slug}`}>
+                                        <NavDropdown.Item>{category.name}</NavDropdown.Item>
+                                    </LinkContainer>
+                                    
+                                ))}
+                                  
+                                    
                                         
                                         
                                    
@@ -68,7 +74,6 @@ const Header = () => {
                 </div>
                 
                 </Container>
-
             </Navbar>
         </header>
     )
