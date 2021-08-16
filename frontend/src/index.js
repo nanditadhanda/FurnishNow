@@ -1,5 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
+//import Provider and store - wrapping store in provider allows store to be available in all components of the application
+import { Provider } from 'react-redux'
+import store from "./store"
+
 import './css/bootstrapTheme.min.css';
 // import './css/index.min.css';
 import App from './App';
@@ -7,9 +12,9 @@ import reportWebVitals from './reportWebVitals';
 
 
 ReactDOM.render(
-  <React.StrictMode>
+  <Provider store={store}>
     <App />
-  </React.StrictMode>,
+  </Provider>,
   document.getElementById('root')
 );
 
