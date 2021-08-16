@@ -1,13 +1,19 @@
 import React, {useEffect} from 'react'
 import {Row, Col} from 'react-bootstrap'
 import Product from '../components/Product'
-import Loader from './Loader'
-import Message from './Message'
+
+import { FaCalculator } from 'react-icons/fa'
 
 //import redux and reducers
 import {useDispatch, useSelector} from 'react-redux'
 import {listProducts} from '../actions/productActions'
-import { FaCalculator } from 'react-icons/fa'
+
+//loading and error message components
+import Loader from './Loader'
+import Message from './Message'
+
+
+
 
 //Products function
 const Products = ({l, xl}) => {

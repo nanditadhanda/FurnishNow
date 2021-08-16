@@ -4,11 +4,15 @@
 import {
     PRODUCT_LIST_SUCCESS,
     PRODUCT_LIST_REQUEST,
-    PRODUCT_LIST_FAIL
+    PRODUCT_LIST_FAIL,
+
+    PRODUCT_DETAILS_SUCCESS,
+    PRODUCT_DETAILS_REQUEST,
+    PRODUCT_DETAILS_FAIL
 } from '../constants/productConstants'
 
 
-//Product Reducers
+//Product Reducers - All products
 export const productListReducers = (state = {products:[]}, action) => {
 
     //switch statement to see what type of action is passed
@@ -23,6 +27,32 @@ export const productListReducers = (state = {products:[]}, action) => {
 
         //action to return error if data fails to load
         case PRODUCT_LIST_FAIL:
+            return { loading: false, error: action.payload }
+
+        //by default, return current state
+        default:
+            return state
+
+    }
+
+}
+
+
+//Product Detail Reducers - Single products
+export const productDetailsReducers = (state = {product:{reviews:[]}}, action) => {
+
+    //switch statement to see what type of action is passed
+    switch (action.type) {
+        //request to load data
+        case PRODUCT_DETAILS_REQUEST:
+            return { loading: true, ...state }
+        
+        //if data has been loaded successfully
+        case PRODUCT_DETAILS_SUCCESS:
+            return { loading: false, product: action.payload}
+
+        //action to return error if data fails to load
+        case PRODUCT_DETAILS_FAIL:
             return { loading: false, error: action.payload }
 
         //by default, return current state
