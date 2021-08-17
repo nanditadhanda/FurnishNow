@@ -24,7 +24,7 @@ def getRoutes(request):
     routes = [
         '/api/products/',
         '/api/categories',
-        '/api/categories/<id>',
+        '/api/categories/<slug>',
         '/api/products/create',
         '/api/products/upload',
         '/api/products/<id>/reviews',
@@ -38,9 +38,9 @@ def getRoutes(request):
 
 # retrieve single category
 @api_view(['GET'])  # GET REST api method
-def getCategory(request, pk):
+def getCategory(request, category_slug):
     # get Category from database
-    category = Category.objects.get(_id=pk)
+    category = Category.objects.get(slug=category_slug)
 
     # serialize into JSON format
     serializer = CategorySerializer(category, many=False)

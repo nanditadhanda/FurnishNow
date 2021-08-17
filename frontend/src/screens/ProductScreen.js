@@ -52,7 +52,7 @@ const ProductScreen = ({match}) => {
                         <Col>
                             <Breadcrumb>
                             <Breadcrumb.Item> <Link to="/">Home</Link></Breadcrumb.Item>
-                                <Breadcrumb.Item><Link to={`/products/${product.category}`}>{product.category}</Link></Breadcrumb.Item>
+                                <Breadcrumb.Item><Link to={`/products/${product.category_slug}`}>{product.category}</Link></Breadcrumb.Item>
                                 <Breadcrumb.Item active>{product.name}</Breadcrumb.Item>
                             </Breadcrumb>
                         </Col>

@@ -11,16 +11,20 @@ from .models import Product, Category
 # product serializer
 class ProductSerializer(serializers.ModelSerializer):
 
+    category = serializers.ReadOnlyField(source='category.name')
+    category_slug = serializers.ReadOnlyField(source='category.slug')
+
     class Meta:
         model = Product
         fields = '__all__'  # all fields
 
-        # for specific fields:
-        # fields = 'name', 'salesPrice'
-
 
 # Category serializer
 class CategorySerializer(serializers.ModelSerializer):
+    products = ProductSerializer(many=True, read_only=True)
+
     class Meta:
         model = Category
-        fields = '__all__'  # all fields
+        fields = ('id', 'name', 'slug', 'products')  # all fields
+
+# Category serializer
