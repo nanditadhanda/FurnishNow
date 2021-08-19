@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import {Container, Row, Col,Breadcrumb, Image, ListGroup, Button, ListGroupItem} from 'react-bootstrap'
 
 //Custom components
+import Quantity from '../components/Quantity'
 import Rating from '../components/Rating'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
@@ -18,6 +19,7 @@ import {listProductDetails} from '../actions/productActions'
 //Product screen function
 const ProductScreen = ({match}) => {
 
+    
     const dispatch = useDispatch()
 
     //useSelector allows us to fire off certain parts of states
@@ -98,29 +100,41 @@ const ProductScreen = ({match}) => {
                                         </Col>     
                                     </Row>
                                 </ListGroupItem>
-                                <ListGroupItem>
-                                    <Row>
-                                        <Col md={4}>
-                                            <label for="quantity" class="form-label">Quantity:</label>      
-                                        </Col>
-                                        <Col>
-                                            <input type="number" class="form-control" id="quantity"
-                                            disabled={product.countInStock === 0} 
-                                            readOnly={product.countInStock === 0} 
-                                            min="0" max={product.countInStock}/> 
-
-                                            {product.countInStock <= 5 && product.countInStock !== 0 ? <cite className="text-danger">Hurry! Only {product.countInStock} items left</cite>
-                                            :<cite className="danger"></cite>}
-                                        </Col> 
-                                        <Col md={12} className="mt-3 mb-2">
-                                            <div className="d-grid">
-                                                <Button variant={product.countInStock === 0 ? "outline-secondary" : "outline-primary"} type='button' disabled={product.countInStock === 0}>Add To Cart</Button>
-                                                
-                                                <Button className={`mt-2 ${product.countInStock === 0 ? "btn-secondary" : "btn-primary"}`} type='button' disabled={product.countInStock === 0}>Buy Now</Button>          
-                                            </div>
-                                        </Col>    
-                                    </Row>
-                                </ListGroupItem>
+                                   <ListGroupItem>
+                                         {product.countInStock > 0 
+                                            ? <Row>
+                                                <Col md={4}>
+                                                    <label for="quantity" class="form-label">Quantity:</label>      
+                                                </Col>
+                                                <Col>
+                                                    <Quantity max={product.countInStock}/>
+                                                    
+                                                {product.countInStock <= 5 ? <small className="text-danger">Hurry! Only {product.countInStock} items left</small>
+                                                :<small className="text-secondary">{product.countInStock} Available</small>}
+                                                       
+                                                </Col>
+                                            
+                                                <Col md={12} className="mt-3 mb-2">
+                                                    <div className="d-grid">
+                                                        <Button variant="outline-primary" type='button'>Add To Cart</Button>
+                                                        
+                                                        <Button className="mt-2 btn-primary" type='button'>Buy Now</Button>          
+                                                    </div>
+                                                </Col> 
+                                            </Row>  
+                                                :
+                                                <Row>
+                                                    <Col md={12} className="mt-3 mb-2">
+                                                        <div className="d-grid">
+                                                            <Button variant="outline-secondary" type='button' disabled>Out Of Stock</Button>
+                                                                     
+                                                        </div>
+                                                    </Col>
+                                                 
+                                                </Row>
+                                        }
+                                        
+                                    </ListGroupItem> 
                             </ListGroup>
                         </Col>   
                     </Row>

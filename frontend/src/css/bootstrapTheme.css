@@ -11509,7 +11509,7 @@ body {
 }
 
 .btn {
-  border-radius: 19px;
+  border-radius: 2px;
 }
 
 header nav .search {
@@ -11569,5 +11569,26 @@ a:hover, a:focus, a:active {
   border: 1px solid #ced4da;
   -webkit-box-shadow: 0px 2px 5px #ced4da;
           box-shadow: 0px 2px 5px #ced4da;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+.quantity .btn:first-child {
+  border-radius: 2px 0 0 2px;
+}
+
+.quantity .btn:first-child {
+  border-radius: 2px 0 0 2px;
+}
+
+.quantity input {
+  max-width: 50px;
+}
+
+.btn-secondary-light {
+  background-color: #6d767e;
 }
 /*# sourceMappingURL=bootstrapTheme.css.map */
