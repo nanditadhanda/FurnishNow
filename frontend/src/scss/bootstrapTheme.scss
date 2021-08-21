@@ -21,7 +21,10 @@ $font-family-serif: Georgia, Cambria, "Times New Roman", Times, serif !default;
 
 //override
 
-body {
+body,
+.list-group-item,
+input,
+p {
   color: $gray-700;
 }
 
@@ -29,6 +32,22 @@ body {
   &:after {
     vertical-align: middle;
   }
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-justify {
+  text-align: justify;
 }
 
 //header
@@ -146,10 +165,17 @@ input[type="number"]::-webkit-outer-spin-button {
 .btn-secondary-light {
   background-color: lighten($secondary, 50%);
   border: none;
+  &:disabled {
+    background-color: lighten($secondary, 20%);
+  }
 
   &:hover,
   &:focus,
   &:active {
     background-color: lighten($secondary, 30%);
   }
+}
+
+.btn-icon {
+  font-size: 22px;
 }

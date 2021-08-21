@@ -5,14 +5,25 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 
 //import reducers
 import { productListReducers, productDetailsReducers } from './reducers/productReducers'
-
+import {cartReducers} from './reducers/cartReducers'
 //register and combine all reducers
 const reducer = combineReducers({
     productList: productListReducers,
     productDetails: productDetailsReducers,
+    cart: cartReducers ,
 })
 
-const initialState = {}
+/*------cart------- */
+
+//get items from local storage if items exist in cart
+const cartItemsFromStorage = localStorage.getItem('cartItems') ?
+    JSON.parse(localStorage.getItem('cartItems')) : []
+
+const initialState = {
+    cart: {
+        cartItems: cartItemsFromStorage
+    }
+}
 
 const middleware =[thunk]
 
