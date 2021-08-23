@@ -27,9 +27,13 @@ const Quantity = ({max, prodQuantity, initQty=0, productID="", min=0}) => {
     const onChange = (e) => {
         const value = parseInt(e.target.value);
         if (value >= 0 && value <= max) {
-            setQty(value);
-            setChange(true)                    
-        }   
+            setQty(value);   
+            setChange(true)                
+        } 
+        if(value > max){
+            setQty(max);
+            setChange(true)  
+        }     
     }
 
     if(increaseQty || decreaseQty || onChange ){

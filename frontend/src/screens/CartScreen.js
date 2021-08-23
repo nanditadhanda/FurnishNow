@@ -48,6 +48,12 @@ function CartScreen({ match, location, history }) {
         } 
     }
 
+    let shippingFee = 0.00
+
+    if(cartItems.length > 0){
+        shippingFee = 25.00
+    }
+
 
     //Remove Item from cart
 
@@ -62,7 +68,7 @@ function CartScreen({ match, location, history }) {
     }
 
     return (
-        <Container>
+        <section>
             {/* //Page Heading */}
             <Row>
                 <Col>
@@ -71,7 +77,7 @@ function CartScreen({ match, location, history }) {
             </Row>
             
             <Row className="py-3">
-                <Col md={8}>
+                <Col md={8} xs={12}>
                     {/* //cart items */}
 
                     {/* If there are no items in cart */}
@@ -89,28 +95,34 @@ function CartScreen({ match, location, history }) {
                                 //product id as key
                                 <ListGroup.Item key={item.product}>
                                     <Row>
+                                        
                                         {/* product image */}
-                                        <Col md={2}>
+                                        <Col md={2} xs={3}>
                                             <Image src={item.image} alt={item.name} fluid rounded/>
                                         </Col>
                                         {/* product name */}
-                                        <Col md={3}>
-                                            <Link to={`/product/${item.category_slug}/${item.product}`}>{item.name}</Link>
-                                        </Col>
-                                        <Col md={2}>
-                                            RM {item.price}
-                                        </Col>
-                                        <Col md={3}>                                      
-                                            <Quantity  prodQuantity={updateQty} 
-                                                    max={item.countInStock} 
-                                                    productID={item.product} 
-                                                    initQty={item.qty}
-                                                    min={1}/>
-                                            {/*Number of items available */}
-                                        </Col>
-                                        <Col md={1}>
-                                            <Button type="button" className="btn-icon" variant="outline" onClick={() => removeFromCartHandler(item.product)}><IoTrashSharp className="text-success" style={{verticalAlign: "top"}}/></Button>
-                                        </Col>
+                                        <Col md={10} xs={9}>
+                                            <Row>
+                                                <Col md={5} sm={8} >
+                                                    <Link to={`/product/${item.category_slug}/${item.product}`}>{item.name}</Link>
+                                                </Col>
+                                                <Col md={3} sm={4} >
+                                                    RM {item.price}
+                                                </Col>
+                                                <Col lg={3} md={4} xs={9} sm={8}>                                      
+                                                    <Quantity  prodQuantity={updateQty} 
+                                                            max={item.countInStock} 
+                                                            productID={item.product} 
+                                                            initQty={item.qty}
+                                                            min={1}/>
+                                                    {/*Number of items available */}
+                                                </Col>
+                                                <Col md={1} xs={2}>
+                                                    <Button type="button" className="btn-icon" variant="outline" onClick={() => removeFromCartHandler(item.product)}><IoTrashSharp className="text-success" style={{verticalAlign: "top"}}/></Button>
+                                                </Col>
+                                                    </Row>
+                                                </Col>
+                                        
                                     </Row>
 
                                 </ListGroup.Item>
@@ -119,7 +131,7 @@ function CartScreen({ match, location, history }) {
 
                     )}
                 </Col>
-                <Col md={4}>
+                <Col md={4}  xs={12}>
                     <Card>
                         <ListGroup variant="flush">
                             <ListGroup.Item><h4>Order Summary</h4></ListGroup.Item>
@@ -134,18 +146,18 @@ function CartScreen({ match, location, history }) {
                                 </Row>
                                 <Row className="py-1">
                                     <Col md={4}>Shipping Fee:</Col>
-                                    <Col className="text-right"> {25.00} </Col>
+                                    <Col className="text-right"> RM {(shippingFee).toFixed(2)} </Col>
                                 </Row>
                                 <Row className="py-1">
                                     <Col md={4}>SST(6%):</Col>
-                                    <Col className="text-right">{(cartItems.reduce((acc, item) => acc + item.qty * item.price, 0) * 0.06).toFixed(2)} </Col>
+                                    <Col className="text-right">RM {(cartItems.reduce((acc, item) => acc + item.qty * item.price, 0) * 0.06).toFixed(2)} </Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row className="py-1">
                                     <Col md={4}><h6>Grand Total</h6></Col>
                                     <Col className="text-right">
-                                        <h6 className="text-success">{((cartItems.reduce((acc, item) => acc + item.qty * item.price, 0) * 1.06) + 25.00).toFixed(2)}</h6>
+                                        <h6 className="text-success">{((cartItems.reduce((acc, item) => acc + item.qty * item.price, 0) * 1.06) + shippingFee).toFixed(2)}</h6>
                                     </Col>
                                 </Row>
                             </ListGroup.Item>
@@ -162,7 +174,7 @@ function CartScreen({ match, location, history }) {
                     </Card>
                 </Col>
             </Row>
-        </Container>
+        </section>
     )
 }
 

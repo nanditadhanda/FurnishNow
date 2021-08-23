@@ -68,6 +68,17 @@ header {
   }
 }
 
+.cart {
+  position: relative;
+  .badge {
+    position: absolute;
+    left: 25px;
+    padding: 1px 5px 0;
+    background: $primary;
+    color: #000;
+  }
+}
+
 //body
 main {
   min-height: calc(100vh - 116px);
