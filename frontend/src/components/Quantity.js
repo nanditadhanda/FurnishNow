@@ -5,8 +5,12 @@ import React, {useState} from 'react'
 import { Button, Form } from 'react-bootstrap'
 import {CgMathPlus, CgMathMinus} from 'react-icons/cg'
 
+//import redux and reducers
+import {useDispatch, useSelector} from 'react-redux'
+import {addToCart} from '../actions/cartActions'
+
 //Quantity Function based component
-const Quantity = ({max, prodQuantity, initQty=0, productID="", min=0}) => {
+const Quantity = ({max, prodQuantity="", initQty=0, productID="", min=0}) => {
     
     const [qty, setQty] = useState(initQty)
     const [change, setChange] = useState(false)
@@ -27,23 +31,31 @@ const Quantity = ({max, prodQuantity, initQty=0, productID="", min=0}) => {
     const onChange = (e) => {
         const value = parseInt(e.target.value);
         if (value >= 0 && value <= max) {
-            setQty(value);   
-            setChange(true)                
+            setQty(value);
+            setChange(true)                 
         } 
         if(value > max){
             setQty(max);
-            setChange(true)  
+            setChange(true)
         }     
     }
 
+    const dispatch = useDispatch()
+
     if(increaseQty || decreaseQty || onChange ){
-        prodQuantity({qty, productID, initQty, change}) 
+        prodQuantity({qty, initQty}) 
+
+        if(change && productID){
+            dispatch(addToCart(productID, qty))
+            setChange(false)
+        }
+        
     }
 
     return (
         <div className="quantity">
             {/* decrement button */}
-            <Button className="btn-secondary-light" onClick={decreaseQty} disabled={qty===min}><CgMathMinus className="text-secondary"/></Button>
+            <Button className="btn-secondary-light" onClick={decreaseQty  } disabled={qty===min}><CgMathMinus className="text-secondary"/></Button>
             {/* input box */}
             <Form.Control type="text" onChange={onChange} value={qty} name="qtyInput"/>
              {/* increment button */}

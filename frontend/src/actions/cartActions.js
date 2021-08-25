@@ -5,7 +5,7 @@ import { CART_ADD_PRODUCT , CART_REMOVE_PRODUCT} from '../constants/cartConstant
 // getState allows us to get any part of a state - it allows us to access local storage
 
 
-export const addToCart = (id, qty) => async(dispatch, getState) => {
+export const addToCart = (id, qty, change) => async(dispatch, getState) => {
     const {data} = await axios.get(`/api/products/${id}`)
 
     dispatch({
@@ -18,6 +18,7 @@ export const addToCart = (id, qty) => async(dispatch, getState) => {
             countInStock: data.countInStock,
             category_slug : data.category_slug,
             slug: data.slug,
+            change,
             qty
         }
     })

@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from 'react'
 import { Link } from 'react-router-dom'
-import {Row, Col,Breadcrumb, Image, ListGroup, Button, ListGroupItem} from 'react-bootstrap'
+import {Row, Col,Breadcrumb, Image, ListGroup, Button, ListGroupItem, Alert} from 'react-bootstrap'
 
 //Custom components
 import Quantity from '../components/Quantity'
@@ -13,6 +13,7 @@ import Message from '../components/Message'
 //import redux and reducers
 import {useDispatch, useSelector} from 'react-redux'
 import {listProductDetails} from '../actions/productActions'
+import {addToCart} from '../actions/cartActions'
 
 //Product screen function
 const ProductScreen = ({match, history}) => {
@@ -36,26 +37,67 @@ const ProductScreen = ({match, history}) => {
 
     /*------quantity update ---------- */
     //React Hook for product quantity
-    const [productQty, setQuantity] = useState (0)
+    
+    const cart = useSelector(state => state.cart)
+    const {cartItems} = cart
+    const [qty, setQuantity] = useState (0)
 
     //set quantity value when value in Quantity field is updated
-    const updateQty = (qtyInput) => {    
-       setQuantity(qtyInput.qty)   
+    const updateQty = (qtyInput) => { 
+
+        cartItems.map(x => (    
+            x.product == productID
+                ? setQuantity((parseInt(x.qty + qtyInput.qty)))
+                : setQuantity(qtyInput.qty)         
+        ))
+            
     }
 
     /*------Add To Cart ---------- */
-    //add to cart event
+    //message
+    const [show, setShow] = useState(false)
+     
+    
     const addToCartHandler = () => {
-        productQty > 0
-            ? history.push(`/cart/${productID}?qty=${productQty}`)
-                
-            : console.log("Update Quantity Value")
+
+        if(qty > 0){
+            dispatch(addToCart(productID, qty))
+            setShow(true)
+      
+
+        }else{
+            console.log("Update Quantity Value")
+        }
+            // ? history.push(`/cart/${productID}?qty=${productQty}`)
+    }
+
+    const [status, setStatus] = useState(false)
+
+    const buyNowHandler = () => {
+
+        if(qty > 0){
+            dispatch(addToCart(productID, qty)) 
+            setStatus(true)
+        }
+        else{
+            console.log("Update Quantity Value")
+        }
+    }
+
+    if(status){
+        history.push("/cart") 
+        setStatus(false)
     }
 
 
     // const product = products.find((p) => p._id === match.params.id)
     return (
-        <section>
+        <section style={{position: "relative"}}>
+                <Message dismissable show={show} variant="success" >    
+                    Product has been added to your shopping cart
+                </Message>
+               
+             
             {/* loading condition */}
             {loading ? 
                 //if loading - display spinner
@@ -153,7 +195,7 @@ const ProductScreen = ({match, history}) => {
                                                 </Col>
                                                 <Col>
                                                     {/* Quantity selector */}
-                                                    <Quantity prodQuantity={updateQty} initQty={productQty}  max={product.countInStock}/>
+                                                    <Quantity prodQuantity={updateQty} initQty={0}  max={product.countInStock}/>
                                                     {/*Number of items available */}
                                                     {product.countInStock <= 5 
                                                         // if less than 5 items available
@@ -167,7 +209,7 @@ const ProductScreen = ({match, history}) => {
                                                     <div className="d-grid">
                                                         <Button variant="outline-primary" type='button' onClick={addToCartHandler}>Add To Cart</Button>
                                                         
-                                                        <Button className="mt-2 btn-primary" type='button'>Buy Now</Button>          
+                                                        <Button className="mt-2 btn-primary" type='button' onClick={buyNowHandler}>Buy Now</Button>         
                                                     </div>
                                                 </Col> 
                                             </Row>  

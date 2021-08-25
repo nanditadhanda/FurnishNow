@@ -13,19 +13,13 @@ import Quantity from '../components/Quantity'
 
 function CartScreen({ match, location, history }) {
     //product ID
-    const productID = match.params.id 
+    //const productID = match.params.id 
 
     //if quantity is passed in URL, split it to turn it into an array
-    const qty = location.search ? Number(location.search.split('=')[1]) : 1
+    //const qty = location.search ? Number(location.search.split('=')[1]) : 1
     
     //dispatch action - action will update the state and add the items into local storage
     const dispatch = useDispatch()
-
-     useEffect(() => {
-        if(productID){
-            dispatch(addToCart(productID, qty))          
-        }
-    }, [dispatch, productID, qty])
 
     //pull cart data from state
     const cart = useSelector(state => state.cart)
@@ -35,16 +29,15 @@ function CartScreen({ match, location, history }) {
 
     
     //quantity update
-    
-    const updateQty = (qtyUpdate) => {    
+
+    //FIX THIS *****  
+    const updateQty = (qtyUpdate) => {         
         
-        const id = qtyUpdate.productID
         const initialQty =  qtyUpdate.initQty
         const updateQty = qtyUpdate.qty
-        const change = qtyUpdate.change
 
         if( updateQty !== initialQty){
-          dispatch(addToCart(id, updateQty))        
+            const {cartItems} = cart   
         } 
     }
 

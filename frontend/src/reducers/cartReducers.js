@@ -7,24 +7,18 @@ export const cartReducers = (state = { cartItems: [] } , action) => {
     switch (action.type){
         case CART_ADD_PRODUCT:
             const item = action.payload
-
-             console.log('New Val: ', item)
-
-           
-
+            
             //check if item exists in cart
             const existItem = state.cartItems.find(x => x.product === item.product)
-
 
             //if item exists in cart
             if(existItem){
 
-                
-               
             //    state.cartItems.map(x => 
             //             x.product === existItem.product && parseFloat(existItem.qty + x.qty) <= item.countInStock
             //                 ? item.qty = parseFloat(x.qty + existItem.qty)
             //                 : x)
+                console.log('New Val: ', item)
 
                 // console.log(state.cartItems.map(x => 
                 //         x.product === existItem.product ? item : item))
