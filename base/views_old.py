@@ -1,7 +1,5 @@
 # views.py - all api data views
-
 from django.shortcuts import render
-from django.http import JsonResponse
 
 # import views from django-rest-framework
 from rest_framework.response import Response

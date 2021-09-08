@@ -3,7 +3,7 @@
 from django.urls import path
 from django.urls.resolvers import URLPattern
 
-from . import views  # import all from views
+from . import views  # import all from accounts.views
 
 
 # URL routes : path(URL, function, return value)

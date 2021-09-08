@@ -1,3 +1,5 @@
+# accounts/views.py - user account views
+
 # Django imports
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -41,9 +43,8 @@ def getUserProfile(request):
     # return serialized data
     return Response(serializer.data)
 
+
 # GET request to retrieve ALL user data (only for admin user)
-
-
 @api_view(['GET'])
 @permission_classes([IsAdminUser])  # only admin user can access
 def getUsers(request):
@@ -52,6 +53,7 @@ def getUsers(request):
     return Response(serializer.data)
 
 
+# extend default TokenObtainPairSerializer with custom class
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
