@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('base.urls')),
+    path('api/users/', include('accounts.urls')),
 ]
 
 # configure image URL paths
