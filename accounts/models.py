@@ -58,8 +58,8 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=False)
 
     # field used to log in
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'email']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'username']
 
     def __str__(self):
         return self.email
