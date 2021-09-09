@@ -6,7 +6,7 @@ import {
 }  from '../constants/userConstants'
 
 //Product Reducers - All products
-export const userLoginReducers = (state = {}, action) => {
+export const userLoginReducers = (state = { }, action) => {
 
     //switch statement to see what type of action is passed
     switch (action.type) {

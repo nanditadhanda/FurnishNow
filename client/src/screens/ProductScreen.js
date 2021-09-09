@@ -45,11 +45,20 @@ const ProductScreen = ({match, history}) => {
     //set quantity value when value in Quantity field is updated
     const updateQty = (qtyInput) => { 
 
-        cartItems.map(x => (    
-            x.product == productID
-                ? setQuantity((parseInt(x.qty + qtyInput.qty)))
-                : setQuantity(qtyInput.qty)         
-        ))
+        //if cart is not empty
+        if(cartItems.length > 0){
+             cartItems.map(x => ( 
+                 //  if product is already in cart, increase current cart product quantity 
+                x.product == productID
+                ? setQuantity((parseInt(x.qty + qtyInput.qty))) 
+                : setQuantity(qtyInput.qty) 
+            ))
+            
+        }
+        else {
+             setQuantity(qtyInput.qty)
+             
+        }
             
     }
 
@@ -63,10 +72,9 @@ const ProductScreen = ({match, history}) => {
         if(qty > 0){
             dispatch(addToCart(productID, qty))
             setShow(true)
-      
-
+            console.log("Working")
         }else{
-            console.log("Update Quantity Value")
+            console.log("Update Quantity Value" , qty)
         }
             // ? history.push(`/cart/${productID}?qty=${productQty}`)
     }
@@ -80,7 +88,7 @@ const ProductScreen = ({match, history}) => {
             setStatus(true)
         }
         else{
-            console.log("Update Quantity Value")
+            console.log("Update Quantity Value", qty)
         }
     }
 

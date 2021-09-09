@@ -6,7 +6,7 @@ import {
     USER_LOGIN_REQUEST,
     USER_LOGIN_FAIL,
     USER_LOGIN_SUCCESS,
-    USER_LOGOUT
+    USER_LOGOUT,
 }  from '../constants/userConstants'
 
 //login action: takes in email and password -> make api call and get back token and register user
@@ -26,7 +26,7 @@ export const login = (email, password) => async (dispatch) => {
         }
         //load data by making api call - post request
         const { data } = await axios.post(
-            'api/users/login/',
+            '/api/users/login',
             { 'email' : email, 'password' : password},
             config
             )

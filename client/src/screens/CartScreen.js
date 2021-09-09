@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
 import {useDispatch , useSelector} from 'react-redux'
-import {Container, Row, Col, ListGroup, Image, Form, Button, Card} from 'react-bootstrap'
+import { Row, Col, ListGroup, Image, Button, Card} from 'react-bootstrap'
 import { IoTrashSharp } from 'react-icons/io5'
 
 import {addToCart, removeFromCart} from '../actions/cartActions'

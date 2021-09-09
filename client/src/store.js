@@ -29,7 +29,7 @@ const userInfoFromStorage = localStorage.getItem('userInfo') ?
 //set initial state with data retrieved from local storage
 const initialState = {
     cart: {cartItems: cartItemsFromStorage},
-    userLogin : {userInfo: userInfoFromStorage}
+    userLogin : {userInfo: userInfoFromStorage},
 
 }
 

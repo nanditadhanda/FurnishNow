@@ -6,7 +6,7 @@ import { Button, Form } from 'react-bootstrap'
 import {CgMathPlus, CgMathMinus} from 'react-icons/cg'
 
 //import redux and reducers
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import {addToCart} from '../actions/cartActions'
 
 //Quantity Function based component

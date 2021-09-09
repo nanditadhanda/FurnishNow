@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'
 import store from "./store"
 
-import './css/bootstrapTheme.min.css';
+import './css/customBootstrap.min.css';
 // import './css/index.min.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
