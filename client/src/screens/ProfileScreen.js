@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react'
 
-//Routing
-import { Link } from 'react-router-dom'
-
 //Redux imports
 import { useDispatch, useSelector } from 'react-redux'
 //Import user details action
-import { getUserDetails } from '../actions/userActions'
+import { getUserDetails, updateUserProfile } from '../actions/userActions'
+
+//import constant
+import { USER_PROFILE_UPDATE_RESET} from '../constants/userConstants'
 
 //UI components
 import {Form, Row, Col, Button} from 'react-bootstrap'
@@ -39,6 +39,10 @@ const ProfileScreen = ({history}) => {
     //destructure the state
     const {userInfo} = userLogin
 
+    //get userUpdateProfile state to check if information has been updated
+    const userUpdateProfile = useSelector(state => state.userUpdateProfile)
+    const {success} = userUpdateProfile
+
     //check if user is already logged in
     useEffect(() => {
         //if user is NOT logged in, redirect to login page
@@ -46,8 +50,13 @@ const ProfileScreen = ({history}) => {
             history.push('/login')
         }
         else {
-            if(!user || !user.first_name){
-                dispatch(getUserDetails('profile'))
+            //if user is logged in but no profile details are found or user details are updated successfully
+            if(!user || !user.first_name || success){
+                //if profile is successfully updated, reset userUpdateProfile state
+                dispatch({type: USER_PROFILE_UPDATE_RESET})
+
+                //get user profile details
+                dispatch(getUserDetails('profile'))      
             }
             else{
                 setFirstName(user.first_name)
@@ -57,14 +66,14 @@ const ProfileScreen = ({history}) => {
         }
     },
     //set dependencies
-    [history, dispatch, userInfo, user])
+    [history, dispatch, userInfo, user, success])
 
     const submitHandler = (e) => {
         //prevent refresh or redirect to another page
         e.preventDefault()
 
         //validations
-        if(first_name == "" || last_name == "" || email == "" || password == "" || confirmPassword == ""){
+        if(first_name == "" || last_name == "" || email == "" ){
             setMessage("Please fill out all fields")
         }
         else if (password !== confirmPassword){
@@ -72,7 +81,15 @@ const ProfileScreen = ({history}) => {
         }
         else {
             //dispatch registeration info to register action
-            console.log("updating")            
+            dispatch(updateUserProfile({
+                'id': user._id,
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': email,
+                'password' : password}))   
+            
+            //reset error message
+            setMessage("")      
         }   
     }
 
@@ -127,8 +144,7 @@ const ProfileScreen = ({history}) => {
                          {/* Password Field */}
                         <Form.Group controlId="password" className="py-3">
                             <Form.Label>Password</Form.Label>
-                            <Form.Control
-                                required 
+                            <Form.Control 
                                 type="password" 
                                 value={password} onChange={(e) => setPassword(e.target.value)}/>
                         </Form.Group>
@@ -138,7 +154,6 @@ const ProfileScreen = ({history}) => {
                         <Form.Group controlId="password" className="py-3">
                             <Form.Label>Confirm Password</Form.Label>
                             <Form.Control 
-                                required
                                 type="password" 
                                 value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
                         </Form.Group>

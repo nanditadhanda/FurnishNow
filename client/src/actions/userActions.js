@@ -16,6 +16,12 @@ import {
     USER_DETAILS_REQUEST,
     USER_DETAILS_FAIL,
     USER_DETAILS_SUCCESS,
+    USER_DETAILS_RESET,
+
+    USER_PROFILE_UPDATE_REQUEST,
+    USER_PROFILE_UPDATE_FAIL,
+    USER_PROFILE_UPDATE_SUCCESS,
+    USER_PROFILE_UPDATE_RESET,
 }  from '../constants/userConstants'
 
 //login action: takes in email and password -> make api call and get back token and register user
@@ -68,9 +74,8 @@ export const logout = () => (dispatch) => {
     localStorage.removeItem('userInfo')
 
     //dispatch logout reducer to clear state from redux
-    dispatch({
-       type: USER_LOGOUT
-    })
+    dispatch({ type: USER_LOGOUT })
+    dispatch({type: USER_DETAILS_RESET})
 }
 
 //register user action
@@ -165,6 +170,63 @@ export const getUserDetails = (id) => async(dispatch, getState) => {
     catch(error){
         dispatch({
             type: USER_DETAILS_FAIL,
+            payload: error.response && error.response.data.detail 
+                    ? error.response.data.detail
+                    : error.message
+        })
+
+    }
+}
+
+
+//update user profile
+export const updateUserProfile = (user) => async(dispatch, getState) => {
+     //try-catch exception
+    try {
+        //dispatch action to throw request to retrieve user details
+        dispatch({ type: USER_PROFILE_UPDATE_REQUEST })
+
+        //get user info (object) of logged in user from userLogin state
+        const { userLogin : { userInfo } } = getState()
+        
+        //configuration of put request with user authentication token
+        const config = {
+            headers : {
+                'Content-type' : 'application/json',
+                //authorization token to allow us to retrieve user info
+                Authorization: `Bearer ${userInfo.token}`
+            }
+
+        }
+
+        console.log(user)
+        //send out put api request
+        const { data } = await axios.put(
+            `/api/users/profile/update/`,
+            user,
+            config
+            )
+
+        //if no error is caught - throw in USER_PROFILE_UPDATE_SUCESS action
+        dispatch({
+            type: USER_PROFILE_UPDATE_SUCCESS,
+            payload: data
+        })    
+
+        //trigger user login to re-login user with updated information
+        dispatch({
+            type: USER_LOGIN_SUCCESS,
+            payload: data
+        })  
+
+        //reset user info details in local storage
+        localStorage.setItem('userInfo', JSON.stringify(data))
+       
+    }
+    //if error is caught  -- error message comes from backend
+    catch(error){
+        dispatch({
+            type: USER_PROFILE_UPDATE_FAIL,
             payload: error.response && error.response.data.detail 
                     ? error.response.data.detail
                     : error.message

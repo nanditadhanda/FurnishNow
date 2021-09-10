@@ -50,7 +50,6 @@ const RegisterScreen = ({location, history}) => {
         }
     }, [history, userInfo, redirect])
 
-    
 
     const submitHandler = (e) => {
         //prevent refresh or redirect to another page
@@ -65,9 +64,19 @@ const RegisterScreen = ({location, history}) => {
         }
         else {
             //dispatch registeration info to register action
-             dispatch(register(first_name, last_name, email, password))      
+             dispatch(register(first_name, last_name, email, password))
+
+            //reset error message
+            setMessage("")            
         }   
     }
+    
+
+    
+
+       
+
+    
 
 
     return (
