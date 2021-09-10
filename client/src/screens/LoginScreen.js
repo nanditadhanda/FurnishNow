@@ -45,7 +45,6 @@ const LoginScreen = ({location, history}) => {
 
         //dispatch login info
         dispatch(login(email, password))
-        console.log(email, " ", password)
 
     }
 
@@ -53,8 +52,6 @@ const LoginScreen = ({location, history}) => {
         <FormContainer title="Sign In" lg="5">
             {loading && <Loader />}
             {error && <Message variant="danger" dismissable="true" show={error ? true : false}>Error: {error}</Message>}
-           
-            
                 <Form onSubmit={submitHandler}>
                     {/* Email Field */}
                     <Form.Group controlId="email">
@@ -77,10 +74,10 @@ const LoginScreen = ({location, history}) => {
                 </Form>
                 <Row>
                     <Col>
-                        <h6>New to Furnish Now? 
+                        <p>New to Furnish Now?&nbsp; 
                             <Link to={redirect ? `/register?redirect=${redirect}` : '/redirect'}>
                             Create an Account</Link>
-                        </h6>
+                        </p>
                     </Col>
                 </Row>
         </FormContainer>
