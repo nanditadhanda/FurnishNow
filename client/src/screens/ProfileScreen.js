@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom'
 
 //Redux imports
 import { useDispatch, useSelector } from 'react-redux'
-//Import register action
-import { register } from '../actions/userActions'
+//Import user details action
+import { getUserDetails } from '../actions/userActions'
 
 //UI components
 import {Form, Row, Col, Button} from 'react-bootstrap'
@@ -14,8 +14,8 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
 
+const ProfileScreen = ({history}) => {
 
-const RegisterScreen = ({location, history}) => {
     //set default local states
     const [first_name, setFirstName] = useState('')
     const [last_name, setLastName] = useState('')
@@ -27,16 +27,13 @@ const RegisterScreen = ({location, history}) => {
     //define dispatch
     const dispatch = useDispatch()
 
-     //check previous location of app URL
-    const redirect = location.search ? location.search.split('=')[1] : '/'
-
-    //register user state
-    const userRegister = useSelector(state => state.userRegister)
+    //get userDetails state
+    const userDetails = useSelector(state => state.userDetails)
 
     //destructure the state
-    const {error, loading} = userRegister
+    const {error, loading, user} = userDetails
 
-    //logged in user state
+    //get userLogin state to check if user is logged in
     const userLogin = useSelector(state => state.userLogin)
 
     //destructure the state
@@ -44,13 +41,23 @@ const RegisterScreen = ({location, history}) => {
 
     //check if user is already logged in
     useEffect(() => {
-        //if user info is found, redirect to previous location
-        if(userInfo){
-            history.push(redirect)
+        //if user is NOT logged in, redirect to login page
+        if(!userInfo){
+            history.push('/login')
         }
-    }, [history, userInfo, redirect])
-
-    
+        else {
+            if(!user || !user.first_name){
+                dispatch(getUserDetails('profile'))
+            }
+            else{
+                setFirstName(user.first_name)
+                setLastName(user.last_name)
+                setEmail(user.email)
+            }
+        }
+    },
+    //set dependencies
+    [history, dispatch, userInfo, user])
 
     const submitHandler = (e) => {
         //prevent refresh or redirect to another page
@@ -65,13 +72,13 @@ const RegisterScreen = ({location, history}) => {
         }
         else {
             //dispatch registeration info to register action
-             dispatch(register(first_name, last_name, email, password))      
+            console.log("updating")            
         }   
     }
 
 
     return (
-        <FormContainer title="Register" lg="7" >
+        <FormContainer title="Profile" lg="7" >
             {loading && <Loader />}
 
             {/* Error */}
@@ -140,20 +147,11 @@ const RegisterScreen = ({location, history}) => {
                 
                 {/* Submit Button */}
                 <div className="d-grid">
-                    <Button type="submit" variant="primary" className="my-3">Register</Button>
+                    <Button type="submit" variant="primary" className="my-3">Update</Button>
                 </div>  
             </Form>
-            <Row>
-                <Col>
-                    <p>Already have an account?&nbsp; 
-                        <Link to={redirect ? `/login?redirect=${redirect}` : '/redirect'}>
-                        Sign In</Link>
-                    </p>
-                </Col>
-            </Row>
         </FormContainer>
     )
 }
 
-export default RegisterScreen
-
+export default ProfileScreen

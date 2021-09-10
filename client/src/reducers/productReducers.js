@@ -13,7 +13,7 @@ import {
 
 
 //Product Reducers - All products
-export const productListReducers = (state = {products:[]}, action) => {
+export const productListReducer = (state = {products:[]}, action) => {
 
     //switch statement to see what type of action is passed
     switch (action.type) {
@@ -39,7 +39,7 @@ export const productListReducers = (state = {products:[]}, action) => {
 
 
 //Product Detail Reducers - Single products
-export const productDetailsReducers = (state = {product:{reviews:[]}}, action) => {
+export const productDetailsReducer = (state = {product:{reviews:[]}}, action) => {
 
     //switch statement to see what type of action is passed
     switch (action.type) {

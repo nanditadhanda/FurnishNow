@@ -12,6 +12,10 @@ import {
     USER_REGISTER_REQUEST,
     USER_REGISTER_FAIL,
     USER_REGISTER_SUCCESS,
+
+    USER_DETAILS_REQUEST,
+    USER_DETAILS_FAIL,
+    USER_DETAILS_SUCCESS,
 }  from '../constants/userConstants'
 
 //login action: takes in email and password -> make api call and get back token and register user
@@ -73,7 +77,7 @@ export const logout = () => (dispatch) => {
 export const register = (first_name, last_name, email, password) => async(dispatch) => {
      //try-catch exception
     try {
-        //dispatch action to throw user_login_request
+        //dispatch action to throw user_registration_request
         dispatch({ type: USER_REGISTER_REQUEST })
         
         //configuration of post request
@@ -116,6 +120,51 @@ export const register = (first_name, last_name, email, password) => async(dispat
     catch(error){
         dispatch({
             type: USER_REGISTER_FAIL,
+            payload: error.response && error.response.data.detail 
+                    ? error.response.data.detail
+                    : error.message
+        })
+
+    }
+}
+
+
+//user profile details
+export const getUserDetails = (id) => async(dispatch, getState) => {
+     //try-catch exception
+    try {
+        //dispatch action to throw request to retrieve user details
+        dispatch({ type: USER_DETAILS_REQUEST })
+
+        //get user info (object) of logged in user from userLogin state
+        const { userLogin : {userInfo} } = getState()
+        
+        //configuration of get request
+        const config = {
+            headers : {
+                'Content-type' : 'application/json',
+                //authorization token to allow us to retrieve user info
+                Authorization: `Bearer ${userInfo.token}`
+            }
+
+        }
+        //load data by making api call - get request
+        const { data } = await axios.get(
+            `/api/users/${id}/`,
+            config
+            )
+
+        //if no error is caught - throw in USER_LOGIN_SUCCESS action
+        dispatch({
+            type: USER_DETAILS_SUCCESS,
+            payload: data
+        })    
+       
+    }
+    //if error is caught  -- error message comes from backend
+    catch(error){
+        dispatch({
+            type: USER_DETAILS_FAIL,
             payload: error.response && error.response.data.detail 
                     ? error.response.data.detail
                     : error.message

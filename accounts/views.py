@@ -103,6 +103,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return data
 
 
+# to log in
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 

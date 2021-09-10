@@ -11,13 +11,15 @@ from .models import User
 # user serializer
 class UserSerializer(serializers.ModelSerializer):
 
-    name = serializers.SerializerMethodField(read_only=True)
     _id = serializers.SerializerMethodField(read_only=True)
+    first_name = serializers.SerializerMethodField(read_only=True)
+    last_name = serializers.SerializerMethodField(read_only=True)
     isStoreManager = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = ('_id', 'username', 'email', 'name', 'isStoreManager')
+        fields = ('_id', 'first_name', 'last_name',
+                  'username', 'email', 'isStoreManager')
 
     # method to create custom attributes based on user data
     #   - self is the serializer and obj is the user object
@@ -28,12 +30,19 @@ class UserSerializer(serializers.ModelSerializer):
 
     # set user's first name as 'name'
 
-    def get_name(self, obj):
-        name = obj.first_name + " " + obj.last_name
-        if name == '':
-            name = obj.email
+    def get_first_name(self, obj):
+        first_name = obj.first_name
+        if first_name == '':
+            first_name = obj.email
 
-        return name
+        return first_name
+
+    def get_last_name(self, obj):
+        last_name = obj.last_name
+        if last_name == '':
+            last_name = " "
+
+        return last_name
 
     def get_isStoreManager(self, obj):
         isStoreManager = obj.is_staff

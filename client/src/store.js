@@ -4,17 +4,18 @@ import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 
 //import reducers
-import { productListReducers, productDetailsReducers } from './reducers/productReducers'
-import {cartReducers} from './reducers/cartReducers'
-import { userLoginReducers, userRegisterReducers } from './reducers/userReducers'
+import { productListReducer, productDetailsReducer } from './reducers/productReducers'
+import { cartReducer } from './reducers/cartReducers'
+import { userDetailsReducer, userLoginReducer, userRegisterReducer } from './reducers/userReducers'
 
 //register and combine all reducers
 const reducer = combineReducers({
-    productList: productListReducers,
-    productDetails: productDetailsReducers,
-    cart: cartReducers ,
-    userLogin: userLoginReducers,
-    userRegister: userRegisterReducers,
+    productList: productListReducer,
+    productDetails: productDetailsReducer,
+    cart: cartReducer ,
+    userLogin: userLoginReducer,
+    userRegister: userRegisterReducer,
+    userDetails: userDetailsReducer,
 })
 
 /*------cart------- */

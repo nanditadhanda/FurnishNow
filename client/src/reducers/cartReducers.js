@@ -3,7 +3,7 @@ import { CART_ADD_PRODUCT
         , CART_REMOVE_PRODUCT } from '../constants/cartConstants'
 
 //cart reducer
-export const cartReducers = (state = { cartItems: [] } , action) => {
+export const cartReducer = (state = { cartItems: [] } , action) => {
     switch (action.type){
         case CART_ADD_PRODUCT:
             const item = action.payload
