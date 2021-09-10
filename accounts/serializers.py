@@ -57,4 +57,4 @@ class UserSerializerWithToken(UserSerializer):
         token = RefreshToken.for_user(obj)
 
         # return string value of token
-        return str(token)
+        return str(token.access_token)

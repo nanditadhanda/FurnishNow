@@ -44,6 +44,37 @@ def getUserProfile(request):
     return Response(serializer.data)
 
 
+# update user
+@api_view(['PUT'])  # PUT REST api method to update data
+# can only access if authorization token is provided
+@permission_classes([IsAuthenticated])
+def updateUserProfile(request):
+
+    user = request.user
+
+    # serialize into JSON format
+    serializer = UserSerializerWithToken(user, many=False)
+
+    # get data passed
+    data = request.data
+
+    # update existing user data with new data
+    user.first_name = data['first_name']
+    user.last_name = data['last_name']
+    user.username = data['email']
+    user.email = data['email']
+
+    # if password value changed then update password
+    if data['password'] != '':
+        user.password = make_password(data['password'])
+
+    # save user info
+    user.save()
+
+    # return serialized data
+    return Response(serializer.data)
+
+
 # GET request to retrieve ALL user data (only for admin user)
 @api_view(['GET'])
 @permission_classes([IsAdminUser])  # only admin user can access
