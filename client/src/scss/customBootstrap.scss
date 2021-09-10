@@ -24,6 +24,7 @@ $font-family-serif: Georgia, Cambria, "Times New Roman", Times, serif !default;
 body,
 .list-group-item,
 input,
+.dropdown-item,
 p {
   color: $gray-700;
 }
@@ -65,6 +66,9 @@ header {
         line-height: 0.75;
       }
     }
+  }
+  .nav-link {
+    line-height: 35px;
   }
 }
 

@@ -9,13 +9,35 @@ import { Link } from 'react-router-dom'
 //icons
 import {MdPerson} from 'react-icons/md'
 import {TiShoppingCart} from 'react-icons/ti'
+import {RiShoppingBasketLine} from 'react-icons/ri'
+import {BiLogOutCircle} from 'react-icons/bi'
 
+//axios
 import axios from 'axios'
+
+//logout action
+import {logout} from '../actions/userActions'
 
 //header function
 const Header = () => {
 
-    //cart
+//----logged in user----
+    //select state
+    const userLogin = useSelector(state => state.userLogin)
+    //destructure state
+    const { userInfo } = userLogin
+
+//-----logout user -----
+    //create dispatch
+    const dispatch = useDispatch()
+
+    //logout handler function
+    const logoutHandler = () => {
+        dispatch(logout())
+    }
+    
+
+    //----cart----
     const cart = useSelector(state => state.cart)
     const {cartItems} = cart 
 
@@ -30,48 +52,14 @@ const Header = () => {
         fetchCategories()
     }, [])
 
-    //cart overlay
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
+    
 
     return (
 
         <header className="sticky-top">
             
 
-            <Offcanvas show={show} placement="start" backdrop={false} scroll={true} name="Disable backdrop" onHide={handleClose} >
-                <Offcanvas.Header closeButton>
-                
-                </Offcanvas.Header>
-                <Offcanvas.Body>
-                    <ListGroup variant="flush">
-                        {cartItems.map(item=> (
-                            <ListGroup.Item key={item.id}>
-                                <Row>
-                                    <Col md={3}><Image src={item.image} fluid rounded/></Col>
-                                    <Col> {item.name}</Col>
-                                    <Col md={3} className="text-success">RM{item.price}</Col>
-
-                                </Row>
-                                
-                                
-                               </ListGroup.Item>
-                        ))}
-                        
-                    </ListGroup >
-                    <div className="offcanvas-footer">
-                        <Link to="/cart" closeButton>
-                            <Button >Go To Cart</Button>
-                        </Link>
-                    </div>
-
-                </Offcanvas.Body>
-                
-            </Offcanvas>
-            
+           
             <Navbar variant="dark" bg="dark" className="p-l-4 p-1" collapseOnSelect  expand="lg">
                 <Container fluid>
                     <div className="d-flex">
@@ -104,13 +92,31 @@ const Header = () => {
                     style={{ maxHeight: '100px' }}
                     navbarScroll
                     >
-                        <LinkContainer to="/cart">
-                            <Nav.Link className="cart" onMouseOver={handleShow} ><TiShoppingCart className="fs-2 pe-1 mb-1" /><Badge pill bg="primary" className={cartItems.length === 0 ? "invisible" : "visible"}>{cartItems.length}</Badge>Cart</Nav.Link>  
-                            {/*                 */}
-                        </LinkContainer>
-                        <LinkContainer to="/login">
+                       
+
+                        {userInfo ? (
+                            
+                             <NavDropdown title={userInfo.first_name + " " + userInfo.last_name}  align={{ lg: 'end' }}>
+                                <LinkContainer to="/profile">
+                                    <NavDropdown.Item ><MdPerson className="fs-2 pe-2 mb-1 "/>Profile</NavDropdown.Item>
+                                </LinkContainer>
+                                <LinkContainer to="/orders">
+                                    <NavDropdown.Item ><RiShoppingBasketLine className="fs-2 pe-2 mb-1 "/>My Orders</NavDropdown.Item>
+                                </LinkContainer>
+                                <NavDropdown.Item onClick={logoutHandler}><BiLogOutCircle className="fs-2 pe-2 mb-1 "/>Logout</NavDropdown.Item>
+                             </NavDropdown>
+                        )
+                        : 
+                        (<LinkContainer to="/login">
                             <Nav.Link ><MdPerson className="fs-2 pe-1 mb-1"/>Account</Nav.Link>
+                        </LinkContainer>)
+                    }
+                     {/*  Cart  */}
+                        <LinkContainer to="/cart">
+                            <Nav.Link className="cart" ><TiShoppingCart className="fs-2 pe-1 mb-1" /><Badge pill bg="primary" className={cartItems.length === 0 ? "invisible" : "visible"}>{cartItems.length}</Badge>Cart</Nav.Link>  
+                            
                         </LinkContainer>
+
                                    
                     </Nav>
                     </Navbar.Collapse>

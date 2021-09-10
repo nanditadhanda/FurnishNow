@@ -52,3 +52,15 @@ export const login = (email, password) => async (dispatch) => {
 
     }
 }
+
+//logout action
+
+export const logout = () => (dispatch) => {
+    //clear local storage
+    localStorage.removeItem('userInfo')
+
+    //dispatch logout reducer to clear state from redux
+    dispatch({
+       type: USER_LOGOUT
+    })
+}
