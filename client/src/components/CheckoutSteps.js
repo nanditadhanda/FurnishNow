@@ -63,7 +63,7 @@ const CheckoutSteps = ({step1, step2, step3, step4}) => {
             <Nav.Item>
                 {step3 ? (
                     <LinkContainer to='/payment'>
-                        <Nav.Link>
+                        <Nav.Link className="text-success">
                             <div className="steps">
                                 <HiCheckCircle className="text-success" />
                             </div>
@@ -84,7 +84,7 @@ const CheckoutSteps = ({step1, step2, step3, step4}) => {
             <Nav.Item>
                 {step4 ? (
                     <LinkContainer to='/placeorder'>
-                        <Nav.Link>
+                        <Nav.Link className="text-success">
                             <div className="steps">
                                 <HiCheckCircle className="text-success" />
                             </div>

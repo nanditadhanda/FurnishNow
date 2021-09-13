@@ -12,10 +12,28 @@ import CheckoutSteps from '../components/CheckoutSteps'
 
 const ShippingScreen = ({history}) => {
 
+    //check login state to see if user is already logged in
+    const userLogin = useSelector(state => state.userLogin)
+
+    //destructure the state
+    const {userInfo} = userLogin
+
     //select cart state
     const cart = useSelector(state => state.cart)
     //destructure state and extract shippingAddress
-    const { shippingAddress } = cart
+    const { cartItems, shippingAddress } = cart
+
+    //check if user is already logged in
+    useEffect(() => {
+        //if cart is empty, redirect to cart page
+        if(cartItems.length === 0){
+            history.push('/cart')
+        }
+        //if user is not logged in, display login page    
+        if(!userInfo && cartItems.length > 0){
+            history.push('/login?redirect=shipping')
+        }
+    }, [history, userInfo, cartItems])
 
     //set dispatch
     const dispatch = useDispatch()
@@ -29,8 +47,13 @@ const ShippingScreen = ({history}) => {
 
     //submit handler
     const submitHandler = (e) => {
+        //prevent default page redirect
         e.preventDefault()
+
+        //dispatch to save shipping address
         dispatch(saveShippingAddress({address, city, state, zipCode, country}))
+
+        //redirect to payment page
         history.push('/payment')
     }
 
