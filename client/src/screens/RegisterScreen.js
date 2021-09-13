@@ -70,17 +70,9 @@ const RegisterScreen = ({location, history}) => {
             setMessage("")            
         }   
     }
-    
-
-    
-
-       
-
-    
-
 
     return (
-        <FormContainer title="Register" lg="7" >
+        <FormContainer title="Register" lg="7"  shadow="shadow">
             {loading && <Loader />}
 
             {/* Error */}

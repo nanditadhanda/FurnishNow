@@ -48,11 +48,13 @@ const ProductScreen = ({match, history}) => {
         //if cart is not empty
         if(cartItems.length > 0){
              cartItems.map(x => ( 
+                
                  //  if product is already in cart, increase current cart product quantity 
                 x.product == productID
                 ? setQuantity((parseInt(x.qty + qtyInput.qty))) 
                 : setQuantity(qtyInput.qty) 
             ))
+           
             
         }
         else {

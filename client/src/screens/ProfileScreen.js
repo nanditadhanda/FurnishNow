@@ -95,7 +95,7 @@ const ProfileScreen = ({history}) => {
 
 
     return (
-        <FormContainer title="Profile" lg="7" >
+        <FormContainer title="Profile" lg="7"  shadow="shadow-sm">
             {loading && <Loader />}
 
             {/* Error */}

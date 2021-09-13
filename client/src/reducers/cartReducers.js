@@ -1,9 +1,10 @@
 //import constants
 import { CART_ADD_PRODUCT
-        , CART_REMOVE_PRODUCT } from '../constants/cartConstants'
+        , CART_REMOVE_PRODUCT ,
+    CART_SAVE_SHIPPING_ADDRESS } from '../constants/cartConstants'
 
 //cart reducer
-export const cartReducer = (state = { cartItems: [] } , action) => {
+export const cartReducer = (state = { cartItems: [] , shippingAddress: {} } , action) => {
     switch (action.type){
         case CART_ADD_PRODUCT:
             const item = action.payload
@@ -46,6 +47,12 @@ export const cartReducer = (state = { cartItems: [] } , action) => {
                 ...state,
                 //filter keeps all products that matches the id passed in action.payload
                 cartItems: state.cartItems.filter(x => x.product !== action.payload)
+            }
+        
+        case CART_SAVE_SHIPPING_ADDRESS:
+            return {
+                ...state,
+                shippingAddress: action.payload
             }
 
         default:

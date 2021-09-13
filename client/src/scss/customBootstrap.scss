@@ -206,3 +206,29 @@ input[type="number"]::-webkit-outer-spin-button {
 //   transform: translateY(100px);
 //   opacity: 100%;
 // }
+
+//checkout steps
+
+.checkout-steps {
+  position: relative;
+  z-index: 1;
+
+  .line {
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    background: #dfdfe0;
+    top: 21px;
+    z-index: -1;
+  }
+
+  .steps {
+    display: block;
+    text-align: center;
+
+    svg {
+      font-size: 2rem;
+      background: #fff;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { CART_ADD_PRODUCT , CART_REMOVE_PRODUCT} from '../constants/cartConstants'
+import { CART_ADD_PRODUCT , CART_REMOVE_PRODUCT, CART_SAVE_SHIPPING_ADDRESS} from '../constants/cartConstants'
 
 //note: function inside a function makes an async function
 // getState allows us to get any part of a state - it allows us to access local storage
@@ -36,4 +36,15 @@ export const removeFromCart = (id) => (dispatch, getState) => {
 
     //update cart items
     localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
+}
+
+//save shipping address action
+export const saveShippingAddress = (data) => (dispatch) => {
+    dispatch({
+        type: CART_SAVE_SHIPPING_ADDRESS,
+        payload: data
+    })
+
+    //update cart items
+    localStorage.setItem('shippingAddress', JSON.stringify(data))
 }
