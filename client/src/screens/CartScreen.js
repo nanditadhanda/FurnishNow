@@ -135,25 +135,14 @@ function CartScreen({ match, location, history }) {
                                 </Row>
                                  <Row className="py-1">
                                     <Col md={4}>Subtotal:</Col>
-                                    <Col className="text-right">RM {cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2)} </Col>
-                                </Row>
-                                <Row className="py-1">
-                                    <Col md={4}>Shipping Fee:</Col>
-                                    <Col className="text-right"> RM {(shippingFee).toFixed(2)} </Col>
-                                </Row>
-                                <Row className="py-1">
-                                    <Col md={4}>SST(6%):</Col>
-                                    <Col className="text-right">RM {(cartItems.reduce((acc, item) => acc + item.qty * item.price, 0) * 0.06).toFixed(2)} </Col>
-                                </Row>
-                            </ListGroup.Item>
-                            <ListGroup.Item>
-                                <Row className="py-1">
-                                    <Col md={4}><h6>Grand Total</h6></Col>
                                     <Col className="text-right">
-                                        <h6 className="text-success">{((cartItems.reduce((acc, item) => acc + item.qty * item.price, 0) * 1.06) + shippingFee).toFixed(2)}</h6>
+                                        <strong>
+                                             $ {cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2)}
+                                        </strong>
                                     </Col>
                                 </Row>
                             </ListGroup.Item>
+                            
                             <ListGroup.Item>
                                 <Row className="py-1">
                                     <Col>

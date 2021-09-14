@@ -11,7 +11,7 @@ $min-contrast-ratio: 1.85;
 // Fonts
 
 // stylelint-disable value-keyword-case
-$font-family-sans-serif: -apple-system, "Roboto", "Helvetica Neue", Arial,
+$font-family-sans-serif: "Roboto", -apple-system, "Helvetica Neue", Arial,
   "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
   "Segoe UI Symbol", "Noto Color Emoji" !default;
 $font-family-serif: Georgia, Cambria, "Times New Roman", Times, serif !default;
@@ -138,11 +138,17 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .btn {
   border-radius: 19px;
-
   &:focus,
   &:active,
   &:hover {
     box-shadow: none !important;
+  }
+
+  &-icon {
+    font-size: 1.25rem;
+    padding: 3px;
+    line-height: 1.25rem;
+    border-radius: 5px;
   }
 }
 

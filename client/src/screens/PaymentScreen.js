@@ -31,15 +31,16 @@ const PaymentScreen = ({history}) => {
         if(cartItems.length === 0){
             history.push('/cart')
         }
-        //if user is not logged in, display login page    
-        if(!userInfo && cartItems.length > 0){
-            history.push('/login?redirect=shipping')
-        }
-
         //if cart not empty and if shipping address not provided, redirect to shipping page
         if(cartItems.length > 0 && !shippingAddress.address){
-        history.push('/shipping')
-    }
+            history.push('/shipping')
+        }
+        //if user is not logged in, display login page    
+        if(!userInfo && cartItems.length > 0){
+            history.push('/login?redirect=payment')
+        }
+
+        
     }, [history, userInfo, cartItems, shippingAddress])
 
     //set states
