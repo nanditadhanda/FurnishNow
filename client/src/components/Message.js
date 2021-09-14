@@ -3,23 +3,10 @@ import {Alert} from 'react-bootstrap'
 
 
 const Message = ({variant, children, dismissable="false", show=false}) => {
-    const [show2, setShow] = useState(true)
+    const [show2, setShow] = useState(show)
    
-    if(dismissable){
-        if(show) {
-            return (
-           <Alert variant={variant} onClose={() => setShow(false)} dismissible>
-                 {children}
-            </Alert>
-        )
-        }
-        else{
-            return ""
-        }
-        
-    }
     return (
-        <Alert variant={variant} onClose={() => setShow(false)} dismissable >
+            <Alert variant={variant} onClose={() => setShow(false)} dismissable={dismissable} >
                 {children}
             </Alert>
     )

@@ -6,7 +6,9 @@ import { Link } from 'react-router-dom'
 //Redux imports
 import { useDispatch, useSelector } from 'react-redux'
 //Import action
-//import { saveShippingAddress } from '../actions/cartActions'
+import { createOrder } from '../actions/orderActions'
+//Import constant
+import { ORDER_CREATE_RESET } from '../constants/orderConstants'
 
 //UI components
 import { Row, Col, Button, ListGroup, Image, Card} from 'react-bootstrap'
@@ -14,8 +16,12 @@ import {MdEdit} from 'react-icons/md'
 import CheckoutSteps from '../components/CheckoutSteps'
 import Message from '../components/Message'
 
+
+
 const PlaceOrderScreen = ({history}) => {
     
+    //-----------Authentications and page access control -------------//
+
     //check login state to see if user is logged in
     const userLogin = useSelector(state => state.userLogin)
     //destructure login state
@@ -25,8 +31,6 @@ const PlaceOrderScreen = ({history}) => {
     const cart = useSelector(state => state.cart)
     //destructure state and extract shippingAddress
     const { cartItems, shippingAddress, paymentMethod } = cart
-
-    console.log(paymentMethod)
 
     //conditions to check to allow user to access place order screen
     useEffect(() => {
@@ -51,21 +55,50 @@ const PlaceOrderScreen = ({history}) => {
     }, [history, userInfo, cartItems, shippingAddress, paymentMethod])
 
 
-    //----------dynamic cart values--------
+    //----------dynamic cart values--------//
 
     //subtotal price
     cart.itemsPrice = cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0).toFixed(2)
     //Shipping price - if total price is more than $250, set shipping to free.
     cart.shippingPrice = (cart.itemsPrice > 250 ? 0 : 50).toFixed(2)
     //SST
-    cart.taxPrice = (Number(cart.itemsPrice * 0.06)).toFixed(2)
+    cart.taxRate = (Number(cart.itemsPrice * 0.06)).toFixed(2)
 
     //total price
-    cart.totalPrice = (Number(cart.itemsPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice)).toFixed(2)
+    cart.totalPrice = (Number(cart.itemsPrice) + Number(cart.shippingPrice) + Number(cart.taxRate)).toFixed(2)
 
-    //place order function
+    //-----------Placing an order --------------//
+
+    // orderCreate state
+    const orderCreate = useSelector(state => state.orderCreate)
+    //destructure state
+    const {order, error, success} = orderCreate
+
+    //set dispatch
+    const dispatch = useDispatch()
+
+    //use effect
+    useEffect(() => {
+        if(success){
+            history.push(`/order/${order._id}`)
+            //reset orderCreate state once order has been created
+            dispatch({
+                type: ORDER_CREATE_RESET
+            })
+        }
+    }, [success, history, order])
+
+    //function to place order
     const placeOrder = () => {
-        console.log("place order")
+        dispatch(createOrder({
+            orderItems: cart.cartItems,
+            shippingAddress: cart.shippingAddress,
+            paymentMethod: cart.paymentMethod,
+            itemsPrice: cart.itemsPrice,
+            shippingPrice : cart.shippingPrice,
+            taxRate: cart.taxRate,
+            totalPrice: cart.totalPrice,
+        }))
     }
     return (
         <section>
@@ -177,7 +210,7 @@ const PlaceOrderScreen = ({history}) => {
                                 </Row>
                                 <Row className="py-1">
                                     <Col md={4}>Tax (SST - 6%):</Col>
-                                    <Col className="text-right">${cart.taxPrice}</Col>
+                                    <Col className="text-right">${cart.taxRate}</Col>
                                 </Row>
                             </ListGroup.Item>
                              <ListGroup.Item>
@@ -186,6 +219,11 @@ const PlaceOrderScreen = ({history}) => {
                                     <Col className="text-right"><h6>${cart.totalPrice}</h6></Col>
                                 </Row>
                             </ListGroup.Item>
+                            {error && (
+                                <ListGroup.Item>
+                                    <Message variant="danger">{error}</Message>
+                                </ListGroup.Item>
+                            )}
                             <ListGroup.Item>
                                 <div className="d-grid">
                                     <Button 

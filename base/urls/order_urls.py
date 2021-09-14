@@ -7,4 +7,5 @@ from base.views import order_views as views  # import all from views
 # URL routes : path(URL, function, return value)
 # order URLS
 urlpatterns = [
+    path('add/', views.addOrderItems, name='orders-add'),
 ]

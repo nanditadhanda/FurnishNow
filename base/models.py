@@ -61,9 +61,9 @@ class Product(models.Model):
 # review table
 class Review(models.Model):
     # fields and attributes
-    productID = models.ForeignKey(
+    product = models.ForeignKey(
         Product, on_delete=models.SET_NULL, null=True)
-    userID = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=200, null=True, blank=True)
     rating = models.DecimalField(
         max_digits=3, decimal_places=2, null=True, blank=True)
@@ -79,7 +79,7 @@ class Review(models.Model):
 # order table
 class Order(models.Model):
     # fields and attributes
-    userID = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     paymentMethod = models.CharField(max_length=200, null=True, blank=True)
     taxRate = models.DecimalField(
         max_digits=7, decimal_places=2, null=True, blank=True)
@@ -104,8 +104,8 @@ class Order(models.Model):
 # single item table
 class OrderItem(models.Model):
     # fields and attributes
-    orderID = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
-    productID = models.ForeignKey(
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
+    product = models.ForeignKey(
         Product, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=200, null=True, blank=True)
     qty = models.IntegerField(null=True, blank=True, default=0)
@@ -122,11 +122,12 @@ class OrderItem(models.Model):
 # shipping address table
 class ShippingAddress(models.Model):
     # fields and attributes
-    orderID = models.OneToOneField(
+    order = models.OneToOneField(
         Order, on_delete=models.CASCADE, null=True, blank=True)
     address = models.TextField(null=True, blank=True)
     city = models.CharField(max_length=200, null=True, blank=True)
-    postalCode = models.CharField(max_length=200, null=True, blank=True)
+    zipCode = models.CharField(max_length=200, null=True, blank=True)
+    state = models.CharField(max_length=200, null=True, blank=True)
     country = models.CharField(max_length=200, null=True, blank=True)
     shippingPrice = models.DecimalField(
         max_digits=7, decimal_places=2, null=True, blank=True)

@@ -199,7 +199,6 @@ export const updateUserProfile = (user) => async(dispatch, getState) => {
 
         }
 
-        console.log(user)
         //send out put api request
         const { data } = await axios.put(
             `/api/users/profile/update/`,
