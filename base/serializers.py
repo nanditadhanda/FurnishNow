@@ -72,7 +72,7 @@ class OrderSerializer(serializers.ModelSerializer):
         # if address is found, return address otherwise return "False"
         try:
             address = ShippingAddressSerializer(
-                obj.shippingAddress, many=False)
+                obj.shippingaddress, many=False).data
         except:
             address = False
 

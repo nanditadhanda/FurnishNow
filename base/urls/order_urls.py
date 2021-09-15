@@ -8,4 +8,5 @@ from base.views import order_views as views  # import all from views
 # order URLS
 urlpatterns = [
     path('add/', views.addOrderItems, name='orders-add'),
+    path('<str:pk>/', views.getOrderById, name='user-order'),
 ]

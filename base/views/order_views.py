@@ -6,7 +6,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework import status
+from rest_framework import serializers, status
 
 
 #import models
@@ -71,3 +71,30 @@ def addOrderItems(request):
     # convert data into JSON format using serializer
     serializer = OrderSerializer(order, many=False)
     return Response(serializer.data)
+
+
+# ------View to get order --------
+# decorators
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getOrderById(request, pk):
+
+    # user data comes from token passed in request
+    user = request.user
+
+    # retrieve order details and return to authorized user
+    try:
+        # get order data by id passed
+        order = Order.objects.get(_id=pk)
+
+        # if user is a staff member or if the user passing the request is the same as the user who placed the order
+        if user.is_staff or order.user == user:
+            serializer = OrderSerializer(order, many=False)
+            return Response(serializer.data)
+        else:
+            # else return error message
+            return Response({'detail': 'Not authorized to view this order'},
+                            status=status.HTTP_400_BAD_REQUEST)
+    # throw exception
+    except:
+        return Response({'detail': 'Order does not exist'}, status=status.HTTP_400_BAD_REQUEST)
