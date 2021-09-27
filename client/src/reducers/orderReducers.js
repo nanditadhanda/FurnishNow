@@ -2,12 +2,16 @@
 import { ORDER_CREATE_REQUEST,
         ORDER_CREATE_SUCCESS,
         ORDER_CREATE_FAIL,
-
         ORDER_CREATE_RESET,
 
         ORDER_DETAILS_REQUEST,
         ORDER_DETAILS_SUCCESS,
         ORDER_DETAILS_FAIL,
+
+        ORDER_PAYMENT_REQUEST,
+        ORDER_PAYMENT_SUCCESS,
+        ORDER_PAYMENT_FAIL,
+        ORDER_PAYMENT_RESET,
 } from '../constants/orderConstants'
 
 //reducer to pass request to create order
@@ -80,6 +84,38 @@ export const orderDetailsReducer = (state = {loading: true, orderItems:[], shipp
         default:
             return state
     }
+}
 
+
+export const orderPaymentReducer = (state = { }, action) => {
+    //check action type
+    switch(action.type){
+        //if request is received, set loading to true
+        case ORDER_PAYMENT_REQUEST:
+            return{
+                loading: true
+            }
+        
+        //if payment made successfully
+        case ORDER_PAYMENT_SUCCESS:
+            return{
+                loading: false,
+                success: true,
+            }
+        //if failed to make payment successfully
+        case ORDER_PAYMENT_FAIL:
+            return{
+                loading: false,
+                error: action.payload
+            }
+
+        //clear payment state once payment is made by returning empty object
+        case ORDER_PAYMENT_RESET:
+            return { }
+
+        //return state by default
+        default:
+            return state
+    }
 }
 

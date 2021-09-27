@@ -16,8 +16,12 @@ from accounts.models import User
 # import serializers (models converted to JSON format)
 from base.serializers import OrderSerializer
 
+# import datetime library
+from datetime import datetime
 
 # decorators
+
+
 @api_view(['POST'])  # POST request to add data to database
 @permission_classes([IsAuthenticated])  # for authenticated users
 # function based view
@@ -98,3 +102,19 @@ def getOrderById(request, pk):
     # throw exception
     except:
         return Response({'detail': 'Order does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+# PUT request when payment is made
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateOrderToPaid(request, pk):
+
+    # get order data by id passed
+    order = Order.objects.get(_id=pk)
+
+    order.isPaid = True
+    order.paymentDate = datetime.now()
+    order.save()
+
+    return Response('Payment made successfully')

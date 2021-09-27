@@ -9,4 +9,5 @@ from base.views import order_views as views  # import all from views
 urlpatterns = [
     path('add/', views.addOrderItems, name='orders-add'),
     path('<str:pk>/', views.getOrderById, name='user-order'),
+    path('<str:pk>/payment', views.updateOrderToPaid, name='payment'),
 ]

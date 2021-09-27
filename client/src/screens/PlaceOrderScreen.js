@@ -60,7 +60,7 @@ const PlaceOrderScreen = ({history}) => {
     //subtotal price
     cart.itemsPrice = cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0).toFixed(2)
     //Shipping price - if total price is more than $250, set shipping to free.
-    cart.shippingPrice = (cart.itemsPrice > 250 ? 0 : 50).toFixed(2)
+    cart.shippingPrice = (cart.itemsPrice > 250 ? 0 : 20).toFixed(2)
     //SST
     cart.taxRate = (Number(cart.itemsPrice * 0.06)).toFixed(2)
 

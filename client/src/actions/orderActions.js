@@ -9,6 +9,11 @@ import { ORDER_CREATE_REQUEST,
         ORDER_DETAILS_REQUEST,
         ORDER_DETAILS_SUCCESS,
         ORDER_DETAILS_FAIL,
+
+        ORDER_PAYMENT_REQUEST,
+        ORDER_PAYMENT_SUCCESS,
+        ORDER_PAYMENT_FAIL,
+        ORDER_PAYMENT_RESET,
 } from '../constants/orderConstants'
 
 import { CART_CLEAR_ITEMS } from '../constants/cartConstants'
@@ -76,7 +81,7 @@ export const createOrder = (order) => async(dispatch, getState) => {
 export const getOrderDetails = (id) => async(dispatch, getState) => {
      //try-catch exception
     try {
-        //dispatch action to throw request to create order
+        //dispatch action to throw request to retrieve order
         dispatch({ type: ORDER_DETAILS_REQUEST })
         
 
@@ -121,3 +126,51 @@ export const getOrderDetails = (id) => async(dispatch, getState) => {
     }
 }
 
+
+//payment action
+export const payOrder = (id, paymentResult) => async(dispatch, getState) => {
+     //try-catch exception
+    try {
+        //dispatch action to throw request to retrieve order
+        dispatch({ type: ORDER_PAYMENT_REQUEST })
+        
+
+        //get user info (object) of logged in user from userLogin state
+        const { userLogin : { userInfo } } = getState()
+        
+        //configuration of post request with user authentication token
+        const config = {
+            headers : {
+                'Content-type' : 'application/json',
+                //authorization token to allow logged in user to place order
+                Authorization: `Bearer ${userInfo.token}`
+            }
+
+        }
+        console.log(config)
+
+        //send out POST api request with data passed in
+        const { data } = await axios.put(
+            `/api/orders/${id}/payment`,
+            paymentResult,
+            config
+            )
+       
+        //if no error is caught - throw in ORDER_CREATE_SUCCESS action
+        dispatch({
+            type: ORDER_PAYMENT_SUCCESS,
+            payload: data
+        })    
+
+    }
+    //if error is caught  -- error message comes from backend
+    catch(error){
+        dispatch({
+            type: ORDER_PAYMENT_FAIL,
+            payload: error.response && error.response.data.detail 
+                    ? error.response.data.detail
+                    : error.message
+        })
+
+    }
+}
