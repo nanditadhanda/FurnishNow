@@ -6,6 +6,9 @@ from django.db import models
 # import custom User model
 from accounts.models import User
 
+# import utility for form choices
+from django.utils.translation import gettext_lazy as _
+
 
 # category model
 class Category(models.Model):
@@ -78,6 +81,14 @@ class Review(models.Model):
 
 # order table
 class Order(models.Model):
+    # subclass
+
+    class orderStatusChoices(models.TextChoices):
+        PLACED = 'Placed', _('Placed')
+        PACKAGED = 'Packaged', _('Packaged')
+        SHIPPED = 'Shipped Out', _('Shipped Out')
+        RECEIVED = 'Received', _('Received')
+
     # fields and attributes
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     paymentMethod = models.CharField(max_length=200, null=True, blank=True)
@@ -90,9 +101,13 @@ class Order(models.Model):
     isPaid = models.BooleanField(default=False)
     paymentDate = models.DateTimeField(
         auto_now_add=False, null=True, blank=True)
-    orderStatus = models.CharField(max_length=200, null=True, blank=True)
+    orderStatus = models.CharField(
+        max_length=20, choices=orderStatusChoices.choices, default=orderStatusChoices.PLACED)
+    isDelivered = models.BooleanField(default=False)
     deliveredAt = models.DateTimeField(
         auto_now_add=False, null=True, blank=True)
+    lastUpdatedAt = models.DateTimeField(
+        auto_now_add=True, null=True, blank=True, editable=True)
     orderDate = models.DateTimeField(auto_now_add=True)
     _id = models.AutoField(primary_key=True, editable=False)
 
