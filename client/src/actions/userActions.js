@@ -24,6 +24,8 @@ import {
     USER_PROFILE_UPDATE_RESET,
 }  from '../constants/userConstants'
 
+import { MY_ORDER_LIST_RESET } from '../constants/orderConstants'
+
 //login action: takes in email and password -> make api call and get back token and register user
 
 export const login = (email, password) => async (dispatch) => {
@@ -75,7 +77,10 @@ export const logout = () => (dispatch) => {
 
     //dispatch logout reducer to clear state from redux
     dispatch({ type: USER_LOGOUT })
+    //dispatch reducer to clear user account details
     dispatch({type: USER_DETAILS_RESET})
+    // dispatch reducer to clear order list of logged in user
+    dispatch({type: MY_ORDER_LIST_RESET})
 }
 
 //register user action

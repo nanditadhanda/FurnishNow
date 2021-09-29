@@ -100,7 +100,7 @@ const Header = () => {
                                 <LinkContainer to="/profile">
                                     <NavDropdown.Item ><MdPerson className="fs-2 pe-2 mb-1 "/>Profile</NavDropdown.Item>
                                 </LinkContainer>
-                                <LinkContainer to="/orders">
+                                <LinkContainer to="/my-orders">
                                     <NavDropdown.Item ><RiShoppingBasketLine className="fs-2 pe-2 mb-1 "/>My Orders</NavDropdown.Item>
                                 </LinkContainer>
                                 <NavDropdown.Item onClick={logoutHandler}><BiLogOutCircle className="fs-2 pe-2 mb-1 "/>Logout</NavDropdown.Item>

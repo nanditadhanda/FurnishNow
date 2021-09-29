@@ -181,7 +181,7 @@ const OrderScreen = ({ match , history }) => {
                                         <ListGroup.Item key="index">
                                             <Row>
                                                 {/* Product Image */}
-                                                <Col md={1} xs={2}>
+                                                <Col md={2} xs={3}>
                                                     <Image src={item.image} alt={item.name} fluid rounded></Image>
                                                 </Col>
                                                 {/* Product Name */}

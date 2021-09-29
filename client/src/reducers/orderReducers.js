@@ -12,6 +12,11 @@ import { ORDER_CREATE_REQUEST,
         ORDER_PAYMENT_SUCCESS,
         ORDER_PAYMENT_FAIL,
         ORDER_PAYMENT_RESET,
+
+        MY_ORDER_LIST_REQUEST,
+        MY_ORDER_LIST_SUCCESS,
+        MY_ORDER_LIST_FAIL,
+        MY_ORDER_LIST_RESET,
 } from '../constants/orderConstants'
 
 //reducer to pass request to create order
@@ -118,4 +123,44 @@ export const orderPaymentReducer = (state = { }, action) => {
             return state
     }
 }
+
+
+
+//---reducer to pass request to retrieve all orders of specific user---
+    // loading set to true by default
+export const myOrdersReducer = (state = {orders:[]}, action) => {
+    //check action type
+    switch(action.type){
+        //if request is received, set loading to true
+        case MY_ORDER_LIST_REQUEST:
+            return{
+                loading: true
+            }
+        
+        //if orders successfully retrieved, return orders list data from action.payload.
+        case MY_ORDER_LIST_SUCCESS:
+            return{
+                loading: false,
+                orders: action.payload
+
+            }
+        //return error if failed to retrieve order list or if order doesn't exist
+        case MY_ORDER_LIST_FAIL:
+            return{
+                loading: false,
+                error: action.payload
+            }
+
+        //clear order state once payment is made by returning empty object
+        case MY_ORDER_LIST_RESET:
+            return {
+                orders : []
+             }
+
+        //return state by default
+        default:
+            return state
+    }
+}
+
 
