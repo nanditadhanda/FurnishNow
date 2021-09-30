@@ -24,6 +24,10 @@ import {
     USER_LIST_SUCCESS,
     USER_LIST_RESET,
 
+    USER_DELETE_REQUEST,
+    USER_DELETE_FAIL,
+    USER_DELETE_SUCCESS,
+
 }  from '../constants/userConstants'
 
 //User Login Reducers
@@ -162,3 +166,29 @@ export const usersListReducer = (state = {users:[] }, action) => {
     }
 
 }
+
+
+//delete user reducer
+export const userDeleteReducer = (state = {}, action) => {
+    //check action type passed in reducer
+    switch(action.type){
+        //request to delete user
+        case USER_DELETE_REQUEST:
+            return { loading: true }
+
+        //if request received and user deleted, return success as true
+        case USER_DELETE_SUCCESS:
+            return { loading: false ,success: true }
+
+        //if error, return error message in state
+        case USER_DELETE_FAIL:
+            return { loading: false, error: action.payload }
+        
+      
+        //return state by default
+        default:
+            return state
+    }
+
+}
+

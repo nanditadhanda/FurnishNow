@@ -75,12 +75,51 @@ def updateUserProfile(request):
     return Response(serializer.data)
 
 
+@api_view(['PUT'])  # PUT REST api method to update data
+# can only access if authorization token is provided
+@permission_classes([IsAdminUser])
+def adminUpdateUser(request, id):
+
+    user = User.objects.get(id=id)
+
+    # get data passed
+    data = request.data
+
+    # update existing user data with new data
+    user.first_name = data['first_name']
+    user.last_name = data['last_name']
+    user.username = data['email']
+    user.email = data['email']
+    user.phone_number = data['phone_number']
+    user.is_staff = data['isSystemAdmin']
+    user.is_admin = data['isStoreManager']
+
+    # save user info
+    user.save()
+
+    # serialize into JSON format
+    serializer = UserSerializer(user, many=False)
+
+    # return serialized data
+    return Response(serializer.data)
+
+
 # GET request to retrieve ALL user data (only for admin user)
 @api_view(['GET'])
 @permission_classes([IsAdminUser])  # only admin user can access
 def getUsers(request):
     users = User.objects.all()
     serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)
+
+# Get single user by ID
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])  # only admin user can access
+def getUserByID(request, id):
+    user = User.objects.get(id=id)
+    serializer = UserSerializer(user, many=False)
     return Response(serializer.data)
 
 
@@ -132,3 +171,12 @@ def registerUser(request):
         # error message dictionary
         message = {'detail': 'User with this email already exists'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Delete user view
+@api_view(['DELETE'])
+@permission_classes([IsAdminUser])
+def deleteUser(request, id):
+    userToDelete = User.objects.get(id=id)
+    userToDelete.delete()
+    return Response('User account has been deleted')

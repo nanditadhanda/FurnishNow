@@ -27,6 +27,10 @@ import {
     USER_LIST_FAIL,
     USER_LIST_SUCCESS,
     USER_LIST_RESET,
+
+    USER_DELETE_REQUEST,
+    USER_DELETE_FAIL,
+    USER_DELETE_SUCCESS,
 }  from '../constants/userConstants'
 
 import { MY_ORDER_LIST_RESET } from '../constants/orderConstants'
@@ -273,7 +277,6 @@ export const listUsers = () => async(dispatch, getState) => {
             config
             )
 
-            console.log(data)
 
         //if no error is caught - throw in USER_LIST_SUCCESS action
         dispatch({
@@ -287,6 +290,53 @@ export const listUsers = () => async(dispatch, getState) => {
     catch(error){
         dispatch({
             type: USER_LIST_FAIL,
+            payload: error.response && error.response.data.detail 
+                    ? error.response.data.detail
+                    : error.message
+        })
+
+    }
+}
+
+
+//delete user
+export const deleteUser = (id) => async(dispatch, getState) => {
+     //try-catch exception
+    try {
+        //dispatch action to throw request to retrieve list of users
+        dispatch({ type: USER_DELETE_REQUEST })
+
+        //get user info (object) of logged in user from userLogin state
+        const { userLogin : { userInfo } } = getState()
+        
+        //configuration of put request with user authentication token
+        const config = {
+            headers : {
+                'Content-type' : 'application/json',
+                //authorization token to allow us to retrieve user info
+                Authorization: `Bearer ${userInfo.token}`
+            }
+
+        }
+
+        //send out put api request
+        const { data } = await axios.delete(
+            `/api/users/delete/${id}`,
+            config
+            )
+
+        //if no error is caught - throw in USER_DELETE_SUCCESS action
+        dispatch({
+            type: USER_DELETE_SUCCESS,
+            payload: data
+        })    
+
+       
+    }
+    //if error is caught  -- error message comes from backend
+    catch(error){
+        dispatch({
+            type: USER_DELETE_FAIL,
             payload: error.response && error.response.data.detail 
                     ? error.response.data.detail
                     : error.message

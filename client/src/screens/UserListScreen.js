@@ -6,7 +6,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 //Redux imports
 import { useDispatch, useSelector } from 'react-redux'
 //Import userList action
-import { listUsers } from '../actions/userActions'
+import { listUsers, deleteUser } from '../actions/userActions'
 
 //UI components
 import {Table, Button} from 'react-bootstrap'
@@ -31,6 +31,10 @@ const UserListScreen = ({history}) => {
     const userLogin = useSelector(state => state.userLogin)
     const {userInfo} = userLogin
 
+    //select userDelete state to check if user is logged in
+    const userDeleteAccount = useSelector(state => state.userDeleteAccount)
+    const {success: deleteSuccess} = userDeleteAccount
+
     useEffect(() => {    
         if(userInfo && userInfo.isSystemAdmin){
             dispatch(listUsers())
@@ -38,12 +42,15 @@ const UserListScreen = ({history}) => {
         else{
             history.push("/login")
         }     
-    },[dispatch, history, userInfo])
+    },[dispatch, history, userInfo, deleteSuccess])
 
 
     //delete user
     const deleteHandler = (id) => {
-        console.log("delete: ", id)
+        if(window.confirm("Are you sure you would like to delete this user?")){
+            dispatch(deleteUser(id))
+        }
+        
     }
 
     return (
@@ -82,10 +89,10 @@ const UserListScreen = ({history}) => {
                                                 : <RiCloseFill className="text-danger"/>}</td>
                                     <td className="text-center">
                                         <LinkContainer to={`/admin/user/${user._id}`}>
-                                            <Button variant="outline-success"  className="btn-icon me-2"><MdEdit/></Button>
+                                            <Button variant="outline-success"   className="btn-icon me-2"><MdEdit/></Button>
                                         </LinkContainer>
                                         
-                                        <Button variant="outline-danger"  className="btn-icon" onClick={deleteHandler(user._id)}><IoTrashSharp /></Button>
+                                        <Button variant="outline-danger"  className="btn-icon" onClick={() => deleteHandler(user._id)}><IoTrashSharp /></Button>
                                     </td>
                                         
                                 </tr>
