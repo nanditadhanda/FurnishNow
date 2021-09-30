@@ -9,8 +9,10 @@ import { Link } from 'react-router-dom'
 //icons
 import {MdPerson} from 'react-icons/md'
 import {TiShoppingCart} from 'react-icons/ti'
-import {RiShoppingBasketLine} from 'react-icons/ri'
-import {BiLogOutCircle} from 'react-icons/bi'
+import {RiShoppingBasketLine, RiMoneyDollarBoxLine} from 'react-icons/ri'
+import {BiLogOutCircle, BiPackage} from 'react-icons/bi'
+import {GoGraph} from 'react-icons/go'
+import {FiUsers} from 'react-icons/fi'
 
 //axios
 import axios from 'axios'
@@ -19,14 +21,14 @@ import axios from 'axios'
 import {logout} from '../actions/userActions'
 
 //header function
-const Header = () => {
+const Header = ({history}) => {
 
 //----logged in user----
     //select state
     const userLogin = useSelector(state => state.userLogin)
     //destructure state
     const { userInfo } = userLogin
-
+ 
 //-----logout user -----
     //create dispatch
     const dispatch = useDispatch()
@@ -34,8 +36,7 @@ const Header = () => {
     //logout handler function
     const logoutHandler = () => {
         dispatch(logout())
-    }
-    
+    }    
 
     //----cart----
     const cart = useSelector(state => state.cart)
@@ -66,22 +67,22 @@ const Header = () => {
                         <LinkContainer to="/">
                             <Navbar.Brand><img alt="Furnish Now" src="/logo.svg" width="150px"/></Navbar.Brand> 
                         </LinkContainer>
+                       
+                            
                         <LinkContainer to="/Products">
-                            <NavDropdown title="Products" id="basic-nav-dropdown">
+                            <NavDropdown title="Shop By Category" id="basic-nav-dropdown">
                                 <LinkContainer to="/products">
-                                    <NavDropdown.Item>All Products</NavDropdown.Item>
+                                    <NavDropdown.Item>All Categories</NavDropdown.Item>
                                 </LinkContainer>
                                 <NavDropdown.Divider />
                                 {categories.map(category => (
                                     <LinkContainer key={category._id} to={`/products/${category.slug}`}>
                                         <NavDropdown.Item>{category.name}</NavDropdown.Item>
                                     </LinkContainer>
-                                    
+            
                                 ))}
-                                </NavDropdown>      
-
-                        </LinkContainer>
-                            
+                        </NavDropdown>  
+                    </LinkContainer>
                     </div>
                 <Search />
                 
@@ -92,17 +93,51 @@ const Header = () => {
                     style={{ maxHeight: '100px' }}
                     navbarScroll
                     >
-                       
+                        {/*  Cart  */}
+                        <LinkContainer to="/cart">
+                            <Nav.Link className="cart" ><TiShoppingCart className="fs-2 pe-1 mb-1" /><Badge pill bg="primary" className={cartItems.length === 0 ? "invisible" : "visible"}>{cartItems.length}</Badge>Cart</Nav.Link>                  
+                        </LinkContainer>
 
-                        {userInfo ? (
-                            
-                             <NavDropdown title={userInfo.first_name + " " + userInfo.last_name}  align={{ lg: 'end' }}>
+
+                        {/* if user is logged in, display user dropdown */}   
+                        {userInfo ? (    
+                             <NavDropdown 
+                            //  if user is system admin
+                                title={userInfo.isSystemAdmin ? 
+                                            ("Admin: " + (userInfo.first_name + " " + userInfo.last_name)) 
+                                            //  if user is store manager
+                                            : userInfo.isStoreManager ? ("Store Manager: " + (userInfo.first_name + " " + userInfo.last_name)) 
+                                            //if normal user
+                                               : (userInfo.first_name + " " + userInfo.last_name)}  align={{ lg: 'end' }}>
+
+                                {/* dropdown options for system admin or store manager */}
+                                {(userInfo.isSystemAdmin || userInfo.isStoreManager) && (
+                                    <>
+                                        {userInfo.isSystemAdmin && (
+                                            <LinkContainer to="/admin/userlist">
+                                                <NavDropdown.Item ><FiUsers className="fs-3 pe-2 ms-1 mb-1 "/>Users</NavDropdown.Item>
+                                            </LinkContainer>
+                                        )}
+                                        <LinkContainer to="/admin/productlist">
+                                            <NavDropdown.Item ><BiPackage className="fs-2 pe-2 mb-1 "/>Products</NavDropdown.Item>
+                                        </LinkContainer>
+                                        <LinkContainer to="/admin/orderlist">
+                                            <NavDropdown.Item ><RiMoneyDollarBoxLine className=" fs-2 pe-2 mb-1 "/>Orders</NavDropdown.Item>
+                                        </LinkContainer>
+                                        <LinkContainer to="/admin/reports">
+                                            <NavDropdown.Item ><GoGraph className=" fs-3 pe-2 ms-1 mb-1 "/>Reports</NavDropdown.Item>
+                                        </LinkContainer>
+                                        <NavDropdown.Divider />
+                                    </>
+                                    
+                                )}
                                 <LinkContainer to="/profile">
-                                    <NavDropdown.Item ><MdPerson className="fs-2 pe-2 mb-1 "/>Profile</NavDropdown.Item>
+                                    <NavDropdown.Item ><MdPerson className="fs-2 pe-2 mb-1 "/>My Profile</NavDropdown.Item>
                                 </LinkContainer>
                                 <LinkContainer to="/my-orders">
                                     <NavDropdown.Item ><RiShoppingBasketLine className="fs-2 pe-2 mb-1 "/>My Orders</NavDropdown.Item>
                                 </LinkContainer>
+                                <NavDropdown.Divider />
                                 <NavDropdown.Item onClick={logoutHandler}><BiLogOutCircle className="fs-2 pe-2 mb-1 "/>Logout</NavDropdown.Item>
                              </NavDropdown>
                         )
@@ -111,13 +146,8 @@ const Header = () => {
                             <Nav.Link ><MdPerson className="fs-2 pe-1 mb-1"/>Account</Nav.Link>
                         </LinkContainer>)
                     }
-                     {/*  Cart  */}
-                        <LinkContainer to="/cart">
-                            <Nav.Link className="cart" ><TiShoppingCart className="fs-2 pe-1 mb-1" /><Badge pill bg="primary" className={cartItems.length === 0 ? "invisible" : "visible"}>{cartItems.length}</Badge>Cart</Nav.Link>  
-                            
-                        </LinkContainer>
 
-                                   
+                     
                     </Nav>
                     </Navbar.Collapse>
                 </div>

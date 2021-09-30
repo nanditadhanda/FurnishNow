@@ -15,11 +15,12 @@ class UserSerializer(serializers.ModelSerializer):
     first_name = serializers.SerializerMethodField(read_only=True)
     last_name = serializers.SerializerMethodField(read_only=True)
     isStoreManager = serializers.SerializerMethodField(read_only=True)
+    isSystemAdmin = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
         fields = ('_id', 'first_name', 'last_name',
-                  'username', 'email', 'isStoreManager')
+                  'username', 'email', 'phone_number', 'isStoreManager', 'isSystemAdmin')
 
     # method to create custom attributes based on user data
     #   - self is the serializer and obj is the user object
@@ -45,8 +46,12 @@ class UserSerializer(serializers.ModelSerializer):
         return last_name
 
     def get_isStoreManager(self, obj):
-        isStoreManager = obj.is_staff
+        isStoreManager = obj.is_admin
         return isStoreManager
+
+    def get_isSystemAdmin(self, obj):
+        isSystemAdmin = obj.is_staff
+        return isSystemAdmin
 
 # extend UserSerializer
 
@@ -57,7 +62,7 @@ class UserSerializerWithToken(UserSerializer):
     class Meta:
         model = User  # model from database
         fields = ('_id', 'first_name', 'last_name', 'username',
-                  'email', 'isStoreManager', 'token')
+                  'email', 'phone_number', 'isStoreManager', 'isSystemAdmin', 'token')
 
     # token method
     def get_token(self, obj):

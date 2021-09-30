@@ -22,6 +22,11 @@ import {
     USER_PROFILE_UPDATE_FAIL,
     USER_PROFILE_UPDATE_SUCCESS,
     USER_PROFILE_UPDATE_RESET,
+
+    USER_LIST_REQUEST,
+    USER_LIST_FAIL,
+    USER_LIST_SUCCESS,
+    USER_LIST_RESET,
 }  from '../constants/userConstants'
 
 import { MY_ORDER_LIST_RESET } from '../constants/orderConstants'
@@ -81,6 +86,8 @@ export const logout = () => (dispatch) => {
     dispatch({type: USER_DETAILS_RESET})
     // dispatch reducer to clear order list of logged in user
     dispatch({type: MY_ORDER_LIST_RESET})
+    //dispatch reducer to clear list of users
+    dispatch({type: USER_LIST_RESET})
 }
 
 //register user action
@@ -231,6 +238,55 @@ export const updateUserProfile = (user) => async(dispatch, getState) => {
     catch(error){
         dispatch({
             type: USER_PROFILE_UPDATE_FAIL,
+            payload: error.response && error.response.data.detail 
+                    ? error.response.data.detail
+                    : error.message
+        })
+
+    }
+}
+
+
+//List users action
+export const listUsers = () => async(dispatch, getState) => {
+     //try-catch exception
+    try {
+        //dispatch action to throw request to retrieve list of users
+        dispatch({ type: USER_LIST_REQUEST })
+
+        //get user info (object) of logged in user from userLogin state
+        const { userLogin : { userInfo } } = getState()
+        
+        //configuration of put request with user authentication token
+        const config = {
+            headers : {
+                'Content-type' : 'application/json',
+                //authorization token to allow us to retrieve user info
+                Authorization: `Bearer ${userInfo.token}`
+            }
+
+        }
+
+        //send out put api request
+        const { data } = await axios.get(
+            `/api/users/`,
+            config
+            )
+
+            console.log(data)
+
+        //if no error is caught - throw in USER_LIST_SUCCESS action
+        dispatch({
+            type: USER_LIST_SUCCESS,
+            payload: data
+        })    
+
+       
+    }
+    //if error is caught  -- error message comes from backend
+    catch(error){
+        dispatch({
+            type: USER_LIST_FAIL,
             payload: error.response && error.response.data.detail 
                     ? error.response.data.detail
                     : error.message

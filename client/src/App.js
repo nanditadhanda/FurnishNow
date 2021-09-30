@@ -18,8 +18,10 @@ import PaymentScreen from './screens/PaymentScreen'
 import PlaceOrderScreen from './screens/PlaceOrderScreen'
 import OrderScreen from './screens/OrderScreen'
 import MyOrderListScreen from './screens/myOrderListScreen'
+import UserListScreen from './screens/UserListScreen'
 
 import {Container} from 'react-bootstrap'
+
 
 function App() {
   return (
@@ -42,6 +44,9 @@ function App() {
           <Route  path="/my-orders" component={MyOrderListScreen}/>
           <Route  path="/order/:id" component={OrderScreen}/>
           <Route  path="/product/:category/:id" component={ProductScreen}/>
+
+          {/* Admin Screens */}
+          <Route  path="/admin/userlist" component={UserListScreen}/>
         </Container>        
       </main>
        {/* Footer */}

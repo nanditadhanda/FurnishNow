@@ -19,6 +19,11 @@ import {
     USER_PROFILE_UPDATE_SUCCESS,
     USER_PROFILE_UPDATE_RESET,
 
+    USER_LIST_REQUEST,
+    USER_LIST_FAIL,
+    USER_LIST_SUCCESS,
+    USER_LIST_RESET,
+
 }  from '../constants/userConstants'
 
 //User Login Reducers
@@ -123,6 +128,33 @@ export const updateUserProfileReducer = (state = { }, action) => {
         //reset state by returning empty object
         case USER_PROFILE_UPDATE_RESET:
             return { }
+        
+        //return state by default
+        default:
+            return state
+    }
+
+}
+
+//list all users reducer 
+export const usersListReducer = (state = {users:[] }, action) => {
+    //check action type passed in reducer
+    switch(action.type){
+        //request to retrieve list of all users
+        case USER_LIST_REQUEST:
+            return { loading: true }
+
+        //if request received and data retreived, pass data retrieved into users array
+        case USER_LIST_SUCCESS:
+            return { loading: false ,users: action.payload }
+
+        //if error, return error message in state
+        case USER_LIST_FAIL:
+            return { loading: false, error: action.payload }
+        
+        //reset state by returning empty array
+        case USER_LIST_RESET:
+            return {users:[] }
         
         //return state by default
         default:
