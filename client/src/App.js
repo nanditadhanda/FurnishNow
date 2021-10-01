@@ -6,6 +6,9 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
 
+//import bootstrap components
+import {Container} from 'react-bootstrap'
+
 //import app screens
 import HomeScreen from './screens/HomeScreen'
 import ProductScreen from './screens/ProductScreen'
@@ -19,8 +22,8 @@ import PlaceOrderScreen from './screens/PlaceOrderScreen'
 import OrderScreen from './screens/OrderScreen'
 import MyOrderListScreen from './screens/myOrderListScreen'
 import UserListScreen from './screens/UserListScreen'
-
-import {Container} from 'react-bootstrap'
+import EditUserScreen from './screens/EditUserScreen'
+import AuthorizationErrorScreen from './screens/AuthorizationErrorScreen'
 
 
 function App() {
@@ -47,6 +50,10 @@ function App() {
 
           {/* Admin Screens */}
           <Route  path="/admin/userlist" component={UserListScreen}/>
+          <Route  path="/admin/user/:id/edit" component={EditUserScreen}/>
+
+          {/* Unauthorized access redirect screen */}
+          <Route  path="/accessdenied" component={AuthorizationErrorScreen}/>
         </Container>        
       </main>
        {/* Footer */}

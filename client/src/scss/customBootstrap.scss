@@ -199,6 +199,19 @@ input[type="number"]::-webkit-outer-spin-button {
   font-size: 22px;
 }
 
+.form-check-input{
+  &:checked{
+    background-color: $success;
+    border-color: $success;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 0.125rem rgba($success, 0.2);
+    border-color: rgba( $success, 0.8);
+  }
+
+}
+
 //alert message
 
 // .alert-dismissible {

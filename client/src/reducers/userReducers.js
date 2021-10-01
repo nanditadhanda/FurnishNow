@@ -28,6 +28,11 @@ import {
     USER_DELETE_FAIL,
     USER_DELETE_SUCCESS,
 
+    USER_UPDATE_REQUEST,
+    USER_UPDATE_FAIL,
+    USER_UPDATE_SUCCESS,
+    USER_UPDATE_RESET,
+
 }  from '../constants/userConstants'
 
 //User Login Reducers
@@ -183,6 +188,34 @@ export const userDeleteReducer = (state = {}, action) => {
         //if error, return error message in state
         case USER_DELETE_FAIL:
             return { loading: false, error: action.payload }
+        
+      
+        //return state by default
+        default:
+            return state
+    }
+
+}
+
+//update user reducer
+export const userUpdateReducer = (state = {user:{}}, action) => {
+    //check action type passed in reducer
+    switch(action.type){
+        //request to update user account
+        case USER_UPDATE_REQUEST:
+            return { loading: true }
+
+        //if request received and user updated, return success as true
+        case USER_UPDATE_SUCCESS:
+            return { loading: false ,success: true }
+
+        //if error, return error message in state
+        case USER_UPDATE_FAIL:
+            return { loading: false, error: action.payload }
+
+        //reset state and empty user object
+        case USER_UPDATE_RESET:
+            return { user:{}}
         
       
         //return state by default

@@ -51,7 +51,7 @@ const ProfileScreen = ({history}) => {
         }
         else {
             //if user is logged in but no profile details are found or user details are updated successfully
-            if(!user || !user.first_name || success){
+            if(!user || !user.first_name || success || userInfo._id !== user._id){
                 //if profile is successfully updated, reset userUpdateProfile state
                 dispatch({type: USER_PROFILE_UPDATE_RESET})
 

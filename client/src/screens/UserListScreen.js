@@ -88,7 +88,7 @@ const UserListScreen = ({history}) => {
                                     <td className="text-center">{user.isStoreManager ? <RiCheckFill className="text-success"/>
                                                 : <RiCloseFill className="text-danger"/>}</td>
                                     <td className="text-center">
-                                        <LinkContainer to={`/admin/user/${user._id}`}>
+                                        <LinkContainer to={`/admin/user/${user._id}/edit`}>
                                             <Button variant="outline-success"   className="btn-icon me-2"><MdEdit/></Button>
                                         </LinkContainer>
                                         
