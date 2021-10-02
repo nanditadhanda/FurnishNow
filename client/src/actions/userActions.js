@@ -310,7 +310,7 @@ export const listUsers = () => async(dispatch, getState) => {
 export const deleteUser = (id) => async(dispatch, getState) => {
      //try-catch exception
     try {
-        //dispatch action to throw request to retrieve list of users
+        //dispatch action to throw request to delete user
         dispatch({ type: USER_DELETE_REQUEST })
 
         //get user info (object) of logged in user from userLogin state

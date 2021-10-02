@@ -66,9 +66,14 @@ const EditUserScreen = ({match, history}) => {
                 //if no user data found in state or if user id doesn't match the id passed in, retrieve user data
                 if(!user || user._id !== Number(user_id)){
                     dispatch(getUserDetails(user_id))
+                    
                 }
                 //if user data is present in state, set values of local states
                 else{
+                    //reset previous update attempt
+                    dispatch({type: USER_UPDATE_RESET})
+
+                    //set local states                    
                     setFirstName(user.first_name)
                     setLastName(user.last_name)
                     setEmail(user.email)

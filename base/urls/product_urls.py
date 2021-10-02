@@ -9,4 +9,6 @@ from base.views import product_views as views  # import all from views
 urlpatterns = [
     path('', views.getProducts, name="products"),
     path('<str:pk>', views.getProduct, name="product"),
+
+    path('delete/<str:id>', views.deleteProduct, name="delete-product"),
 ]

@@ -27,7 +27,7 @@ const Products = ({l, xl}) => {
     useEffect(() => {
         //fire off listProduct() action
        dispatch(listProducts())
-    }, [])
+    }, [dispatch])
 
     return (
         <Row>
