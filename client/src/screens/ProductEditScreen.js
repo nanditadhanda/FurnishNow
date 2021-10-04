@@ -33,7 +33,7 @@ const ProductEditScreen = ({match, history}) => {
     const [brand, setBrand] = useState('')
     const [category, setCategory] = useState('')
     const [description, setDescription] = useState('')
-    const [image, setImage] = useState('')
+    const [imagePath, setImagePath] = useState('')
    // const [image3D, setImage3D] = useState('')
     const [countInStock, setCountInStock] = useState('')
     const [costPrice, setCostPrice] = useState(0.00)
@@ -89,7 +89,7 @@ const ProductEditScreen = ({match, history}) => {
                     setSlug(product.slug)
                     setCategory(product.category)
                     setDescription(product.description)
-                    setImage(product.image)
+                    setImagePath(product.image)
                     
                    // setImage3D(product.image3D)
                     setCountInStock(product.countInStock)
@@ -261,45 +261,34 @@ const ProductEditScreen = ({match, history}) => {
                                     </Form.Group>
                                 </Col>
                             </Row>
-                            <Row>
-                                <Col xs="12">
-                                    {/* Image Field */}
-                                    <Form.Group controlId="image" className="pb-4">
+                            <Row>  
+                                                              
+                                <Col >
+                                    <Form.Group controlId="image" className="pb-4">                                      
                                         <Form.Label>Product Image</Form.Label>
-
-                                        <Row>
-                                            {/* <Col xs='3' md='2'>
-                                                < Image src={image} alt={slug} fluid rounded className="border"/>
-                                            </Col> */}
-                                            <Col>
-                                                <Form.Control 
-                                                    readOnly
-                                                    className="mb-2"
-                                                    type="text" 
-                                                    value={image} 
-                                                    onChange={(e) => setImage(e.target.value)}/> 
-                                                
-                                                <Form.Control 
-                                                    type="file"
-                                                    id="image-file"
-                                                    label="Select File"
-                                                    custom
-                                                    onChange={(e) => setFile(e.target.files[0])}
-                                                />
-                                            </Col>
-                                        </Row>
-
+                                        <Form.Control 
+                                            readOnly
+                                            className="mb-2"
+                                            type="text" 
+                                            value={imagePath} 
+                                            onChange={(e) => setImagePath(e.target.value)}/> 
                                         
-                                        
-
-                          
+                                        <Form.Control 
+                                            type="file"
+                                            id="image-file"
+                                            label="Select File"
+                                            custom
+                                            onChange={(e) => setFile(e.target.files[0])}
+                                        />
                                         {/* if image is uploading */}
                                         {uploading && <Loader />}
                                     
                                     </Form.Group> 
-                                    
                                           
                                 </Col>
+                                
+                            </Row>
+                            <Row>
                                 <Col xs="12" md="6">
                                     {/* Count In Stock */}
                                     {/* <Form.Group controlId="image3D" className="py-3">
