@@ -69,11 +69,11 @@ const UserListScreen = ({history}) => {
                 /*else show page content */
                 : ( <>
                     <div className="d-flex flex-row-reverse mb-3"> 
-                        <LinkContainer to="admin/user/add">
+                        
                             <Button variant="outline-success">
                                 <IoMdPersonAdd className="me-2 mb-1 fs-5"/>Add User 
                             </Button>    
-                        </LinkContainer>                        
+                                             
                     </div>
                     <Table striped bordered responsive className="table-sm">
                         <thead>

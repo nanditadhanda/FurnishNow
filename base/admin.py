@@ -12,6 +12,9 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'brand', 'category', 'salePrice', 'countInStock')
     prepopulated_fields = {'slug': ('name',)}
 
+    # readonly fields
+   # readonly_fields = ('user',)
+
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('_id', 'orderDate', 'totalPrice',

@@ -10,6 +10,11 @@ import {
     PRODUCT_DETAILS_REQUEST,
     PRODUCT_DETAILS_FAIL,
 
+    PRODUCT_CREATE_REQUEST,
+    PRODUCT_CREATE_SUCCESS,
+    PRODUCT_CREATE_FAIL,
+    PRODUCT_CREATE_RESET,
+
     PRODUCT_DELETE_REQUEST,
     PRODUCT_DELETE_SUCCESS,
     PRODUCT_DELETE_FAIL,
@@ -90,4 +95,32 @@ export const productDeleteReducer = (state = {}, action) => {
 
     }
 
+}
+
+//Product Reducers - All products
+export const productCreateReducer = (state = {}, action) => {
+
+    //switch statement to see what type of action is passed
+    switch (action.type) {
+        //request to create product
+        case PRODUCT_CREATE_REQUEST:
+            return { loading: true}
+        
+        //if product has been created successfully
+        case PRODUCT_CREATE_SUCCESS:
+            return { loading: false, success: true, product: action.payload}
+
+        //action to return error if data fails to create
+        case PRODUCT_CREATE_FAIL:
+            return { loading: false, error: action.payload }
+        
+        //reset state once product is created
+        case PRODUCT_CREATE_RESET:
+            return { }
+
+        //by default, return current state
+        default:
+            return state
+
+    }
 }

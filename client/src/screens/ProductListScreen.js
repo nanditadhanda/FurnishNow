@@ -5,9 +5,11 @@ import { LinkContainer } from 'react-router-bootstrap'
 
 //Redux imports
 import { useDispatch, useSelector } from 'react-redux'
-//Import userList action
-import { listProducts, deleteProduct } from '../actions/productActions'
+//Import relavant product action
+import { listProducts, deleteProduct, createProduct } from '../actions/productActions'
 
+//import constant
+import {PRODUCT_CREATE_RESET} from '../constants/productConstants'
 //UI components
 import {Table, Button, Row, Col} from 'react-bootstrap'
 import { IoTrashSharp } from 'react-icons/io5'
@@ -31,20 +33,33 @@ const ProductListScreen = ({history}) => {
     //destructure state
     const {loading:deleteLoading, error: deleteError, success: deleteSuccess} = productDelete
 
+    //select productCreate state
+    const productCreate = useSelector(state => state.productCreate)
+    //destructure state
+    const{loading: createLoading, error: createError, success:createSuccess, product: productCreated} = productCreate
+
 
     //select userLogin state to check if user is logged in
     const userLogin = useSelector(state => state.userLogin)
     const {userInfo} = userLogin
 
 
-    useEffect(() => {    
-        if(userInfo && userInfo.isSystemAdmin){
+    useEffect(() => { 
+        
+        dispatch({type: PRODUCT_CREATE_RESET})
+
+        if(!userInfo.isSystemAdmin){
+            history.push("/accessdenied")
+        }
+        
+        if(createSuccess){
+            history.push(`/admin/product/${productCreated._id}/edit`)
+        }
+        else{            
             dispatch(listProducts())
         }
-        else{
-            history.push("/accessdenied")
-        }     
-    },[dispatch, history, userInfo, deleteSuccess])
+
+    },[dispatch, history, userInfo, deleteSuccess, createSuccess, productCreated])
 
 
     //delete user
@@ -55,14 +70,21 @@ const ProductListScreen = ({history}) => {
         
     }
 
-    //create user
-    const createProductHandler = (product) => {
-        console.log("create product")
+    //create product
+    const createProductHandler = () => {
+        dispatch(createProduct())
     }
 
     return (
         <section>
             <h1>Products</h1>
+            {// loading while performing create action
+                createLoading && <Loader />
+            }
+            {//error when creating product
+                createError && <Message variant="danger">{createError}</Message>                  
+            }
+
             {// loading while performing delete action
                 deleteLoading && <Loader />
             }
@@ -76,11 +98,9 @@ const ProductListScreen = ({history}) => {
                 /*else show page content */
                 : ( <>
                     <div className="d-flex flex-row-reverse mb-3"> 
-                        <LinkContainer to="admin/user/add">
-                            <Button variant="outline-success" onClick={createProductHandler}>
-                                <IoMdAddCircleOutline className="me-2 mb-1 fs-5"/>Add Product 
-                            </Button>    
-                        </LinkContainer>                        
+                        <Button variant="outline-success" onClick={createProductHandler}>
+                            <IoMdAddCircleOutline className="me-2 mb-1 fs-5"/>Add Product 
+                        </Button>                        
                     </div>
                     <Table striped bordered responsive className="table-sm">
                         <thead>

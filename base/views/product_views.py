@@ -1,6 +1,7 @@
 # product_views.py - all product views
 
 from django.shortcuts import render
+from rest_framework import serializers
 
 # import decorator from django-rest-framework
 from rest_framework.response import Response
@@ -38,6 +39,59 @@ def getProduct(request, pk):
     serializer = ProductSerializer(product, many=False)
 
     # return serialized data
+    return Response(serializer.data)
+
+# create product view
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def createProduct(request):
+    user = request.user
+
+    product = Product.objects.create(
+        user=user,
+        name='Sample Name',
+        brand='Sample Brand',
+        costPrice=0.00,
+        salePrice=0.00,
+        description=''
+    )
+
+    serializer = ProductSerializer(product, many=False)
+    return Response(serializer.data)
+
+# Update product view
+
+
+@api_view(['PUT'])
+@permission_classes([IsAdminUser])
+def updateProduct(request, id):
+
+    # get product to be updated
+    product = Product.objects.get(_id=id)
+
+    # data passed in request form
+    data = request.data
+
+    # update data
+    product.name = data['name']
+    product.brand = data['brand']
+    product.category = data['category']
+    product.description = data['description']
+    product.image = data['image']
+    #product.image3D = data['image3D']
+    product.countInStock = data['countInStock']
+    product.costPrice = data['costPrice']
+    product.salePrice = data['salePrice']
+
+    # save data
+    product.save()
+
+    # pass into serializer
+    serializer = ProductSerializer(product, many=False)
+
+    # return
     return Response(serializer.data)
 
 

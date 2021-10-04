@@ -25,7 +25,6 @@ import UserListScreen from './screens/UserListScreen'
 import EditUserScreen from './screens/EditUserScreen'
 import AuthorizationErrorScreen from './screens/AuthorizationErrorScreen'
 import ProductListScreen from './screens/ProductListScreen'
-import TestScreen from './screens/TestScreen'
 
 
 function App() {
