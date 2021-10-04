@@ -77,9 +77,9 @@ def updateProduct(request, id):
     # update data
     product.name = data['name']
     product.brand = data['brand']
-    product.category = data['category']
+    #product.category = data['category']
     product.description = data['description']
-    product.image = data['image']
+    # product.image = data['image']
     #product.image3D = data['image3D']
     product.countInStock = data['countInStock']
     product.costPrice = data['costPrice']
@@ -93,6 +93,26 @@ def updateProduct(request, id):
 
     # return
     return Response(serializer.data)
+
+
+# request to upload image
+@api_view(['POST'])
+def uploadProductImage(request):
+
+    # get the data passed in from front end
+    data = request.data
+
+    # set product ID
+    product_id = data['product_id']
+
+    # retrieve product
+    product = Product.objects.get(_id=product_id)
+
+    # upload image to product
+    product.image = request.FILES.get('image')
+    product.save()
+
+    return Response('Image was uploaded')
 
 
 # Delete product view

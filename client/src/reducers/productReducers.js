@@ -15,6 +15,11 @@ import {
     PRODUCT_CREATE_FAIL,
     PRODUCT_CREATE_RESET,
 
+    PRODUCT_UPDATE_REQUEST,
+    PRODUCT_UPDATE_SUCCESS,
+    PRODUCT_UPDATE_FAIL,
+    PRODUCT_UPDATE_RESET,
+
     PRODUCT_DELETE_REQUEST,
     PRODUCT_DELETE_SUCCESS,
     PRODUCT_DELETE_FAIL,
@@ -123,4 +128,32 @@ export const productCreateReducer = (state = {}, action) => {
             return state
 
     }
+}
+
+//update product reducer
+export const productUpdateReducer = (state = {product:{}}, action) => {
+    //check action type passed in reducer
+    switch(action.type){
+        //request to update product
+        case PRODUCT_UPDATE_REQUEST:
+            return { loading: true }
+
+        //if request received and product updated, return success as true
+        case PRODUCT_UPDATE_SUCCESS:
+            return { loading: false ,success: true , product: action.payload}
+
+        //if error, return error message in state
+        case PRODUCT_UPDATE_FAIL:
+            return { loading: false, error: action.payload }
+
+        //reset state and empty product object
+        case PRODUCT_UPDATE_RESET:
+            return { product:{}}
+        
+      
+        //return state by default
+        default:
+            return state
+    }
+
 }

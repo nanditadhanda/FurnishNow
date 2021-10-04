@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { bindActionCreators } from 'redux'
 //import variables for actions
 import {
     PRODUCT_LIST_SUCCESS,
@@ -16,6 +17,10 @@ import {
     PRODUCT_DELETE_REQUEST,
     PRODUCT_DELETE_SUCCESS,
     PRODUCT_DELETE_FAIL,
+
+    PRODUCT_UPDATE_REQUEST,
+    PRODUCT_UPDATE_SUCCESS,
+    PRODUCT_UPDATE_FAIL,
 } from '../constants/productConstants'
 
 
@@ -125,6 +130,54 @@ export const createProduct = () => async(dispatch, getState) => {
     }
 }
 
+//action to update product
+export const updateProduct = (product) => async(dispatch, getState) => {
+     //try-catch exception
+    try {
+        //dispatch action to throw request to update product
+        dispatch({ type: PRODUCT_UPDATE_REQUEST })
+
+        //get user info (object) of logged in user from userLogin state
+        const { userLogin : { userInfo } } = getState()
+        
+        //configuration of put request with user authentication token
+        const config = {
+            headers : {
+                'Content-type' : 'application/json',
+                //authorization token to allow us to retrieve user info
+                Authorization: `Bearer ${userInfo.token}`
+            }
+
+        }
+
+        //send out put api request
+        const { data } = await axios.put(
+            `/api/products/update/${product._id}`,
+            product,
+            config
+            )
+
+        //if no error is caught - throw in delete product success action
+        dispatch({
+            type: PRODUCT_UPDATE_SUCCESS,
+            payload: data,
+        }) 
+        
+        //update product details
+        dispatch({type: PRODUCT_DETAILS_SUCCESS, payload: data})
+    }
+    //if error is caught  -- error message comes from backend
+    catch(error){
+        dispatch({
+            type: PRODUCT_UPDATE_FAIL,
+            payload: error.response && error.response.data.detail 
+                    ? error.response.data.detail
+                    : error.message
+        })
+
+    }
+}
+
 
 //action to delete product
 export const deleteProduct = (id) => async(dispatch, getState) => {
@@ -168,3 +221,5 @@ export const deleteProduct = (id) => async(dispatch, getState) => {
 
     }
 }
+
+
