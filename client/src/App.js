@@ -26,6 +26,7 @@ import EditUserScreen from './screens/EditUserScreen'
 import AuthorizationErrorScreen from './screens/AuthorizationErrorScreen'
 import ProductListScreen from './screens/ProductListScreen'
 import ProductEditScreen from './screens/ProductEditScreen'
+import OrderListScreen from './screens/OrderListScreen'
 
 
 function App() {
@@ -55,6 +56,8 @@ function App() {
           <Route  path="/admin/user/:id/edit" component={EditUserScreen}/>
           <Route  path="/admin/productlist" component={ProductListScreen}/>
           <Route  path="/admin/product/:id/edit" component={ProductEditScreen}/>
+          <Route  path="/admin/orderlist" component={OrderListScreen}/>
+          <Route  path="/admin/order/:id" component={OrderScreen}/>
       
           {/* Unauthorized access redirect screen */}
           <Route  path="/accessdenied" component={AuthorizationErrorScreen}/>

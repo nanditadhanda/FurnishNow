@@ -17,6 +17,10 @@ import { ORDER_CREATE_REQUEST,
         MY_ORDER_LIST_REQUEST,
         MY_ORDER_LIST_SUCCESS,
         MY_ORDER_LIST_FAIL,
+
+        ORDER_LIST_REQUEST,
+        ORDER_LIST_SUCCESS,
+        ORDER_LIST_FAIL,
 } from '../constants/orderConstants'
 
 import { CART_CLEAR_ITEMS } from '../constants/cartConstants'
@@ -154,7 +158,6 @@ export const myOrdersList = ( ) => async(dispatch, getState) => {
             `/api/orders/myorders`,
             config
             )
-
         
        
         //if no error is caught - throw in ORDER_CREATE_SUCCESS action
@@ -217,6 +220,54 @@ export const payOrder = (id, paymentResult) => async(dispatch, getState) => {
     catch(error){
         dispatch({
             type: ORDER_PAYMENT_FAIL,
+            payload: error.response && error.response.data.detail 
+                    ? error.response.data.detail
+                    : error.message
+        })
+
+    }
+}
+
+
+//retrieve orders of logged in user action
+export const listOrders = ( ) => async(dispatch, getState) => {
+ 
+     //try-catch exception
+    try {
+        //dispatch action to throw request to retrieve order list
+        dispatch({ type: ORDER_LIST_REQUEST })
+
+        //get user info (object) of logged in user from userLogin state
+        const { userLogin : { userInfo } } = getState()
+        
+        //configuration of post request with user authentication token
+        const config = {
+            headers : {
+                'Content-type' : 'application/json',
+                //authorization token to allow logged in user to place order
+                Authorization: `Bearer ${userInfo.token}`
+            }
+
+        }
+
+        //send out GET api request with data passed in
+        const { data } = await axios.get(
+            `/api/orders/`,
+            config
+            )
+        
+       
+        //if no error is caught - throw in ORDER_LIST_SUCCESS action
+        dispatch({
+            type: ORDER_LIST_SUCCESS,
+            payload: data
+        })    
+
+    }
+    //if error is caught  -- error message comes from backend
+    catch(error){
+        dispatch({
+            type: ORDER_LIST_FAIL,
             payload: error.response && error.response.data.detail 
                     ? error.response.data.detail
                     : error.message

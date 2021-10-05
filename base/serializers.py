@@ -14,6 +14,7 @@ from accounts.serializers import UserSerializer
 # product serializer
 class ProductSerializer(serializers.ModelSerializer):
 
+    category_id = serializers.ReadOnlyField(source='category.id')
     category = serializers.ReadOnlyField(source='category.name')
     category_slug = serializers.ReadOnlyField(source='category.slug')
 

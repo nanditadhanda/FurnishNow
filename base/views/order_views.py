@@ -21,6 +21,8 @@ from datetime import datetime
 
 # decorators
 
+# ----- Create New Order -------
+
 
 @api_view(['POST'])  # POST request to add data to database
 @permission_classes([IsAuthenticated])  # for authenticated users
@@ -76,9 +78,23 @@ def addOrderItems(request):
     serializer = OrderSerializer(order, many=False)
     return Response(serializer.data)
 
+#----view to get all orders ---#
 
-#---- view to get all orders ------ #
 
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getOrders(request):
+    # get all orders
+    orders = Order.objects.all()
+
+    # serialize order data
+    serializer = OrderSerializer(orders, many=True)
+
+    # return serialized data
+    return Response(serializer.data)
+
+
+#---- view to get user's orders ------ #
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getMyOrders(request):

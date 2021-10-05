@@ -29,7 +29,6 @@ const ProductEditScreen = ({match, history}) => {
 
     //set default local states
     const [name, setName] = useState('')
-    const [slug, setSlug] = useState('')
     const [brand, setBrand] = useState('')
     const [category, setCategory] = useState('')
     const [description, setDescription] = useState('')
@@ -86,7 +85,6 @@ const ProductEditScreen = ({match, history}) => {
                     //set local states                    
                     setName(product.name)
                     setBrand(product.brand)
-                    setSlug(product.slug)
                     setCategory(product.category)
                     setDescription(product.description)
                     setImagePath(product.image)
@@ -112,6 +110,7 @@ const ProductEditScreen = ({match, history}) => {
 
         if(file !== ""){
             uploadFileHandler()
+            setFile('')
         }        
         dispatch(updateProduct({
             _id: productID,
@@ -219,6 +218,13 @@ const ProductEditScreen = ({match, history}) => {
                                             type="text" 
                                             value={category} onChange={(e) => setCategory(e.target.value)}/>
                                     </Form.Group>
+
+                                        {/* <Form.Select aria-label="Select Category">
+                                            <option>Select Category</option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                        </Form.Select> */}
                                 </Col>
                                 <Col md="6" xs="12">
                                     {/* Brand Field */}

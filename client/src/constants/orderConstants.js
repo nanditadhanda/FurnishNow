@@ -27,3 +27,10 @@ export const MY_ORDER_LIST_FAIL = 'MY_ORDER_LIST_FAIL'
 
 export const MY_ORDER_LIST_RESET = 'MY_ORDER_LIST_RESET'
 
+
+// all orders
+export const ORDER_LIST_REQUEST = 'ORDER_LIST_REQUEST'
+export const ORDER_LIST_SUCCESS = 'ORDER_LIST_SUCCESS'
+export const ORDER_LIST_FAIL = 'ORDER_LIST_FAIL'
+
+
