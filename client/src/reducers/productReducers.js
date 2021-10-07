@@ -23,6 +23,11 @@ import {
     PRODUCT_DELETE_REQUEST,
     PRODUCT_DELETE_SUCCESS,
     PRODUCT_DELETE_FAIL,
+
+    PRODUCT_CREATE_REVIEW_REQUEST,
+    PRODUCT_CREATE_REVIEW_SUCCESS,
+    PRODUCT_CREATE_REVIEW_FAIL,
+    PRODUCT_CREATE_REVIEW_RESET,
 } from '../constants/productConstants'
 
 
@@ -149,6 +154,35 @@ export const productUpdateReducer = (state = {product:{}}, action) => {
         //reset state and empty product object
         case PRODUCT_UPDATE_RESET:
             return { product:{}}
+        
+      
+        //return state by default
+        default:
+            return state
+    }
+
+}
+
+
+// create review
+export const productCreateReviewReducer = (state = {}, action) => {
+    //check action type passed in reducer
+    switch(action.type){
+        //request to create product review
+        case PRODUCT_CREATE_REVIEW_REQUEST:
+            return { loading: true }
+
+        //if request received and review created, return success as true
+        case PRODUCT_CREATE_REVIEW_SUCCESS:
+            return { loading: false ,success: true }
+
+        //if error, return error message in state
+        case PRODUCT_CREATE_REVIEW_FAIL:
+            return { loading: false, error: action.payload }
+
+        //reset state and empty product object
+        case PRODUCT_CREATE_REVIEW_RESET:
+            return {}
         
       
         //return state by default

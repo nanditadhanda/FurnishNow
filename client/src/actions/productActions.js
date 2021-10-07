@@ -21,6 +21,10 @@ import {
     PRODUCT_UPDATE_REQUEST,
     PRODUCT_UPDATE_SUCCESS,
     PRODUCT_UPDATE_FAIL,
+
+    PRODUCT_CREATE_REVIEW_REQUEST,
+    PRODUCT_CREATE_REVIEW_SUCCESS,
+    PRODUCT_CREATE_REVIEW_FAIL,
 } from '../constants/productConstants'
 
 
@@ -214,6 +218,59 @@ export const deleteProduct = (id) => async(dispatch, getState) => {
     catch(error){
         dispatch({
             type: PRODUCT_DELETE_FAIL,
+            payload: error.response && error.response.data.detail 
+                    ? error.response.data.detail
+                    : error.message
+        })
+
+    }
+}
+
+
+
+//action to create product review
+export const createProductReview = (product_id, review) => async(dispatch, getState) => {
+     //try-catch exception
+    try {
+        //dispatch action to throw request to create product review
+        dispatch({ type: PRODUCT_CREATE_REVIEW_REQUEST })
+
+        //get user info (object) of logged in user from userLogin state
+        const { userLogin : { userInfo } } = getState()
+        
+        //configuration of put request with user authentication token
+        const config = {
+            headers : {
+                'Content-type' : 'application/json',
+                //authorization token to allow us to retrieve user info
+                Authorization: `Bearer ${userInfo.token}`
+            }
+
+        }
+
+        console.log("data: ", review)
+        
+
+        //send out post api request
+        const { data } = await axios.post(
+            `/api/products/${product_id}/review`,
+            review,
+            config
+            )
+
+        
+        //if no error is caught - throw in product review success action
+        dispatch({
+            type: PRODUCT_CREATE_REVIEW_SUCCESS,
+            payload: data,
+        }) 
+        
+        
+    }
+    //if error is caught  -- error message comes from backend
+    catch(error){
+        dispatch({
+            type: PRODUCT_CREATE_REVIEW_FAIL,
             payload: error.response && error.response.data.detail 
                     ? error.response.data.detail
                     : error.message

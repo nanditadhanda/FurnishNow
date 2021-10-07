@@ -267,7 +267,7 @@ const OrderScreen = ({ match , history }) => {
                                     </Row>
                                 </ListGroup.Item> 
                                 {/*------ Paypal Payment Integration (Not for admin user)----- */}
-                                {!order.isPaid && !userInfo.isSystemAdmin && !userInfo.isStoreManager (
+                                {(!order.isPaid && !userInfo.isSystemAdmin && !userInfo.isStoreManager) && (
                                     <ListGroup.Item>
                                         {loadingPayment && <Loader />}
                                         {!sdkReady ? (
@@ -282,8 +282,8 @@ const OrderScreen = ({ match , history }) => {
                                 )}
 
                                 {/* Update Order Status - Admin and Store Manager */}
-                                {order.isPaid 
-                                    && (userInfo.isAdmin || userInfo.isStoreManager) 
+                                {((userInfo.isSystemAdmin || userInfo.isStoreManager) && order.isPaid) 
+                                     
                                     && (
                                         !order.isDelivered ? (
                                             <ListGroup.Item>

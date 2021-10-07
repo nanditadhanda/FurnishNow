@@ -149,14 +149,14 @@ def createProductReview(request, id):
 
     if reviewExists:
         # define error message
-        content = {'details': 'Product already reviewed'}
+        content = {'detail': 'Product already reviewed'}
         # return error message in HTTP response status
         return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
     # 2 - No rating or if rating is 0
     elif data['rating'] == 0:
         # define error message
-        content = {'details': 'Please enter a rating for the product'}
+        content = {'detail': 'Please enter a rating for the product'}
         # return error message in HTTP response status
         return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
