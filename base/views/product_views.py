@@ -1,18 +1,22 @@
 # product_views.py - all product views
 
 from django.shortcuts import render
-from rest_framework import serializers
+from rest_framework import serializers, status
 
 # import decorator from django-rest-framework
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
-#import models
-from base.models import Product
+# import models
+from base.models import Product, Review
+from accounts.models import User
 
 # import serializers (models converted to JSON format)
 from base.serializers import ProductSerializer
+
+# import datetime library
+from datetime import datetime
 
 
 # get all products
@@ -77,10 +81,10 @@ def updateProduct(request, id):
     # update data
     product.name = data['name']
     product.brand = data['brand']
-    #product.category = data['category']
+    # product.category = data['category']
     product.description = data['description']
     # product.image = data['image']
-    #product.image3D = data['image3D']
+    # product.image3D = data['image3D']
     product.countInStock = data['countInStock']
     product.costPrice = data['costPrice']
     product.salePrice = data['salePrice']
@@ -122,3 +126,70 @@ def deleteProduct(request, id):
     product = Product.objects.get(_id=id)
     product.delete()
     return Response('Product has been deleted')
+
+# leave product review view
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def createProductReview(request, id):
+    # get user information from token passed
+    user = request.user
+
+    # get product information from Product model
+    product = Product.objects.get(_id=id)
+
+    # retrieve data passed
+    data = request.data
+
+    # ------- Leaving a review------------
+
+    # 1 - check if review exists
+    reviewExists = product.review_set.filter(user=user).exists()
+
+    if reviewExists:
+        # define error message
+        content = {'details': 'Product already reviewed'}
+        # return error message in HTTP response status
+        return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+    # 2 - No rating or if rating is 0
+    elif data['rating'] == 0:
+        # define error message
+        content = {'details': 'Please enter a rating for the product'}
+        # return error message in HTTP response status
+        return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+    # 3 - create the review
+    else:
+        review = Review.objects.create(
+            product=product,
+            user=user,
+            title=data['title'],
+            rating=data['rating'],
+            comment=data['comment'],
+            reviewDate=datetime.now()
+        )
+
+    # ----calculate total number of reviews ----
+
+    reviews = product.review_set.all()
+    numReviews = len(reviews)
+    product.numReviews = numReviews
+
+    # ----calculate average rating----
+
+    # calculate total
+    total = 0
+    for i in reviews:
+        # add rating of i product to total
+        total += i.rating
+
+    # calculate average and set product rating
+    product.rating = total / numReviews
+
+    # save product data
+    product.save()
+
+    # --------return success message--------
+    return Response("Review Added")

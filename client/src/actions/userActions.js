@@ -1,6 +1,8 @@
 //import axios
 import axios from 'axios'
 
+
+
 //import constants
 import {
     USER_LOGIN_REQUEST,
@@ -86,6 +88,7 @@ export const login = (email, password) => async (dispatch) => {
 
 //logout action
 export const logout = () => (dispatch) => {
+
     //clear local storage
     localStorage.removeItem('userInfo')
 
@@ -97,6 +100,8 @@ export const logout = () => (dispatch) => {
     dispatch({type: MY_ORDER_LIST_RESET})
     //dispatch reducer to clear list of users
     dispatch({type: USER_LIST_RESET})
+
+    
 }
 
 //register user action

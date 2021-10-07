@@ -5,15 +5,31 @@ from rest_framework import serializers
 
 # import models
 from accounts.models import User
-from .models import Product, Category, Order, OrderItem, ShippingAddress
+from .models import Product, Category, Order, OrderItem, ShippingAddress, Review
 
 # import user serializer
 from accounts.serializers import UserSerializer
 
+# review serializer
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    # get user details
+    first_name = serializers.ReadOnlyField(source='user.first_name')
+    last_name = serializers.ReadOnlyField(source='user.last_name')
+
+    class Meta:
+        model = Review
+        fields = '__all__'
+
 
 # product serializer
-class ProductSerializer(serializers.ModelSerializer):
 
+
+class ProductSerializer(serializers.ModelSerializer):
+    reviews = serializers.SerializerMethodField(read_only=True)
+
+    # get category details
     category_id = serializers.ReadOnlyField(source='category.id')
     category = serializers.ReadOnlyField(source='category.name')
     category_slug = serializers.ReadOnlyField(source='category.slug')
@@ -21,6 +37,14 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'  # all fields
+
+    def get_reviews(self, obj):
+        # retrieve all reviews
+        reviews = obj.review_set.all()
+        # serialize reviews from review serializer
+        serializer = ReviewSerializer(reviews, many=True)
+        # return serialized data
+        return serializer.data
 
 
 # Category serializer

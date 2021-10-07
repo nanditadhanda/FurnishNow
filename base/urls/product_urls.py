@@ -13,6 +13,7 @@ urlpatterns = [
     path('create', views.createProduct, name="create-product"),
     path('upload-image', views.uploadProductImage, name="upload-image"),
 
+    path('<str:id>/review', views.createProductReview, name="product-review"),
     path('<str:pk>', views.getProduct, name="product"),
 
     path('update/<str:id>', views.updateProduct, name="update-product"),

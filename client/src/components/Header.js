@@ -4,7 +4,8 @@ import {useDispatch , useSelector} from 'react-redux'
 import { LinkContainer } from 'react-router-bootstrap'
 import {Container, Navbar, Nav, NavDropdown, Badge, Button, Offcanvas , ListGroup, Image, Row, Col} from 'react-bootstrap'
 import Search from './Search'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
+
 
 //icons
 import {MdPerson} from 'react-icons/md'
@@ -21,7 +22,9 @@ import axios from 'axios'
 import {logout} from '../actions/userActions'
 
 //header function
-const Header = ({history}) => {
+const Header = () => {
+
+    const history = useHistory();
 
 //----logged in user----
     //select state
@@ -36,6 +39,7 @@ const Header = ({history}) => {
     //logout handler function
     const logoutHandler = () => {
         dispatch(logout())
+        history.push("/login");
     }    
 
     //----cart----
