@@ -6,17 +6,18 @@ import { Link } from 'react-router-dom'
 //Redux imports
 import { useDispatch, useSelector } from 'react-redux'
 //Import action
-import { getOrderDetails, payOrder } from '../actions/orderActions'
+import { getOrderDetails, payOrder, updateOrderStatus } from '../actions/orderActions'
 //import constants
-import { ORDER_PAYMENT_RESET } from '../constants/orderConstants'
+import { ORDER_PAYMENT_RESET, ORDER_STATUS_RESET } from '../constants/orderConstants'
 
 //payment buttons
 import { PayPalButton} from 'react-paypal-button-v2'
 
 //UI components
-import { Row, Col, ListGroup, Image, Card} from 'react-bootstrap'
+import { Row, Col, ListGroup, Image, Card, Form} from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import Button from '@restart/ui/esm/Button'
 
 
 
@@ -25,25 +26,8 @@ import Loader from '../components/Loader'
 //Order Screen Function
     //match with the id passed in
 const OrderScreen = ({ match , history }) => {
-    
-    //-----------Authentications and page access control -------------//
-
-    //check login state to see if user is logged in
-    const userLogin = useSelector(state => state.userLogin)
-    //destructure login state
-    const {userInfo} = userLogin
-
-    //conditions to check to allow user to access place order screen
-    useEffect(() => {
-       
-        //if user is not logged in, display login page    
-        if(!userInfo){
-            history.push(`/login?redirect=order/${orderID}`)
-        }
-       
-    }, [history, userInfo])
-
-
+    //set states
+    const [status, setStatus] = useState('')
     
     //-----------Retrieve order details --------------//
 
@@ -62,6 +46,23 @@ const OrderScreen = ({ match , history }) => {
         //subtotal item price
         order.itemsPrice = order.orderItems.reduce((acc, item) => acc + item.price * item.qty, 0).toFixed(2) 
     }
+
+    //-----------Authentications and page access control -------------//
+
+    //check login state to see if user is logged in
+    const userLogin = useSelector(state => state.userLogin)
+    //destructure login state
+    const {userInfo} = userLogin
+
+    //conditions to check to allow user to access place order screen
+    useEffect(() => {
+       
+        //if user is not logged in, display login page    
+        if(!userInfo){
+            history.push(`/login?redirect=order/${orderID}`)
+        }
+       
+    }, [history, userInfo, orderID])
 
     //-------------- Payment ----------------//
 
@@ -90,13 +91,30 @@ const OrderScreen = ({ match , history }) => {
         document.body.appendChild(script)
     }
 
+    //--------------Order Status-------------------//
+
+    // orderDetails state
+    const orderStatus = useSelector(state => state.orderStatus)
+    //destructure state
+    const {loading: loadingStatus, error:errorStatus, success: successStatus, successMessage: updateSuccessMsg} = orderStatus
+    
+
+    //--------------- Launch Use Effect ---------------//
+
     //use effect to get order details
     useEffect(() => {
         //if order details not found in state or if order ID match order ID in backend, send dispatch to retrieve order data
-        if(!order || order._id !== Number(orderID) || successPayment){
+        if(!order || order._id !== Number(orderID) || successPayment || successStatus ){
             //if payment is made, reset state
             dispatch({type: ORDER_PAYMENT_RESET})
-            dispatch(getOrderDetails(orderID))     
+            
+            //if order status is updated, reset state
+            dispatch({type: ORDER_STATUS_RESET})
+
+            //dispatch to get order details of specific order
+            dispatch(getOrderDetails(orderID))  
+            
+            
         }   
         else if(!order.isPaid){
             if(!window.paypal){
@@ -106,11 +124,24 @@ const OrderScreen = ({ match , history }) => {
                 setSdkReady(true)
             }
         }   
-    }, [dispatch,order, orderID, successPayment])
+    }, [dispatch,order, orderID, successPayment, successStatus])
 
     //payment handler on successful payment
     const successPaymentHandler = (paymentResult) => {
         dispatch(payOrder(orderID, paymentResult))
+    }
+
+    const changeStatus = (e) => {
+        const value = e.target.value        
+        setStatus(value)
+    }
+
+    //update orderStatus handler
+    const orderStatusHandler = () => {
+
+        order.orderStatus = status
+        dispatch(updateOrderStatus(order))
+        console.log(order.orderStatus)
     }
 
 
@@ -133,7 +164,7 @@ const OrderScreen = ({ match , history }) => {
                                 <strong>Order Status:</strong>
                                  <p>{order.orderStatus}</p>
                                 <strong>Last Updated:</strong>
-                                <p>{order.lastUpdatedAt}</p>
+                                <p>{order.lastUpdatedAt.substring(0,10)}</p>
                             </ListGroup.Item>
                             <ListGroup.Item className="py-3">
                                 {/* Heading */}
@@ -172,9 +203,7 @@ const OrderScreen = ({ match , history }) => {
                                     <Col xs={10} md={11}>
                                         <h4 className="mb-4">Order Items</h4>
                                     </Col>
-                                </Row>
-                                
-                                
+                                </Row> 
                                 <ListGroup variant="flush">
                                     {/* Map out items in order */}
                                     {order.orderItems.map((item, index) => (
@@ -237,8 +266,8 @@ const OrderScreen = ({ match , history }) => {
                                             </Col>
                                     </Row>
                                 </ListGroup.Item> 
-                                {/*------ Paypal Payment Integration----- */}
-                                {!order.isPaid && (
+                                {/*------ Paypal Payment Integration (Not for admin user)----- */}
+                                {!order.isPaid && !userInfo.isSystemAdmin && !userInfo.isStoreManager (
                                     <ListGroup.Item>
                                         {loadingPayment && <Loader />}
                                         {!sdkReady ? (
@@ -251,6 +280,38 @@ const OrderScreen = ({ match , history }) => {
                                         )}
                                     </ListGroup.Item>   
                                 )}
+
+                                {/* Update Order Status - Admin and Store Manager */}
+                                {order.isPaid 
+                                    && (userInfo.isAdmin || userInfo.isStoreManager) 
+                                    && (
+                                        !order.isDelivered ? (
+                                            <ListGroup.Item>
+                                                {loadingStatus && <Loader />}
+                                                {errorStatus && <Message variant="danger">{errorStatus}</Message>}
+                                                
+                                                <Form>
+                                                    <Form.Select aria-label="Order Status" defaultValue={order.orderStatus} onChange={changeStatus}>
+                                                        <option>Order Status</option>
+                                                        <option value="Placed">Placed</option>
+                                                        <option value="Packaged">Packaged</option>
+                                                        <option value="Shipped">Shipped Out</option>
+                                                        <option value="Delivered">Delivered</option>
+                                                    </Form.Select>
+                                                    <div className="d-grid my-3">
+                                                        <Button type="button" className="btn-primary btn" onClick={orderStatusHandler}>Update Order Status</Button>
+                                                    </div>
+                                                </Form>
+                                            </ListGroup.Item>   
+                                        )
+                                        : (
+                                            <ListGroup.Item> 
+                                                <Message variant="success" >Order Completed</Message>
+                                            </ListGroup.Item>
+                                        )
+
+                                        )}
+                                    
                                 
                                                        
                             </ListGroup>

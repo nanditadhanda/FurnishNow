@@ -86,8 +86,8 @@ class Order(models.Model):
     class orderStatusChoices(models.TextChoices):
         PLACED = 'Placed', _('Placed')
         PACKAGED = 'Packaged', _('Packaged')
-        SHIPPED = 'Shipped Out', _('Shipped Out')
-        RECEIVED = 'Received', _('Received')
+        SHIPPED = 'Shipped', _('Shipped Out')
+        DELIVERED = 'Delivered', _('Delivered')
 
     # fields and attributes
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)

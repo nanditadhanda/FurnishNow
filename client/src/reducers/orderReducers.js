@@ -13,6 +13,11 @@ import { ORDER_CREATE_REQUEST,
         ORDER_PAYMENT_FAIL,
         ORDER_PAYMENT_RESET,
 
+        ORDER_STATUS_REQUEST,
+        ORDER_STATUS_SUCCESS,
+        ORDER_STATUS_FAIL,
+        ORDER_STATUS_RESET,
+
         MY_ORDER_LIST_REQUEST,
         MY_ORDER_LIST_SUCCESS,
         MY_ORDER_LIST_FAIL,
@@ -120,6 +125,40 @@ export const orderPaymentReducer = (state = { }, action) => {
 
         //clear payment state once payment is made by returning empty object
         case ORDER_PAYMENT_RESET:
+            return { }
+
+        //return state by default
+        default:
+            return state
+    }
+}
+
+
+export const orderStatusReducer = (state = { }, action) => {
+    //check action type
+    switch(action.type){
+        //if request is received, set loading to true
+        case ORDER_STATUS_REQUEST:
+            return{
+                loading: true
+            }
+        
+        //if order status changed successfully
+        case ORDER_STATUS_SUCCESS:
+            return{
+                loading: false,
+                success: true,
+                successMessage: action.payload
+            }
+        //if failed to change order status successfully
+        case ORDER_STATUS_FAIL:
+            return{
+                loading: false,
+                error: action.payload
+            }
+
+        //clear state once order status is updated by returning empty object
+        case ORDER_STATUS_RESET:
             return { }
 
         //return state by default

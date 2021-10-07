@@ -146,6 +146,29 @@ def updateOrderToPaid(request, pk):
 
     order.isPaid = True
     order.paymentDate = datetime.now()
+    order.lastUpdatedAt = datetime.now()
     order.save()
 
     return Response('Payment made successfully')
+
+
+# PUT request to update order status
+@api_view(['PUT'])
+@permission_classes([IsAdminUser])
+def updateOrderStatus(request, pk):
+
+    # get order data by id passed
+    order = Order.objects.get(_id=pk)
+
+    data = request.data
+
+    order.orderStatus = data['orderStatus']
+
+    if(data['orderStatus'] == 'Delivered'):
+        order.isDelivered = True
+        order.deliveredAt = datetime.now()
+
+    order.lastUpdatedAt = datetime.now()
+    order.save()
+
+    return Response('Order status updated')
