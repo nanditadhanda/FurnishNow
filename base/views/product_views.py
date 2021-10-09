@@ -22,8 +22,16 @@ from datetime import datetime
 # get all products
 @api_view(['GET'])  # GET REST api method
 def getProducts(request):
-    # get products from database
-    products = Product.objects.all()
+
+    # if search parameters are passed
+    query = request.query_params.get('search')
+
+    # if no search value is passed set query string to empty string
+    if query == None:
+        query = ''
+
+    # get products from database - filter based on query sent - by name with case insenstive
+    products = Product.objects.filter(name__icontains=query)
 
     # serialize into JSON format
     serializer = ProductSerializer(products, many=True)

@@ -31,14 +31,15 @@ import {
 //action to get product list API call 
     //using redux thunk, we are able to create a function within a function:
     //dispatch is used to dispatch actions
-export const listProducts = () => async (dispatch) => {
+    //keyword is for search results - by default set to an empty string
+export const listProducts = (keyword='') => async (dispatch) => {
     //try-catch exception
     try {
         //dispatch action to throw product_list_request
         dispatch({ type: PRODUCT_LIST_REQUEST })
         
         //load data by making api call
-        const { data } = await axios.get(`/api/products/`)
+        const { data } = await axios.get(`/api/products${keyword}`)
 
         //if no error is caught - throw in PRODUCT_LIST_REQUEST action
         dispatch({

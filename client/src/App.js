@@ -27,6 +27,7 @@ import AuthorizationErrorScreen from './screens/AuthorizationErrorScreen'
 import ProductListScreen from './screens/ProductListScreen'
 import ProductEditScreen from './screens/ProductEditScreen'
 import OrderListScreen from './screens/OrderListScreen'
+import CatalogScreen from './screens/CatalogScreen'
 
 
 function App() {
@@ -38,18 +39,27 @@ function App() {
       {/* app body screens*/}
       <main >
         {/* register routing to different screens based on URL path */}
+          <Route  path="/products" component={CatalogScreen}/>
+          <Route  path="/products/:category" component={CatalogScreen}/>  
         <Container className="py-5">
+
           <Route path="/" component={HomeScreen} exact/>
+          
+          <Route  path="/product/:category/:id" component={ProductScreen}/>
+
+          {/* User account screens */}
           <Route path="/login" component={LoginScreen}/>
           <Route path="/register" component={RegisterScreen} />
           <Route path="/profile" component={ProfileScreen}/>
+
+          {/* Order and cart screens */}
           <Route  path="/cart" component={CartScreen}/>
           <Route  path="/shipping" component={ShippingScreen}/>
           <Route  path="/payment" component={PaymentScreen}/>
           <Route  path="/placeorder" component={PlaceOrderScreen}/>
           <Route  path="/my-orders" component={MyOrderListScreen}/>
           <Route  path="/order/:id" component={OrderScreen}/>
-          <Route  path="/product/:category/:id" component={ProductScreen}/>
+          
 
           {/* Admin Screens */}
           <Route  path="/admin/userlist" component={UserListScreen}/>
@@ -61,7 +71,9 @@ function App() {
       
           {/* Unauthorized access redirect screen */}
           <Route  path="/accessdenied" component={AuthorizationErrorScreen}/>
-        </Container>        
+        </Container> 
+
+               
       </main>
        {/* Footer */}
       <Footer />
