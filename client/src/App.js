@@ -39,8 +39,7 @@ function App() {
       {/* app body screens*/}
       <main >
         {/* register routing to different screens based on URL path */}
-          <Route  path="/products" component={CatalogScreen}/>
-          <Route  path="/products/:category" component={CatalogScreen}/>  
+          <Route  path="/products" component={CatalogScreen}/>  
         <Container className="py-5">
 
           <Route path="/" component={HomeScreen} exact/>

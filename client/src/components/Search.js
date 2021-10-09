@@ -4,7 +4,7 @@ import {FaSearch} from 'react-icons/fa'
 
 import {useHistory} from 'react-router-dom'
 
-const Search = ({page="products"}) => {
+const Search = ({path="products"}) => {
     //set keyword state
     const [keyword, setKeyword] = useState('')  
     
@@ -24,7 +24,7 @@ const Search = ({page="products"}) => {
         e.preventDefault()
 
         if(keyword){
-            history.push(`/${page}?search=${keyword}`)
+            history.push(`/${path}?search=${keyword}&page=1`)
         }
         else{
             history.push(history.location.pathname)

@@ -1,5 +1,11 @@
 # product_views.py - all product views
 
+from datetime import datetime
+
+from django.core import paginator
+from base.serializers import ProductSerializer
+from accounts.models import User
+from base.models import Product, Review
 from django.shortcuts import render
 from rest_framework import serializers, status
 
@@ -7,6 +13,9 @@ from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
+
+# import django pagination library
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # import models
 from base.models import Product, Review
@@ -33,11 +42,43 @@ def getProducts(request):
     # get products from database - filter based on query sent - by name with case insenstive
     products = Product.objects.filter(name__icontains=query)
 
+    # pagination
+    page = request.query_params.get('page')
+    # return 10 products per page
+    paginator = Paginator(products, 10)
+
+    # ----pagination exception handling---
+
+    # by default, return the data of the page number passed in according to the paginator
+    try:
+        products = paginator.page(page)
+
+    # if no page number is passed, return the first page
+    except PageNotAnInteger:
+        products = paginator.page(1)
+
+    # if page number passed returns no data, return the last page in the paginator that has data present in it
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+
+    # if no page number is passed in from front end, set page to 1 by default
+    if page == None:
+        page = 1
+
+    # convert value of page to integer
+    page = int(page)
+
     # serialize into JSON format
     serializer = ProductSerializer(products, many=True)
 
-    # return serialized data
-    return Response(serializer.data)
+    # return serialized data along with pagination as an object
+    return Response({
+        'products': serializer.data,
+        'page': page,
+        'pages': paginator.num_pages
+
+
+    })
 
 
 # retrieve single products
@@ -53,9 +94,8 @@ def getProduct(request, pk):
     # return serialized data
     return Response(serializer.data)
 
+
 # create product view
-
-
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def createProduct(request):
@@ -135,9 +175,8 @@ def deleteProduct(request, id):
     product.delete()
     return Response('Product has been deleted')
 
+
 # leave product review view
-
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def createProductReview(request, id):

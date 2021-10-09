@@ -18,6 +18,7 @@ import {MdEdit} from 'react-icons/md'
 
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import Paginate from '../components/Paginate'
 
 const ProductListScreen = ({history}) => {
     //set dispatch
@@ -26,7 +27,7 @@ const ProductListScreen = ({history}) => {
     //select productList state
     const productList = useSelector(state => state.productList)
     //destructure state
-    const {loading, error, products} = productList
+    const {loading, error, products, page, pages} = productList
 
     //select productDelete state
     const productDelete = useSelector(state => state.productDelete)
@@ -43,6 +44,8 @@ const ProductListScreen = ({history}) => {
     const userLogin = useSelector(state => state.userLogin)
     const {userInfo} = userLogin
 
+    let keyword = history.location.search
+
 
     useEffect(() => { 
         
@@ -56,10 +59,10 @@ const ProductListScreen = ({history}) => {
             history.push(`/admin/product/${productCreated._id}/edit`)
         }
         else{            
-            dispatch(listProducts())
+            dispatch(listProducts(keyword))
         }
 
-    },[dispatch, history, userInfo, deleteSuccess, createSuccess, productCreated])
+    },[dispatch, history, userInfo, deleteSuccess, createSuccess, productCreated, keyword])
 
 
     //delete user
@@ -137,6 +140,7 @@ const ProductListScreen = ({history}) => {
                         </tbody>
 
                     </Table>
+                    <Paginate path="/admin/productlist" page={page} pages={pages}/>
                     </>
                 )}
             

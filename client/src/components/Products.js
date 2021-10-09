@@ -1,6 +1,10 @@
 import React, {useEffect} from 'react'
 import { useHistory } from 'react-router-dom'
+import PropTypes from 'prop-types'
+
 import {Row, Col} from 'react-bootstrap'
+
+
 import Product from '../components/Product'
 
 
@@ -13,8 +17,9 @@ import Loader from './Loader'
 import Message from './Message'
 
 
+
 //Products function
-const Products = ({l, xl}) => {
+const Products = ({l, xl, val={}}) => {
 
     const dispatch = useDispatch()
 
@@ -22,7 +27,7 @@ const Products = ({l, xl}) => {
     const productList = useSelector(state => state.productList)
 
     //destructure the state
-    const {error, loading, products} = productList
+    const {error, loading, products, page, pages} = productList
 
     //declare history
     const history = useHistory()
@@ -30,6 +35,10 @@ const Products = ({l, xl}) => {
     //set keyword for search results
     let keyword = history.location.search
 
+    if(val !== ''){
+        val({page, pages, keyword})
+    }
+    
 
     //useEffect is triggered when component loads
     useEffect(() => {
@@ -38,6 +47,7 @@ const Products = ({l, xl}) => {
     }, [dispatch, keyword])
 
     return (
+        <>
         <Row>
             {//if state is loading
             loading ? <Loader/>
@@ -56,10 +66,22 @@ const Products = ({l, xl}) => {
                     
             }
         </Row>
+        
+        </>
             
        
     )
 }
 
+Products.defaultProps = {
+    val: '',
+}
+
+Products.propTypes = {
+    val: PropTypes.func,
+}
+
 //export Product function
 export default Products
+
+
