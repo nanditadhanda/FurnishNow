@@ -28,6 +28,9 @@ import ProductListScreen from './screens/ProductListScreen'
 import ProductEditScreen from './screens/ProductEditScreen'
 import OrderListScreen from './screens/OrderListScreen'
 import CatalogScreen from './screens/CatalogScreen'
+import AR from './components/AR'
+
+
 
 
 function App() {
@@ -40,6 +43,7 @@ function App() {
       <main >
         {/* register routing to different screens based on URL path */}
           <Route  path="/products" component={CatalogScreen}/>  
+          <Route  path="/ar" component={AR}/>  
         <Container className="py-5">
 
           <Route path="/" component={HomeScreen} exact/>
