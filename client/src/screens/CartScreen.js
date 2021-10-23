@@ -107,7 +107,8 @@ function CartScreen({ match, location, history }) {
                                                             max={item.countInStock} 
                                                             productID={item.product} 
                                                             initQty={item.qty}
-                                                            min={1}/>
+                                                            min={1}
+                                                            cartPage="true"/>
                                                     {/*Number of items available */}
                                                 </Col>
                                                 <Col md={1} xs={2}>

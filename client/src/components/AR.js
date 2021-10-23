@@ -1,8 +1,23 @@
 import React, {useState, useEffect} from 'react'
+
+//THREE.js modules and controls
 import * as THREE from 'three/build/three.module'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 
-const AR = () => {
+//UI compontents
+import {Button} from 'react-bootstrap'
+import PopoverTooltip from './PopoverTooltip'
+import AddToCart from './AddToCart'
+import Quantity from './Quantity'
+import Message from './Message'
+import Loader from './Loader'
+
+
+
+
+
+const AR = ({model3D="", productID, max}) => {
 
   //----------- initializing states, variables and constants ----------//
 
@@ -27,6 +42,13 @@ const AR = () => {
 
   let vec = null;
 
+  //------ popover info -----
+
+  const [popoverTitle, setPopoverTitle] = useState('')
+  const [popoverDesc, setPopoverDesc] = useState('')
+
+  const [ loading, setLoading] = useState(false)
+
   //---------------- THREE.js ------------------//
 
   //---- variables
@@ -34,10 +56,16 @@ const AR = () => {
   let scene = null;
   let camera = null;
   let model = null;
+  
   let mixer = null;
   let action = null;
   let reticle = null;
   let lastFrame = Date.now();
+
+
+  const [modelPlaced, setModelPlaced] = useState(false)
+
+
 
   //initial scene
   const initScene = (gl, session) => {
@@ -50,19 +78,19 @@ const AR = () => {
       0.1,
       1000
     );
-
+    
     // load our gltf model
     var loader = new GLTFLoader();
     loader.load(
-      "models/wheel.glb",
+      model3D,
       (gltf) => {
         model = gltf.scene;
-        model.scale.set(0.1, 0.1, 0.1);
+        model.scale.set(1.0, 1.0, 1.0);
         model.castShadow = true;
         model.receiveShadow = true;
-        mixer = new THREE.AnimationMixer(model);
-        action = mixer.clipAction(gltf.animations[0]);
-        action.setLoop(THREE.LoopRepeat, 0);
+        // mixer = new THREE.AnimationMixer(model);
+        // action = mixer.clipAction(gltf.animations[0]);
+        // action.setLoop(THREE.LoopRepeat, 0);
       },
       () => {},
       (error) => console.error(error)
@@ -80,7 +108,7 @@ const AR = () => {
       alpha: true,
       autoClear: true,
       context: gl,
-    });
+    })
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.xr.enabled = true;
@@ -101,31 +129,9 @@ const AR = () => {
   }
 
 
-
-
-
-
   //----------------- Immersive-AR XRSession ---------------------------//
 
-  //-- TO DO : PUT IN TRY-CATCH
-  //check if webxr is supported
-  const checkSupportedState = () => {
-   
-    if(navigator.xr){
-      navigator.xr.isSessionSupported('immersive-ar').then((isSupported) => {
-        setSupported(isSupported)
-        if (isSupported) {
-          setXRButton('View in AR')
-        } else {
-          setXRButton('AR not found')
-          console.log("WebXR doesn't support immersive-ar mode!") 
-        }       
-      }) 
-    }
-    else {
-      console.log("WebXR is not available!")
-    }
-  }
+  
 
   //if webxr is supported, allow onButtonClicked handler to be called
   const onButtonClicked = () => {
@@ -161,6 +167,9 @@ const AR = () => {
     let canvas = document.createElement('canvas');
     gl = canvas.getContext("webgl", { xrCompatible: true });
     session.updateRenderState({ baseLayer: new XRWebGLLayer(xrSession, gl) });
+
+    //loader
+    setLoading(true)
 
     // here we ask for viewer reference space, since we will be casting a ray
     // from a viewer towards a detected surface. The results of ray and surface intersection
@@ -203,7 +212,8 @@ const AR = () => {
   //once immersive-ar session ends
   const onSessionEnded = (event) => {
       setXRSession(null);
-      setXRButton( 'Enter AR')
+      setXRButton( 'View in AR')
+      setModelPlaced(false)
       setInfo('')
       gl = null;
 
@@ -222,36 +232,43 @@ const AR = () => {
           scene.remove(reticle);
           model.position.set(pos.x, pos.y, pos.z);
           scene.add(model);
+          setModelPlaced(true)
+
+          
 
           // start object animation right away
-          toggleAnimation();
+          //toggleAnimation();
           // instead of placing an object we will just toggle animation state
           document
             .getElementById("overlay")
             .removeEventListener("click", placeObject);
-          document
-            .getElementById("overlay")
-            .addEventListener("click", toggleAnimation);
+          // document
+          //   .getElementById("overlay")
+          //   .addEventListener("click", toggleAnimation);
+
+          
         }
+
+        
       }
 
-      function toggleAnimation() {
-        if (action.isRunning()) {
-          action.stop();
-          action.reset();
-        } else {
-          action.play();
-        }
-      }
+      // function toggleAnimation() {
+      //   if (action.isRunning()) {
+      //     action.stop();
+      //     action.reset();
+      //   } else {
+      //     action.play();
+      //   }
+      // }
 
-      // Utility function to update animated objects
-      function updateAnimation() {
-        let dt = (Date.now() - lastFrame) / 1000;
-        lastFrame = Date.now();
-        if (mixer) {
-          mixer.update(dt);
-        }
-      }
+      // // Utility function to update animated objects
+      // function updateAnimation() {
+      //   let dt = (Date.now() - lastFrame) / 1000;
+      //   lastFrame = Date.now();
+      //   if (mixer) {
+      //     mixer.update(dt);
+      //   }
+      // }
 
       function onXRFrame(t, frame) {
         let session = frame.session;
@@ -267,6 +284,7 @@ const AR = () => {
             // place a reticle at the intersection point
             reticle.matrix.fromArray(pose.transform.matrix);
             reticle.visible = true;
+            setLoading(false)
           }
         } else {
           // do not show a reticle if no surfaces are intersected
@@ -274,7 +292,7 @@ const AR = () => {
         }
 
         // update object animation
-        updateAnimation();
+        //updateAnimation();
         // bind our gl context that was created with WebXR to threejs renderer
         gl.bindFramebuffer(
           gl.FRAMEBUFFER,
@@ -284,11 +302,66 @@ const AR = () => {
         renderer.render(scene, camera);
       }
 
+
+      function resetHandler (){
+        
+        console.log("reset")
+      }
+
+      
+    
+
   
   // use effect to initialize component
   useEffect(() => {
-    // checkXR()
+        //-- TO DO : PUT IN TRY-CATCH
+  //check if webxr is supported
+  const checkSupportedState = () => {
+   
+    if(navigator.xr){
+      navigator.xr.isSessionSupported('immersive-ar').then((isSupported) => {
+        setSupported(isSupported)
+        if (isSupported && model3D !== null) {
+          setXRButton('View in AR')
+          setPopoverTitle('3D model using immersive-AR')
+          setPopoverDesc(
+              <div>
+                <p className="text-justify">"View in AR" allows you to view how the product will look like in your home setting by accessing your device camera and overlaying a 3D model of the product in your selected placement.</p>
+                <ol>
+                  <li>Click 'View in AR' button</li>
+                  <li>Allow your browser to access your device's camera</li>
+                  <li>Wait for reticle to appear after FurnishNow scans the area through your camera.</li>
+                  <li>Once Reticle appears, tap on the screen to place the object.</li>
+                </ol>
+                 <p className="text-justify text-danger"><strong>Please Note: </strong>FurnishNow ensures your privacy is not breached. Data from your camera will not be recorded or stored in any form. Your camera will not be accessed when AR-mode is not active.</p>
+              </div>)
+        } else if (isSupported && model3D === null){
+          setXRButton('3D model unavailable')
+          setPopoverTitle('3D model unavailable')
+          setPopoverDesc(`3D model is not available for this product. We apologize for the inconvenience caused`)
+        }   else{
+          setXRButton('AR not supported')
+          setPopoverTitle('Immersive-AR Pre-requisites')
+          setPopoverDesc(<div>
+                              <p className="text-justify">AR is not supported on your browser window. Please open application on a mobile device with one of the following mobile web browers to enjoy our immersive AR experience: </p>
+                              <ul>
+                                <li>Chrome: version 79+</li>
+                                <li>Opera: version 66+</li>
+                                <li>Edge: version 79+</li>
+                                <li>Mozilla: version 90+</li>
+                                <li className="text-danger">Safari: Not Supported</li>
+                              </ul>
+                            </div>) 
+        }    
+      }) 
+    }
+    else {
+      console.log("WebXR is not available!")
+    }
+  }
 
+
+    // checkXR
      if (!window.isSecureContext) {
         document.getElementById("warning").innerText = "WebXR unavailable. Please use secure context" 
       }
@@ -298,21 +371,65 @@ const AR = () => {
       } else {
         document.getElementById("warning").innerText = "WebXR unavailable for this browser" 
       }
-    
-  }, [])
 
+
+  
+    
+  }, [model3D])
+
+  
+//-------------------------- AR Mode UI Functions ---------------//
+const [qty, setQuantity] = useState (0)
+const [show, setShow] = useState(false)
+const [qtyError, setQtyError] = useState(false)
+
+const updateQty = (qtyInput) => { 
+    setQuantity(qtyInput.qty)            
+}
+const updateMsg = ({show, error}) => {
+    setShow(show)
+    setQtyError(error)
+}
 
 
   return (
-    <div id="overlay">
+    <div id="overlay" className={`${xrSession !== null && "my-2"}`}>
       <div className="info-area">
-        <div id="info">{info}</div>
-        { supported ?
-          <button id="xr-button" onClick={onButtonClicked}>{xrButton}</button>
+        <div id="info">{info}</div>  
+        {/* If WebXR is supported on device and 3D model is */}
+        { (supported && model3D !== null) ?
+          <Button id="xr-button" className="btn-success" onClick={onButtonClicked}>{xrButton}</Button>
             :
-              <button id="xr-button" disabled>{xrButton}</button>
-
+              <Button className="btn-secondary" id="xr-button" disabled>{xrButton}</Button>
         }
+        {modelPlaced && 
+            <>
+              <Button id="resetModel" onClick={resetHandler} >Reset</Button>
+               {show && 
+                    <div className="py-2">
+                    <Message variant="success" >    
+                        Product has been added to your shopping cart
+                    </Message>
+                    </div>
+                }
+              <div className="position-fixed bottom-0 w-100 p-4 bg-light">
+                {qtyError &&
+                <Message variant="danger">Error: Select Quantity</Message>}
+                {/* Quantity selector */}
+                <div className="d-flex justify-content-evenly  ">
+                    {/* Quantity selector */}
+                    <Quantity prodQuantity={updateQty} initQty={0}  max={max} productID={productID} />
+                    <AddToCart productID={productID} qty={qty} msgShow={updateMsg}/>
+                </div>             
+              </div>
+            </>}
+           {xrSession ===  null && 
+            <PopoverTooltip title={popoverTitle} content={popoverDesc}/>}
+            {xrSession && loading && 
+              <div className="d-flex align-items-center ">
+                <Loader />
+              </div>}
+        
         
       </div>
     </div>

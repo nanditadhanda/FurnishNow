@@ -40,7 +40,8 @@ class Product(models.Model):
         max_length=100, unique=False, null=False, blank=True)
     image = models.ImageField(
         upload_to='images/products', null=True, blank=True, default='/images/products/placeholder.jpg')
-    # image3D =
+    model3D = models.FileField(
+        upload_to='models', null=True, blank=True)
     brand = models.CharField(max_length=200, null=True, blank=True)
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, null=True, related_name="products", default=5)

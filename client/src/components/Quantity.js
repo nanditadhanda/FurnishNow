@@ -1,8 +1,9 @@
 //custom increment-decrement number input
 
 //import components
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Button, Form } from 'react-bootstrap'
+import { useSelector } from 'react-redux'
 import {CgMathPlus, CgMathMinus} from 'react-icons/cg'
 
 //import redux and reducers
@@ -10,10 +11,14 @@ import {useDispatch} from 'react-redux'
 import {addToCart} from '../actions/cartActions'
 
 //Quantity Function based component
-const Quantity = ({max, prodQuantity="", initQty=0, productID="", min=0}) => {
+const Quantity = ({max, prodQuantity="", initQty=0, productID="", min=0, cartPage=false}) => {
     
     const [qty, setQty] = useState(initQty)
+    const [cartQty, setCartQty] = useState(0)
     const [change, setChange] = useState(false)
+
+    const cart = useSelector(state => state.cart)
+    const {cartItems} = cart
 
     //increase value if quantity is less than max available
     const increaseQty = () => {
@@ -43,14 +48,37 @@ const Quantity = ({max, prodQuantity="", initQty=0, productID="", min=0}) => {
     const dispatch = useDispatch()
 
     if(increaseQty || decreaseQty || onChange ){
-        prodQuantity({qty, initQty}) 
-
-        if(change && productID){
+        if(change){
+            if(cartPage){
             dispatch(addToCart(productID, qty))
             setChange(false)
-        }
-        
+            }else{
+                
+                if(cartQty !==0){
+                    if(qty+cartQty <= max){
+                        prodQuantity({qty: (qty+cartQty), productID}) 
+                    }
+                    else{
+                        prodQuantity({qty: max, productID}) 
+                    }           
+                }
+                else{
+                    prodQuantity({qty, productID})
+                }    
+                setChange(false)
+            }      
+        }    
     }
+
+    useEffect(() => {
+        if(cartItems.length > 0){
+                cartItems.map(x => (
+                    (parseInt(x.product) === parseInt(productID)) &&
+                        setCartQty(x.qty)                                                         
+                ))
+        }        
+          
+    }, [cartItems, setCartQty, productID, cartQty, qty, cartPage])
 
     return (
         <div className="quantity">
