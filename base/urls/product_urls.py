@@ -10,6 +10,7 @@ urlpatterns = [
 
     path('', views.getProducts, name="products"),
 
+
     path('create', views.createProduct, name="create-product"),
     path('upload-image', views.uploadProductImage, name="upload-image"),
 

@@ -8,6 +8,7 @@ from accounts.models import User
 from base.models import Product, Review
 from django.shortcuts import render
 from rest_framework import serializers, status
+from rest_framework import generics
 
 # import decorator from django-rest-framework
 from rest_framework.response import Response
@@ -20,6 +21,11 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # import models
 from base.models import Product, Review
 from accounts.models import User
+
+#import filters
+from base.filters import ProductFilter
+from rest_framework.filters import OrderingFilter, SearchFilter
+import django_filters
 
 # import serializers (models converted to JSON format)
 from base.serializers import ProductSerializer
@@ -34,13 +40,24 @@ def getProducts(request):
 
     # if search parameters are passed
     query = request.query_params.get('search')
+    sort = request.query_params.get('ordering')
 
     # if no search value is passed set query string to empty string
     if query == None:
         query = ''
 
+    # if order filter is not applied, by default sort by id
+    if sort == None:
+        sort = '_id'
+
     # get products from database - filter based on query sent - by name with case insenstive
-    products = Product.objects.filter(name__icontains=query)
+    products = Product.objects.filter(name__icontains=query).order_by(sort)
+
+    dict_params = dict(request.query_params.lists())
+    print("list:", dict_params)
+    filter = ProductFilter(request.GET, queryset=products)
+    if filter.is_valid():
+        products = filter.qs
 
     # pagination
     page = request.query_params.get('page')
@@ -82,7 +99,7 @@ def getProducts(request):
 
 
 # retrieve single products
-    # GET REST api method
+# GET REST api method
 @api_view(['GET'])
 def getProduct(request, pk):
 

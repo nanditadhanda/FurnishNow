@@ -47,7 +47,7 @@ class Product(models.Model):
         Category, on_delete=models.CASCADE, null=True, related_name="products", default=5)
     description = models.TextField(null=True, blank=True)
     rating = models.DecimalField(
-        max_digits=3, decimal_places=2, null=True, blank=True)
+        max_digits=3, decimal_places=2, null=True, blank=True, default=0)
     numReviews = models.IntegerField(null=True, blank=True, default=0)
     costPrice = models.DecimalField(
         max_digits=7, decimal_places=2, null=True, blank=True)
