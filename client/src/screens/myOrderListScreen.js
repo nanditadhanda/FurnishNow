@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 
 //Routing
 import { LinkContainer } from 'react-router-bootstrap'
@@ -13,7 +13,6 @@ import { myOrdersList } from '../actions/orderActions'
 import {Row, Col, Card, Table, ListGroup, Button, Image} from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import {RiCheckboxCircleLine , RiCloseCircleLine} from 'react-icons/ri'
 
 const MyOrderListScreen = ({history}) => {
 

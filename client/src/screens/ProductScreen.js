@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Row, Col, Breadcrumb, Image, ListGroup, Button, ListGroupItem, Form } from 'react-bootstrap'
+import { Row, Col, Breadcrumb, Image, ListGroup, Button, ListGroupItem } from 'react-bootstrap'
 
 //Custom components
 import Quantity from '../components/Quantity'

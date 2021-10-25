@@ -32,14 +32,21 @@ import {
     //using redux thunk, we are able to create a function within a function:
     //dispatch is used to dispatch actions
     //keyword is for search results - by default set to an empty string
-export const listProducts = (keyword='') => async (dispatch) => {
+export const listProducts = (keyword='', ordering='', filter='') => async (dispatch) => {
     //try-catch exception
     try {
         //dispatch action to throw product_list_request
         dispatch({ type: PRODUCT_LIST_REQUEST })
+
+        if(keyword ===''){
+            keyword = `?ordering=${ordering}&${filter}`
+        }
+        else{
+            keyword = `${keyword}&ordering=${ordering}&${filter}`       
+        }
         
         //load data by making api call
-        const { data } = await axios.get(`/api/products${keyword}`)
+        const { data } = await axios.get(`/api/products/${keyword}`)
 
         //if no error is caught - throw in PRODUCT_LIST_REQUEST action
         dispatch({

@@ -264,3 +264,19 @@ input[type="number"]::-webkit-outer-spin-button {
     }
   }
 }
+
+
+.nav-side.nav-pills {
+    .nav-link{
+        color: $secondary;
+        border-radius: 0;
+        &:hover{
+           color: $dark;
+           background: darken($light , 5%);
+        }
+    }
+    .nav-link.active{
+        color: $dark;
+        background: darken($light, 10%);
+    }
+}

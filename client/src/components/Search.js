@@ -4,13 +4,14 @@ import {FaSearch} from 'react-icons/fa'
 
 import {useHistory} from 'react-router-dom'
 
-const Search = ({path="products"}) => {
+const Search = ({path="products/all"}) => {
     //set keyword state
     const [keyword, setKeyword] = useState('')  
     
-
     //set history to redirect user based on URL parameters
     let history = useHistory()
+
+    
 
     //clear search bar if keyword is blank
     if(keyword === ''){

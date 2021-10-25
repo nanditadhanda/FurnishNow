@@ -3,12 +3,11 @@ import React from 'react'
 import {Pagination} from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 
-
-
-const Paginate = ({path='', pages, page, keyword='', isSystemAdmin=false}) => {
+const Paginate = ({path='', pages, page, keyword='', filter='', isSystemAdmin=false}) => {
     if(keyword){
         keyword = keyword.split('?search=')[1].split('&')[0]
     }
+    
     return (
         pages > 1 && (
         <Pagination className="justify-content-center">

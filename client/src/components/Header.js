@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import {useDispatch , useSelector} from 'react-redux'
 //header component 
 import { LinkContainer } from 'react-router-bootstrap'
-import {Container, Navbar, Nav, NavDropdown, Badge, Button, Offcanvas , ListGroup, Image, Row, Col} from 'react-bootstrap'
+import {Container, Navbar, Nav, NavDropdown, Badge} from 'react-bootstrap'
 import Search from './Search'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 
 //icons
@@ -15,11 +15,11 @@ import {BiLogOutCircle, BiPackage} from 'react-icons/bi'
 import {GoGraph} from 'react-icons/go'
 import {FiUsers} from 'react-icons/fi'
 
-//axios
-import axios from 'axios'
-
 //logout action
 import {logout} from '../actions/userActions'
+
+//category action
+import {listCategories} from '../actions/categoryActions'
 
 //header function
 const Header = () => {
@@ -47,15 +47,12 @@ const Header = () => {
     const {cartItems} = cart 
 
     //categories
-    const [categories, setCategories] = useState([])
+    const categoryList = useSelector(state => state.categoryList)
+    const {loading, error, categories} = categoryList
 
     useEffect(()=> {
-        async function fetchCategories(){
-            const {data} = await axios.get('/api/categories/')
-            setCategories(data)
-        }   
-        fetchCategories()
-    }, [])
+        dispatch(listCategories())
+    }, [dispatch])
 
     
 
@@ -75,16 +72,18 @@ const Header = () => {
                             
                         <LinkContainer to="/Products">
                             <NavDropdown title="Shop By Category" id="basic-nav-dropdown">
-                                <LinkContainer to="/products">
+                                <LinkContainer to="/products/all">
                                     <NavDropdown.Item>All Categories</NavDropdown.Item>
                                 </LinkContainer>
                                 <NavDropdown.Divider />
-                                {categories.map(category => (
+                                {(!loading && !error) && (
+                                    categories.map(category => (
                                     <LinkContainer key={category._id} to={`/products/${category.slug}`}>
                                         <NavDropdown.Item>{category.name}</NavDropdown.Item>
-                                    </LinkContainer>
-            
-                                ))}
+                                    </LinkContainer>            
+                                ))
+                                ) }
+                                
                         </NavDropdown>  
                     </LinkContainer>
                     </div>

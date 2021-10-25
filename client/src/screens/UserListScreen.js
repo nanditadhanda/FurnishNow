@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 
 //Routing
 import { LinkContainer } from 'react-router-bootstrap'
@@ -55,9 +55,9 @@ const UserListScreen = ({history}) => {
     }
 
     //create user
-    const createUserHandler = () => {
-        console.log("create user")
-    }
+    // const createUserHandler = () => {
+    //     console.log("create user")
+    // }
 
     return (
         <section>
