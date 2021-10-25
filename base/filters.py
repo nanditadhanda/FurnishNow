@@ -1,5 +1,5 @@
 # import django fitlers library
-from django_filters.filters import CharFilter, MultipleChoiceFilter
+from django_filters.filters import CharFilter, MultipleChoiceFilter, RangeFilter
 from accounts.models import User
 from base.models import Product
 import django_filters
@@ -16,13 +16,13 @@ class MultipleParamsFilter(django_filters.BaseInFilter, django_filters.CharFilte
 
 
 class ProductFilter(django_filters.FilterSet):
-
+    price = django_filters.RangeFilter(field_name='salePrice')
     category = MultipleParamsFilter(
         field_name='category__slug', lookup_expr='in')
 
-    rating = MultipleParamsFilter(
+    rating = django_filters.RangeFilter(
         field_name='rating', lookup_expr='in')
 
     class Meta:
         model = Product
-        fields = ['category', 'rating']
+        fields = ['category', 'rating', 'price']

@@ -2,15 +2,15 @@ import React from 'react'
 import {RiStarHalfSLine, RiStarSLine, RiStarSFill} from 'react-icons/ri'
 
 
-const Rating = ({value, text, color}) => {
+const Rating = ({value, text, color, size=''}) => {
     return (
 
        
     
        <div >
-          <span className={color} title={`${value} out of 5 stars`}>
+          <span className={`${color} ${size}`} title={`${value} out of 5 stars`}>
             {value >= 1 
-                ? <RiStarSFill className={color}/>
+                ? <RiStarSFill className={`${color} ${size}`}/>
                 : value >= 0.5 
                     ? <RiStarHalfSLine />
                     : <RiStarSLine />
@@ -34,7 +34,7 @@ const Rating = ({value, text, color}) => {
                     : <RiStarSLine />
             }  
             {value >= 5 
-                ? <RiStarSFill />
+                ? <RiStarSFill className={`${color} ${size}`}/>
                 : value >= 4.5 
                     ? <RiStarHalfSLine />
                     : <RiStarSLine />

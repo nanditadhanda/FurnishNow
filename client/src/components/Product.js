@@ -2,7 +2,7 @@
 
 //import components
 import React from 'react'
-import {Card, Button} from 'react-bootstrap'
+import {Card} from 'react-bootstrap'
 import Rating from './Rating'
 import { Link } from 'react-router-dom'
 
@@ -22,10 +22,7 @@ function Product({product}) {
                     </Card.Text>
                     
                     <Card.Text as="h4" className="fw-bold ">${product.salePrice}</Card.Text>
-                    {/* do add to cart function */}
-                    <div className="d-grid">
-                        <Button variant="outline-success">Add To Cart</Button>  
-                    </div>                         
+                    {/* do add to cart function */}                        
                 </Card.Body>
             </Link>
             
