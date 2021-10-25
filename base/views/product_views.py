@@ -19,10 +19,10 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # import models
-from base.models import Product, Review
+from base.models import Product, Review, Category
 from accounts.models import User
 
-#import filters
+# import filters
 from base.filters import ProductFilter
 from rest_framework.filters import OrderingFilter, SearchFilter
 import django_filters
@@ -146,7 +146,7 @@ def updateProduct(request, id):
     # update data
     product.name = data['name']
     product.brand = data['brand']
-    # product.category = data['category']
+    product.category = Category.objects.get(id=data['category'])
     product.description = data['description']
     # product.image = data['image']
     # product.image3D = data['image3D']
@@ -165,7 +165,7 @@ def updateProduct(request, id):
 
 
 # request to upload image
-@api_view(['POST'])
+@ api_view(['POST'])
 def uploadProductImage(request):
 
     # get the data passed in from front end
@@ -185,8 +185,8 @@ def uploadProductImage(request):
 
 
 # Delete product view
-@api_view(['DELETE'])
-@permission_classes([IsAdminUser])
+@ api_view(['DELETE'])
+@ permission_classes([IsAdminUser])
 def deleteProduct(request, id):
     product = Product.objects.get(_id=id)
     product.delete()
@@ -194,8 +194,8 @@ def deleteProduct(request, id):
 
 
 # leave product review view
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@ api_view(['POST'])
+@ permission_classes([IsAuthenticated])
 def createProductReview(request, id):
     # get user information from token passed
     user = request.user

@@ -10,12 +10,15 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 //Import product details action
 import {listProductDetails, updateProduct } from '../actions/productActions'
+//Import category details action
+import {listCategories } from '../actions/categoryActions'
+
 
 //constants
 import {PRODUCT_UPDATE_RESET} from '../constants/productConstants'
 
 //UI components
-import {Form, Row, Col, Button, FloatingLabel, Image} from 'react-bootstrap'
+import {Form, Row, Col, Button, FloatingLabel, Image, Container} from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
@@ -31,6 +34,7 @@ const ProductEditScreen = ({match, history}) => {
     const [name, setName] = useState('')
     const [brand, setBrand] = useState('')
     const [category, setCategory] = useState('')
+    const [category_id, setCategoryID] = useState('')
     const [description, setDescription] = useState('')
     const [imagePath, setImagePath] = useState('')
    // const [image3D, setImage3D] = useState('')
@@ -52,6 +56,11 @@ const ProductEditScreen = ({match, history}) => {
     //destructure state
     const { error, loading, product} = productDetails
 
+    //get category state
+    const categoryList = useSelector(state => state.categoryList)
+    const {categories} = categoryList
+    
+
 
     //get productUpdate state
     const productUpdate = useSelector(state => state.productUpdate)
@@ -61,6 +70,10 @@ const ProductEditScreen = ({match, history}) => {
 
     //use effect react hook
     useEffect(() => {
+
+        // setCategories(categoryList.categories)
+
+
         //authenticate and check if user is logged in and whether they are System Admin
         if(userInfo && userInfo.isSystemAdmin){
 
@@ -74,8 +87,7 @@ const ProductEditScreen = ({match, history}) => {
             
                 //if no product data found in state or if product id doesn't match the id passed in, retrieve product data
                 if(!product || product._id !== Number(productID)){
-                    dispatch(listProductDetails(productID))
-                    
+                   dispatch(listProductDetails(productID))
                 }
                 //if user data is present in state, set values of local states
                 else{
@@ -85,7 +97,7 @@ const ProductEditScreen = ({match, history}) => {
                     //set local states                    
                     setName(product.name)
                     setBrand(product.brand)
-                    setCategory(product.category)
+                    setCategory(product.category_id)
                     setDescription(product.description)
                     setImagePath(product.image)
                     
@@ -102,7 +114,7 @@ const ProductEditScreen = ({match, history}) => {
              history.push("/accessdenied")
         }
      
-    }, [dispatch, userInfo, updateSuccess, product, productID, history])
+    }, [categoryList, dispatch, userInfo, updateSuccess, product, productID, history])
 
     const submitHandler = (e) => {
         //prevent refresh or redirect to another page
@@ -116,7 +128,7 @@ const ProductEditScreen = ({match, history}) => {
             _id: productID,
             name,
             brand,
-            //category,
+            category,
             description,
             // image3D,
             countInStock,
@@ -172,14 +184,29 @@ const ProductEditScreen = ({match, history}) => {
         }
     }
 
+    //function to update category
+    const selectCategoryHandler = (e) => {
+        e.preventDefault()
+        const value = e.target.value        
+        setCategory(value)
+
+        console.log("value: ", value)
+    }
+
 
     // displayed to user
     return (
 
-        <div>
-            <Link to="/admin/productList">
-                <Button variant="outline-secondary"><IoArrowBack /> Back</Button>
-            </Link>
+        <Container className="py-5">
+            <Row>
+                <Col lg={7}>
+                     <Link to="/admin/productList">
+                        <Button variant="outline-secondary"><IoArrowBack /> Back</Button>
+                    </Link>
+                </Col>
+
+            </Row>
+           
             
             <FormContainer title="Edit Product" lg="7"  shadow="shadow-sm">
                 {/* If loading when updated */}
@@ -212,19 +239,22 @@ const ProductEditScreen = ({match, history}) => {
                             <Row>
                                 <Col xs="12" md="6">
                                     {/* Category */}
-                                    <Form.Group controlId="category" className="pb-3">
+                                    <Form.Group id="category" className="pb-3">
                                         <Form.Label>Category</Form.Label>
-                                        <Form.Control 
-                                            type="text" 
-                                            value={category} onChange={(e) => setCategory(e.target.value)}/>
-                                    </Form.Group>
-
-                                        {/* <Form.Select aria-label="Select Category">
+                                        <Form.Select aria-label="Category" defaultValue={product.category_id} onChange={selectCategoryHandler}>
                                             <option>Select Category</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </Form.Select> */}
+                                            {categories !=='' && (categories.map((category)=> (
+                                                <option 
+                                                    key={category.id}
+                                                    value={category.id}
+                                                    selected={category === category.id} >
+                                                    
+                                                    {category.name}
+                                                </option>
+                                            )))}                                            
+                                        </Form.Select> 
+                                        
+                                    </Form.Group>    
                                 </Col>
                                 <Col md="6" xs="12">
                                     {/* Brand Field */}
@@ -325,7 +355,7 @@ const ProductEditScreen = ({match, history}) => {
                         </Form>
                     )}
             </FormContainer>
-        </div>
+        </Container>
     )
 }
 

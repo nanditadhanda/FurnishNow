@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 
 //Routing
 import { LinkContainer } from 'react-router-bootstrap'
@@ -11,7 +11,7 @@ import { listProducts, deleteProduct, createProduct } from '../actions/productAc
 //import constant
 import {PRODUCT_CREATE_RESET} from '../constants/productConstants'
 //UI components
-import {Table, Button, Row, Col} from 'react-bootstrap'
+import {Table, Button, Container} from 'react-bootstrap'
 import { IoTrashSharp } from 'react-icons/io5'
 import {IoMdAddCircleOutline} from 'react-icons/io'
 import {MdEdit} from 'react-icons/md'
@@ -44,8 +44,12 @@ const ProductListScreen = ({history}) => {
     const userLogin = useSelector(state => state.userLogin)
     const {userInfo} = userLogin
 
-    let keyword = history.location.search
 
+    //ordering and filter
+    const [filter, setFilter] = useState('')
+    const [ordering, setOrdering] = useState('_id')
+
+    let keyword = history.location.search
 
     useEffect(() => { 
         
@@ -59,10 +63,10 @@ const ProductListScreen = ({history}) => {
             history.push(`/admin/product/${productCreated._id}/edit`)
         }
         else{            
-            dispatch(listProducts(keyword))
+            dispatch(listProducts(keyword, ordering, filter))
         }
 
-    },[dispatch, history, userInfo, deleteSuccess, createSuccess, productCreated, keyword])
+    },[dispatch, history, userInfo, deleteSuccess, createSuccess, productCreated, keyword,ordering, filter])
 
 
     //delete user
@@ -79,7 +83,7 @@ const ProductListScreen = ({history}) => {
     }
 
     return (
-        <section>
+        <Container className="py-5">
             <h1>Products</h1>
             {// loading while performing create action
                 createLoading && <Loader />
@@ -144,7 +148,7 @@ const ProductListScreen = ({history}) => {
                     </>
                 )}
             
-        </section>
+        </Container>
     )
 }
 
