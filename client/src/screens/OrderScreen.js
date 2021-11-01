@@ -14,13 +14,15 @@ import { ORDER_PAYMENT_RESET, ORDER_STATUS_RESET } from '../constants/orderConst
 import { PayPalButton} from 'react-paypal-button-v2'
 
 //UI components
-import { Row, Col, ListGroup, Image, Card, Form} from 'react-bootstrap'
+import {Container, Row, Col, ListGroup, Image, Card, Form} from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import Button from '@restart/ui/esm/Button'
+import OrderStatusSteps from '../components/OrderStatusSteps'
 
-
-
+//icons
+import {HiCheckCircle} from 'react-icons/hi'
+import {BiCircle} from 'react-icons/bi'
 
 
 //Order Screen Function
@@ -153,19 +155,62 @@ const OrderScreen = ({ match , history }) => {
             <Message variant="danger">{ error }</Message>
         ) : (
             //else display order details
-            <section>   
+            <section className="py-5">
+            {order.orderStatus === 'Delivered' ?
+                <OrderStatusSteps step1 step2 step3 step4 />
+                : order.orderStatus === 'Shipped Out'
+                ?   <OrderStatusSteps step1 step2 step3 />
+                : order.orderStatus === 'Packaged'
+                ?   <OrderStatusSteps step1 step2 />
+                :   <OrderStatusSteps step1 />
+            }
+            <Container className="py-2"> 
                 <Row>
                     <Col md={8} lg={7}>
                         {/* Shipping */}
                         <ListGroup variant='flush'>
                             <ListGroup.Item className="py-3"> 
                                 <h3>Order: #{order._id}</h3>
-                                <p>{order.orderDate}</p>
+                                <p>{order.orderDate.substring(0,10)} , {order.orderDate.substring(11,19)}</p>
                                 <strong>Order Status:</strong>
-                                 <p>{order.orderStatus}</p>
+                                 <p>Order {order.orderStatus}</p>
                                 <strong>Last Updated:</strong>
-                                <p>{order.lastUpdatedAt.substring(0,10)}</p>
+                                <p>{order.lastUpdatedAt.substring(0,10)}, {order.lastUpdatedAt.substring(11,19)}</p>
                             </ListGroup.Item>
+                            {/* user details */}
+                             {(userInfo.isSystemAdmin || userInfo.isStoreManager) && (
+                                <ListGroup.Item className="py-3">
+                                    <h4 className="mb-4">Customer Details</h4>
+                                    <Row>
+                                        <Col xs={6} md={6}>
+                                         <p className="">
+                                            <strong>ID: </strong>
+                                            {order.user._id}
+                                        </p>
+                                        </Col>
+                                        <Col xs={6} md={6}>
+                                        <p className="">
+                                            <strong>Name: </strong>
+                                            {order.user.first_name}&nbsp;{order.user.last_name}
+                                        </p>
+                                        </Col> 
+                                    </Row>
+                                    <Row>
+                                        <Col xs={6} md={6}>
+                                         <p className="">
+                                            <strong>Email: </strong>
+                                            {order.user.email}
+                                        </p>
+                                        </Col>
+                                        <Col xs={6} md={6}>
+                                        <p className="">
+                                            <strong>Phone: </strong>
+                                            {order.user.phone}
+                                        </p>
+                                        </Col> 
+                                    </Row>
+                                </ListGroup.Item>
+                             )}
                             <ListGroup.Item className="py-3">
                                 {/* Heading */}
                                 
@@ -261,7 +306,7 @@ const OrderScreen = ({ match , history }) => {
                                         <Col md={4}>Payment Status:</Col>
                                         <Col className="text-right">
                                             {order.isPaid ? 
-                                                <p className="text-success">Paid on {order.paymentDate}</p>
+                                                <p className="text-success">Paid on {order.paymentDate.substring(0,10)} , {order.paymentDate.substring(11,19)}</p>
                                                 : <p className="text-danger">Not Paid</p>}
                                             </Col>
                                     </Row>
@@ -318,6 +363,7 @@ const OrderScreen = ({ match , history }) => {
                         </Card>
                     </Col>
                 </Row>
+            </Container>
             </section>
         )
 }
