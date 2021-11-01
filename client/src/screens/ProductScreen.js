@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Row, Col, Breadcrumb, Image, ListGroup, Button, ListGroupItem } from 'react-bootstrap'
+import { Container,Row, Col, Breadcrumb, Image, ListGroup, Button, ListGroupItem } from 'react-bootstrap'
 
 //Custom components
 import Quantity from '../components/Quantity'
@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { listProductDetails } from '../actions/productActions'
 import { addToCart } from '../actions/cartActions'
 import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants'
+import { LinkContainer } from 'react-router-bootstrap'
 
 
 //Product screen function
@@ -114,7 +115,7 @@ const ProductScreen = ({ match, history }) => {
 
     // const product = products.find((p) => p._id === match.params.id)
     return (
-        <section style={{ position: "relative" }}>
+        <Container className="py-5" style={{ position: "relative" }}>
             {show &&
                 <Message variant="success" >
                     Product has been added to your shopping cart
@@ -225,23 +226,40 @@ const ProductScreen = ({ match, history }) => {
                                                         <label for="quantity" class="form-label">Quantity:</label>
                                                     </Col>
                                                     <Col md={8}>
-                                                        <Quantity prodQuantity={updateQty} initQty={0} max={product.countInStock} productID={productID} />
-                                                        {/*Number of items available */}
-                                                        {product.countInStock <= 5
-                                                            // if less than 5 items available
-                                                            ? <small className="text-danger">Hurry! Only {product.countInStock} items left</small>
-                                                            // else
-                                                            : <small className="text-secondary">{product.countInStock} Available</small>}
+                                                        {/* If user is logged in and user is staff member */}
+                                                        {userInfo && (userInfo.isSystemAdmin || userInfo.isStoreManager) ?
+                                                            (<span className={`${product.countInStock > 5 ? "text-success" : "text-danger" }`  }>{product.countInStock}</span>)
+                                                            :
+                                                            (<>
+                                                                <Quantity prodQuantity={updateQty} initQty={0} max={product.countInStock} productID={productID} />
+                                                                {/*Number of items available */}
+                                                                {product.countInStock <= 5
+                                                                // if less than 5 items available
+                                                                ? <small className="text-danger">Hurry! Only {product.countInStock} items left</small>
+                                                                // else
+                                                                : <small className="text-secondary">{product.countInStock} Available</small>}
+
+                                                            </>)
+                                                        }                                   
                                                     </Col>
-
-
                                                     {/*Buttons */}
-                                                    <Col md={12} className="mt-3 mb-2">
-                                                        <div className="d-grid">
-                                                            <AddToCart productID={productID} qty={qty} msgShow={updateMsg} />
+                                                    <Col md={12} className="mt-3 mb-2">  
+                                                        {/* If user is logged in and user is staff member */}
+                                                        {userInfo && (userInfo.isSystemAdmin || userInfo.isStoreManager) ?
+                                                            (<LinkContainer to={`/admin/product/${productID}/edit`}>
+                                                                <div className="d-grid">
+                                                                <Button className="mt-2 btn-primary" type='button'>Update Product</Button>
+                                                                </div>
+                                                            </LinkContainer>)
+                                                            /* If not logged in or if user is customer */
+                                                            :
+                                                            (<div className="d-grid"> 
+                                                                <AddToCart productID={productID} qty={qty} msgShow={updateMsg} />
 
-                                                            <Button className="mt-2 btn-primary" type='button' onClick={buyNowHandler}>Buy Now</Button>
-                                                        </div>
+                                                                <Button className="mt-2 btn-primary" type='button' onClick={buyNowHandler}>Buy Now</Button>
+                                                            
+                                                            </div>)
+                                                        }                                                        
                                                     </Col>
                                                 </Row>
                                                 :
@@ -272,8 +290,11 @@ const ProductScreen = ({ match, history }) => {
                                         </Message>}
                                     <ListGroup variant="flush">
                                         <ListGroup.Item className="px-0 ">
-                                            <h5 className="pb-2">Leave A Review</h5>
+                                            {userInfo && (!userInfo.isSystemAdmin || !userInfo.isStoreManager) &&
+                                                <h5 className="pb-2">Leave A Review</h5>
+                                            }
                                             {userInfo ? (
+                                                (!userInfo.isSystemAdmin || !userInfo.isStoreManager) &&
                                                 <Review user={userInfo} product_id={productID} />
 
                                             ) : (
@@ -311,9 +332,8 @@ const ProductScreen = ({ match, history }) => {
 
                         </section>
                     </>
-
             }
-        </section>
+        </Container>
     )
 }
 

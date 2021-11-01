@@ -140,6 +140,8 @@ class ShippingAddress(models.Model):
     # fields and attributes
     order = models.OneToOneField(
         Order, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=200, null=True, blank=True)
+    phone = models.CharField(max_length=50, null=True, blank=True)
     address = models.TextField(null=True, blank=True)
     city = models.CharField(max_length=200, null=True, blank=True)
     zipCode = models.CharField(max_length=200, null=True, blank=True)

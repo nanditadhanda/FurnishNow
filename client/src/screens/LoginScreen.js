@@ -22,13 +22,15 @@ const LoginScreen = ({location, history}) => {
     const dispatch = useDispatch()
 
     //check previous location of app URL
-    const redirect = location.search ? location.search.split('=')[1]: '/'
+    let redirect = location.search ? location.search.split('=')[1]: '/'
 
-    //check login state to see if user is already logged in
+    console.log("location:", redirect)
+
+     //logged in user state
     const userLogin = useSelector(state => state.userLogin)
 
     //destructure the state
-    const {error, loading, userInfo} = userLogin
+    const {userInfo, error, loading} = userLogin
 
     //check if user is already logged in
     useEffect(() => {

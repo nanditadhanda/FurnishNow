@@ -5,12 +5,13 @@ import React from 'react'
 import {Nav}  from 'react-bootstrap'
 import {HiCheckCircle} from 'react-icons/hi'
 import {BiCircle} from 'react-icons/bi'
+import {RiRadioButtonFill} from 'react-icons/ri'
 
 //routing
 import {LinkContainer}  from 'react-router-bootstrap'
 
 //functional component
-const CheckoutSteps = ({step1, step2, step3, step4}) => {
+const CheckoutSteps = ({step1, step2, step3}) => {
 
     //return value
     return (
@@ -23,7 +24,11 @@ const CheckoutSteps = ({step1, step2, step3, step4}) => {
                         
                         <Nav.Link className="text-success">
                             <div className="steps">
-                                <HiCheckCircle className="text-success" />
+                                {!step2 ?
+                                    (<RiRadioButtonFill  className="text-success" />)
+                                    :
+                                    (<HiCheckCircle className="text-success" />)
+                                }
                             </div>          
                             Cart
                         </Nav.Link>
@@ -41,10 +46,15 @@ const CheckoutSteps = ({step1, step2, step3, step4}) => {
             {/* Step 2 */}
             <Nav.Item>
                 {step2 ? (
+                   
                     <LinkContainer to='/shipping'>
                         <Nav.Link className="text-success">
                             <div className="steps">
-                                <HiCheckCircle className="text-success" />
+                                {!step3 ?
+                                    (<RiRadioButtonFill  className="text-success" />)
+                                    :
+                                    (<HiCheckCircle className="text-success" />)
+                                }
                             </div>
                             Shipping
                         </Nav.Link>
@@ -59,7 +69,7 @@ const CheckoutSteps = ({step1, step2, step3, step4}) => {
                     </Nav.Link>
                 )}
             </Nav.Item>
-            {/* Step 3 */}
+            {/* Step 3
             <Nav.Item>
                 {step3 ? (
                     <LinkContainer to='/payment'>
@@ -79,14 +89,14 @@ const CheckoutSteps = ({step1, step2, step3, step4}) => {
                         Payment
                     </Nav.Link>
                 )}
-            </Nav.Item>
+            </Nav.Item> */}
             {/* Step 4 */}
             <Nav.Item>
-                {step4 ? (
+                {step3 ? (
                     <LinkContainer to='/placeorder'>
                         <Nav.Link className="text-success">
                             <div className="steps">
-                                <HiCheckCircle className="text-success" />
+                                <RiRadioButtonFill className="text-success" />
                             </div>
                             Place Order
                         </Nav.Link>

@@ -231,6 +231,53 @@ export const payOrder = (id, paymentResult) => async(dispatch, getState) => {
     }
 }
 
+//payment action
+export const saveStripeInfo = (info) => async(dispatch, getState) => {
+     //try-catch exception
+    try {
+        //dispatch action to throw request to retrieve order
+        dispatch({ type: ORDER_PAYMENT_REQUEST })
+        
+
+        //get user info (object) of logged in user from userLogin state
+        const { userLogin : { userInfo } } = getState()
+        
+        //configuration of post request with user authentication token
+        const config = {
+            headers : {
+                'Content-type' : 'application/json',
+                //authorization token to allow logged in user to place order
+                Authorization: `Bearer ${userInfo.token}`
+            }
+
+        }
+
+        //send out POST api request with data passed in
+        const { data } = await axios.post(
+            `/api/orders/payment/save-stripe-info/`,
+            info,
+            config
+            )
+
+        //if no error is caught - throw in ORDER_CREATE_SUCCESS action
+        dispatch({
+            type: ORDER_PAYMENT_SUCCESS,
+            payload: data
+        })    
+
+    }
+    //if error is caught  -- error message comes from backend
+    catch(error){
+        dispatch({
+            type: ORDER_PAYMENT_FAIL,
+            payload: error.response && error.response.data.detail 
+                    ? error.response.data.detail
+                    : error.message
+        })
+
+    }
+}
+
 //update order status action
 export const updateOrderStatus = (order) => async(dispatch, getState) => {
      //try-catch exception

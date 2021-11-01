@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
 import {useDispatch , useSelector} from 'react-redux'
-import { Row, Col, ListGroup, Image, Button, Card} from 'react-bootstrap'
+import { Container, Row, Col, ListGroup, Image, Button, Card} from 'react-bootstrap'
 import { IoTrashSharp } from 'react-icons/io5'
 
 import {addToCart, removeFromCart} from '../actions/cartActions'
@@ -12,11 +12,14 @@ import Quantity from '../components/Quantity'
 
 
 function CartScreen({ match, location, history }) {
-    //product ID
-    //const productID = match.params.id 
 
-    //if quantity is passed in URL, split it to turn it into an array
-    //const qty = location.search ? Number(location.search.split('=')[1]) : 1
+    //-----------Authentications and page access control -------------//
+
+    //check login state to see if user is logged in
+    const userLogin = useSelector(state => state.userLogin)
+    //destructure login state
+    const {userInfo} = userLogin
+
     
     //dispatch action - action will update the state and add the items into local storage
     const dispatch = useDispatch()
@@ -60,8 +63,15 @@ function CartScreen({ match, location, history }) {
         history.push('/login?redirect=shipping')
     }
 
+    useEffect(() => {
+        //prevent store manager or system admin from accessing this page
+        if(userInfo && (userInfo.isStoreManager || userInfo.isSystemAdmin)){
+            history.push(`/accessdenied`)
+        }
+    })
+
     return (
-        <section>
+        <Container className="py-5">
             {/* //Page Heading */}
             <Row>
                 <Col>
@@ -138,7 +148,7 @@ function CartScreen({ match, location, history }) {
                                     <Col md={4}>Subtotal:</Col>
                                     <Col className="text-right">
                                         <strong>
-                                             $ {cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2)}
+                                             RM {cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2)}
                                         </strong>
                                     </Col>
                                 </Row>
@@ -157,7 +167,7 @@ function CartScreen({ match, location, history }) {
                     </Card>
                 </Col>
             </Row>
-        </section>
+        </Container>
     )
 }
 

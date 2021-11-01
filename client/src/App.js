@@ -42,9 +42,7 @@ function App() {
       {/* app body screens*/}
       <main >
         {/* register routing to different screens based on URL path */}
-          <Route  path="/products/:category" component={CatalogScreen}/>  
-          <Route  path="/ar" component={AR}/>  
-        
+          <Route  path="/products/:category" component={CatalogScreen}/>         
 
           <Route path="/" component={HomeScreen} exact/>
           

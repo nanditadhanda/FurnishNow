@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { saveShippingAddress } from '../actions/cartActions'
 
 //UI components
-import {Form, Row, Col, Button} from 'react-bootstrap'
+import {Container, Form, Row, Col, Button} from 'react-bootstrap'
 import FormContainer from '../components/FormContainer'
 import CheckoutSteps from '../components/CheckoutSteps'
 
@@ -39,6 +39,8 @@ const ShippingScreen = ({history}) => {
     const dispatch = useDispatch()
 
     //set states
+    const [name, setName] = useState(shippingAddress.name)
+    const [phone, setPhone] = useState(shippingAddress.phone)
     const [address, setAddress] = useState(shippingAddress.address)
     const [city, setCity] = useState(shippingAddress.city)
     const [state, setState] = useState(shippingAddress.state)
@@ -51,15 +53,15 @@ const ShippingScreen = ({history}) => {
         e.preventDefault()
 
         //dispatch to save shipping address
-        dispatch(saveShippingAddress({address, city, state, zipCode, country}))
+        dispatch(saveShippingAddress({name, phone, address, city, state, zipCode, country}))
 
         //redirect to payment page
-        history.push('/payment')
+        history.push('/placeorder')
     }
 
 
     return (
-        <>
+        <Container className="py-5">
 
             <FormContainer  bg="white" border="border" >
                 {/* Checkout Steps */}
@@ -68,6 +70,31 @@ const ShippingScreen = ({history}) => {
                 <h2 className="my-4 text-center">Shipping</h2>
                 
                 <Form onSubmit={submitHandler}>
+                    <h6 className="text-success py-3">Recepient Information</h6>
+                    <Row>
+                        <Col md="6" xs="12">
+                            {/* City Field */}
+                            <Form.Group controlId="name" className="mb-3">
+                                <Form.Label>Name</Form.Label>
+                                <Form.Control
+                                    required 
+                                    type="text" 
+                                    value={name ? name : ''} onChange={(e) => setName(e.target.value)}/>
+                            </Form.Group>      
+                        </Col>
+                        <Col md="6" xs="12">
+                            {/* Phone Field */}
+                            <Form.Group controlId="phone" className="mb-3">
+                                <Form.Label>Phone</Form.Label>
+                                <Form.Control
+                                    required 
+                                    type="text" 
+                                    value={phone ? phone : ''} onChange={(e) => setPhone(e.target.value)}/>
+                            </Form.Group>      
+                        </Col>
+                    </Row>
+                    <hr />
+                    <h6 className="text-success py-3">Shipping Information</h6>
                     <Row>
                         <Col xs="12" >
                             {/* Address Field */}
@@ -106,7 +133,7 @@ const ShippingScreen = ({history}) => {
                         <Col md="6" xs="12">
                             {/* Zip Field */}
                             <Form.Group controlId="zipCode" className="mb-3">
-                                <Form.Label>Zip</Form.Label>
+                                <Form.Label>Zip Code</Form.Label>
                                 <Form.Control
                                     required 
                                     type="text" 
@@ -132,7 +159,7 @@ const ShippingScreen = ({history}) => {
                 </Form>
                 
             </FormContainer>
-        </>
+        </Container>
     )
 }
 

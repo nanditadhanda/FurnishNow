@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import serializers, status
 
 
-#import models
+# import models
 from base.models import Product, Order, OrderItem, ShippingAddress
 from accounts.models import User
 
@@ -19,13 +19,76 @@ from base.serializers import OrderSerializer
 # import datetime library
 from datetime import datetime
 
-# decorators
+# import stripe
+import stripe
+
+# stripe payment key
+stripe.api_key = 'sk_test_51JouiJFWKt2oGMYrCH4MHhAv57SJbClJ73AQXkthmZiCbZDjMLVsAnJXVIJoBopelRv7DrghoBAcf8vUHBNIz8rc00jdLQR7Mi'
+
+# payment test
+
+
+@api_view(['POST'])
+def test_payment(request):
+    test_payment_intent = stripe.PaymentIntent.create(
+        amount=1000, currency='myr',
+        payment_method_types=['grabpay'],
+        receipt_email='test@example.com')
+    return Response(status=status.HTTP_200_OK, data=test_payment_intent)
+
+
+# save payment info to stripe
+@api_view(['POST'])
+@ permission_classes([IsAuthenticated])
+def save_stripe_info(request):
+    # check user datails passed in request
+    user = request.user
+    # check data passed into request
+    data = request.data
+
+    amount = int(float(data['amount']) * 100)
+
+    # set variables
+    email = data['email']
+    payment_method_id = data['payment_method_id']
+
+    #-------- 1 stripe customer account / details --------#
+    # checking if customer with provided email already exists
+    customer_data = stripe.Customer.list(email=email).data
+
+    # if the array is empty it means the email has not been used yet
+    if len(customer_data) == 0:
+        # creating customer
+        customer = stripe.Customer.create(
+            email=email, payment_method=payment_method_id)
+
+    else:
+        customer = customer_data[0]
+
+    #-------- 2 Payment intent --------#
+    payment = stripe.PaymentIntent.create(
+        customer=customer,
+        payment_method=payment_method_id,
+        currency='myr',
+        amount=amount,
+        confirm=True
+    )
+
+    print(payment)
+    return Response(status=status.HTTP_200_OK,
+                    data={
+                        'data': {
+                            'customer_id': customer.id,
+                            'payment_id': payment.id,
+                            'status': payment.status
+                        }
+                    })
 
 # ----- Create New Order -------
 
 
-@api_view(['POST'])  # POST request to add data to database
-@permission_classes([IsAuthenticated])  # for authenticated users
+@ api_view(['POST'])  # POST request to add data to database
+@ permission_classes([IsAuthenticated])  # for authenticated users
 # function based view
 def addOrderItems(request):
     user = request.user
@@ -42,6 +105,8 @@ def addOrderItems(request):
         order = Order.objects.create(
             user=user,
             paymentMethod=data['paymentMethod'],
+            isPaid=True,
+            paymentDate=datetime.now(),
             taxRate=data['taxRate'],
             shippingPrice=data['shippingPrice'],
             totalPrice=data['totalPrice']
@@ -50,6 +115,8 @@ def addOrderItems(request):
         # (2) Create shipping address
         shipping = ShippingAddress.objects.create(
             order=order,
+            name=data['shippingAddress']['name'],
+            phone=data['shippingAddress']['phone'],
             address=data['shippingAddress']['address'],
             city=data['shippingAddress']['city'],
             state=data['shippingAddress']['state'],
@@ -81,8 +148,8 @@ def addOrderItems(request):
 #----view to get all orders ---#
 
 
-@api_view(['GET'])
-@permission_classes([IsAdminUser])
+@ api_view(['GET'])
+@ permission_classes([IsAdminUser])
 def getOrders(request):
     # get all orders
     orders = Order.objects.all()
@@ -95,8 +162,8 @@ def getOrders(request):
 
 
 #---- view to get user's orders ------ #
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@ api_view(['GET'])
+@ permission_classes([IsAuthenticated])
 def getMyOrders(request):
     # user data
     user = request.user
@@ -111,8 +178,8 @@ def getMyOrders(request):
 
 # ------View to get order --------
 # decorators
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@ api_view(['GET'])
+@ permission_classes([IsAuthenticated])
 def getOrderById(request, pk):
 
     # user data comes from token passed in request
@@ -137,8 +204,8 @@ def getOrderById(request, pk):
 
 
 # PUT request when payment is made
-@api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+@ api_view(['PUT'])
+@ permission_classes([IsAuthenticated])
 def updateOrderToPaid(request, pk):
 
     # get order data by id passed
@@ -153,8 +220,8 @@ def updateOrderToPaid(request, pk):
 
 
 # PUT request to update order status
-@api_view(['PUT'])
-@permission_classes([IsAdminUser])
+@ api_view(['PUT'])
+@ permission_classes([IsAdminUser])
 def updateOrderStatus(request, pk):
 
     # get order data by id passed

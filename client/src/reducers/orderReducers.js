@@ -114,7 +114,7 @@ export const orderPaymentReducer = (state = { }, action) => {
         case ORDER_PAYMENT_SUCCESS:
             return{
                 loading: false,
-                success: true,
+                paymentStatus: action.payload.data
             }
         //if failed to make payment successfully
         case ORDER_PAYMENT_FAIL:
