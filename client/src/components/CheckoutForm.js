@@ -31,7 +31,7 @@ const CheckoutForm = ({amount, method}) => {
     const orderPayment = useSelector(state => state.orderPayment)
     const { success : successPayment, error: errorPayment, loading: loadingPayment} = orderPayment
 
-    
+   
 
     //------------stripe----------//
     // Handle real-time validation errors from the CardElement.
@@ -47,31 +47,84 @@ const CheckoutForm = ({amount, method}) => {
         //prevent default submission and page refresh
         e.preventDefault();
 
-        //get stripe card element
-        const card = elements.getElement(CardElement);
+         if (!stripe || !elements) {
+            // Stripe.js has not yet loaded.
+            // Make sure to disable form submission until Stripe.js has loaded.
+            return;
+            }
 
-        //stripe payment api
-        const {paymentMethod, error} = await stripe.createPaymentMethod({
-            type: 'card',
-            card: card
-        })
+        const {error} = await stripe.confirmPayment({
+        //`Elements` instance that was used to create the Payment Element
+        elements,
+        confirmParams: {
+            return_url: '/placeorder',
+        },
 
-        if(!error){
-            //dispatch payment info to backend
-            dispatch(saveStripeInfo({
-                email,
-                payment_method_id: paymentMethod.id,
-                amount
-            }))
-        }
+         if (error) {
+             setError("Error: Something went wrong")
+         }
+
+    });
+
+
+        // switch(method){
+        //     case "card":
+        //         //get stripe card element
+        //         const card = elements.getElement(CardElement);
+
+        //         //stripe payment api
+        //         const {paymentMethod, error , paymentIntent} = await stripe.createPaymentMethod({
+        //             type: 'card',
+        //             card: card
+        //         })
+
+        //         console.log("paymentIntent: ", paymentIntent)
+
+        //         if(!error){
+        //             //dispatch payment info to backend
+        //             dispatch(saveStripeInfo({
+        //                 email,
+        //                 payment_method_id: paymentMethod.id,
+        //                 amount
+        //             }))
+        //         }
+        //         break;
+            
+        //     case "fpx":
+
+        //         // let {error: stripeError, paymentIntent} = await stripe.confirmFpxPayment(
+        //         // clientSecret,
+        //         // {
+        //         //     payment_method: {
+        //         //     fpx: elements.getElement(FpxBankElement),
+        //         //     },
+        //         //     return_url: `${window.location.origin}/fpx?return=true`,
+        //         // }
+        //         // );
+
+        //         // if (stripeError) {
+        //         // // Show error to your customer (e.g., insufficient funds)
+        //         // addMessage(stripeError.message);
+        //         // return;
+        //         // }
+
+        //         break;
+        //     default:
+        //         break;
+
+        // }
+        
         
     }
     return (
         <Form onSubmit={handleSubmit} className="stripe-form">
             {/* display error message */}
-            {(error || errorPayment) && <Message variant="danger">{error ? error : errorPayment}</Message>}          
-            
-            {method === 'card' && (
+            {(error || errorPayment) && <Message variant="danger">{error ? error : errorPayment}</Message>} 
+                   
+               {!stripe && <Message variant="danger">Stripe has not loaded</Message>}    
+                {!elements && <Message variant="danger">Elements has not loaded</Message>}
+                <PaymentElement id="payment-element"/>
+            {/* {method === 'card' && (
                 <>
                     <Row >
                         <Col>
@@ -97,9 +150,18 @@ const CheckoutForm = ({amount, method}) => {
                 </>
 
             )}
+            {method === 'fpx' && (
+               <div>
+                    <Form.Group className="mb-3" controlId="fpx-bank-element">
+                        <Form.Label>FPX</Form.Label>
+                        <FpxBankElement id="fpx-bank-element" options={{accountHolderType: 'individual'}}/>
+                    </Form.Group>  
+                    {/* <FPX  /> */}
+               {/* </div>
+            )} */} 
             
             <div className="d-grid">
-                <Button type="submit" variant="primary">
+                <Button type="submit" variant="primary" className="my-3 mt-4" disabled={!stripe}>
                     Submit Payment
                 </Button>
             </div>

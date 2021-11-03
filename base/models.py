@@ -9,6 +9,9 @@ from accounts.models import User
 # import utility for form choices
 from django.utils.translation import gettext_lazy as _
 
+# timezone
+from django.utils import timezone
+
 
 # category model
 class Category(models.Model):
@@ -108,8 +111,8 @@ class Order(models.Model):
     deliveredAt = models.DateTimeField(
         auto_now_add=False, null=True, blank=True)
     lastUpdatedAt = models.DateTimeField(
-        auto_now_add=True, null=True, blank=True, editable=True)
-    orderDate = models.DateTimeField(auto_now_add=True)
+        default=timezone.now, null=True, blank=True, editable=True)
+    orderDate = models.DateTimeField(default=timezone.now)
     _id = models.AutoField(primary_key=True, editable=False)
 
     # string method

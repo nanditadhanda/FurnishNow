@@ -278,6 +278,50 @@ export const saveStripeInfo = (info) => async(dispatch, getState) => {
     }
 }
 
+//dynamic payment
+export const createPaymentIntent = () => async() => {
+     //try-catch exception
+    try {
+         
+        //get user info (object) of logged in user from userLogin state
+        // const { userLogin : { userInfo } } = getState()
+        
+        // //configuration of post request with user authentication token
+        // const config = {
+        //     headers : {
+        //         'Content-type' : 'application/json',
+        //         //authorization token to allow logged in user to place order
+        //         Authorization: `Bearer ${userInfo.token}`
+        //     }
+
+        // }
+
+        //send out POST api request with data passed in
+        const { data } = await axios.post(
+            `/api/orders/payment/test-payment/`,  
+            )
+        const response = {
+            client_secret : data.client_secret,
+            success: true
+        }
+
+        return response
+
+    }
+    //if error is caught  -- error message comes from backend
+    catch(error){
+        const response = {          
+            error: `${error.response && error.response.data.detail 
+                    ? error.response.data.detail
+                    : error.message}`,
+            success: false
+        }
+
+        return response       
+    }
+}
+
+
 //update order status action
 export const updateOrderStatus = (order) => async(dispatch, getState) => {
      //try-catch exception

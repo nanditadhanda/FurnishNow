@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import axios from 'axios'
 
 //routing
 import { Link } from 'react-router-dom'
@@ -15,6 +16,7 @@ import {Container, Row, Col, Form, Button, ListGroup, Image, Card} from 'react-b
 import {MdEdit} from 'react-icons/md'
 import CheckoutSteps from '../components/CheckoutSteps'
 import Message from '../components/Message'
+import Loader from '../components/Loader'
 
 //paypal
 import Paypal from '../components/Paypal'
@@ -24,7 +26,6 @@ import Paypal from '../components/Paypal'
 import {Elements} from '@stripe/react-stripe-js'
 import {loadStripe} from "@stripe/stripe-js/pure"
 import CheckoutForm from "../components/CheckoutForm"
-import Loader from '../components/Loader'
 
 //dev-based publishable key
 const stripePromise = loadStripe('pk_test_51JouiJFWKt2oGMYrbH8o342vopUMr6GOLRwDT6BJNKgimEMj8zUH2tyyik8goKyNcoW1sWk0q0G8vY57faN3TNVD00uewso2Ax');
@@ -80,6 +81,8 @@ const PlaceOrderScreen = ({history}) => {
 
     //set states
     const [paymentMethod, setPaymentMethod] = useState('card')
+    const [amount, setAmount] = useState(0)
+    let [clientSecret, setClientSecret] = useState('')
 
     //-----------Placing an order --------------//
 
@@ -94,38 +97,77 @@ const PlaceOrderScreen = ({history}) => {
 
     //set dispatch
     const dispatch = useDispatch()
+
+    const [options, setOptions] = useState('')
     
-    
+    const [stripeLoading, setStripeLoading] = useState(true)
     
 
+    useEffect(()=> {
+        if(cart.totalPrice > 0) {
+            setAmount(cart.totalPrice )
+        }
+        //get client_secret
+        
+        (async () => {
+            if(amount>0 && clientSecret === ''){
+                //fetch client secret
+                const response = await axios.post('/api/orders/payment/test-payment/', 
+                                                {'amount':amount}
+                                            )                       
+               // set client secret
+                const cs = await response.data.client_secret
+                setClientSecret(cs)  
+                setStripeLoading(false)  
+
+                console.log(clientSecret)
+                console.log(stripeLoading)
+                console.log("options:", options)
+            }    
+        })()
+
+        if(!stripeLoading){
+            setOptions({
+                clientSecret: clientSecret,
+                appearance : {
+                    theme: 'stripe'
+                }
+            })
+            console.log("options2:", options)
+        }
+
+    },[amount, cart.totalPrice, stripeLoading])
     //use effect
     useEffect(() => {
 
-        if(paymentStatus){
-        //place order if payment is successfull
-        if(paymentStatus.status === 'succeeded')
-            dispatch(createOrder({
-                orderItems: cart.cartItems,
-                shippingAddress: cart.shippingAddress,
-                paymentMethod: paymentMethod,
-                itemsPrice: cart.itemsPrice,
-                shippingPrice : cart.shippingPrice,
-                taxRate: cart.taxRate,
-                totalPrice: cart.totalPrice,
-            }))
-        }
-        if(orderSuccess){
-            history.push(`/order/${order._id}`)
-            //reset orderCreate state once order has been created
-            dispatch({
-                type: ORDER_CREATE_RESET,
-            })
+        
+        // if(paymentStatus){
+        // //place order if payment is successfull
+        // if(paymentStatus.status === 'succeeded')
+        //     dispatch(createOrder({
+        //         orderItems: cart.cartItems,
+        //         shippingAddress: cart.shippingAddress,
+        //         paymentMethod: paymentMethod,
+        //         itemsPrice: cart.itemsPrice,
+        //         shippingPrice : cart.shippingPrice,
+        //         taxRate: cart.taxRate,
+        //         totalPrice: cart.totalPrice,
+        //     }))
 
-            //reset payment status
-            dispatch({
-                type: ORDER_PAYMENT_RESET,
-            })
-        }
+        //     if(orderSuccess){
+        //         history.push(`/order/${order._id}`)
+        //         //reset orderCreate state once order has been created
+        //         dispatch({
+        //             type: ORDER_CREATE_RESET,
+        //         })
+
+        //         //reset payment status
+        //         dispatch({
+        //             type: ORDER_PAYMENT_RESET,
+        //         })
+        //     }
+        // }
+       
     }, [dispatch, orderSuccess, history, order, orderPayment, cart, paymentStatus, paymentMethod])
 
     return (
@@ -251,44 +293,7 @@ const PlaceOrderScreen = ({history}) => {
                                         <Message variant="danger">Payment could not be processed. Please refresh the browser window and try again after a few minutes</Message>
                                    
                                 )}
-                                    <Form>      
-                                        <Form.Group>
-                                            <Form.Check 
-                                                type='radio' 
-                                                label ='Credit/Debit Card'
-                                                id='card' 
-                                                name ='paymentMethod'
-                                                value='card'
-                                                defaultChecked
-                                                onChange={(e) => setPaymentMethod(e.target.value)}
-                                            />
-                                            <Form.Check 
-                                                type='radio' 
-                                                label ='Grabpay'
-                                                id='grabwallet' 
-                                                name ='paymentMethod'
-                                                value='grabwallet'
-                                                onChange={(e) => setPaymentMethod(e.target.value)}
-                                            />
-                                            <Form.Check 
-                                                type='radio' 
-                                                label ='FPX'
-                                                id='fpx' 
-                                                name ='paymentMethod'
-                                                value='fpx'
-                                                onChange={(e) => setPaymentMethod(e.target.value)}
-                                            />
-                                            <Form.Check 
-                                                type='radio' 
-                                                label ='PayPal'
-                                                id='paypal' 
-                                                name ='paymentMethod'
-                                                value='paypal'
-                                                onChange={(e) => setPaymentMethod(e.target.value)}
-                                            />
-                                        </Form.Group>
-                                        
-                                    </Form>
+                               
                                 </ListGroup.Item>
 
 
@@ -301,12 +306,17 @@ const PlaceOrderScreen = ({history}) => {
                                         </>
                                         )
                                         :
+
+                                    
                                     //else show checkout form
                                         paymentMethod !== 'paypal' ? (
-                                            <Elements stripe={stripePromise}>
-                                                <CheckoutForm amount={cart.totalPrice} method={paymentMethod}/>
-                                            </Elements>
-                                        )
+                                            (options === '') ? (<Loader/>)
+                                                :
+                                                    <Elements stripe={stripePromise} options={options} >
+                                                        <CheckoutForm amount={cart.totalPrice} method={paymentMethod}/>
+                                                    </Elements>
+
+                                                )
                                         :
                                          <Paypal/>
                                         
