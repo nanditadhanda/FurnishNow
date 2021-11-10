@@ -30,6 +30,9 @@ def addOrderItems(request):
     # data received from client side
     orderItems = data['orderItems']
 
+    # get payment info
+    payment = Payment.objects.get(_id=data['payment'])
+
     # if request is passed but no data is passed in request, return error response
     if orderItems and len(orderItems) == 0:
         return Response({'detail': 'No Order Items'}, status=status.HTTP_400_BAD_REQUEST)
@@ -37,9 +40,7 @@ def addOrderItems(request):
         # (1) Create order
         order = Order.objects.create(
             user=user,
-            paymentMethod=data['paymentMethod'],
-            isPaid=True,
-            paymentDate=datetime.now(),
+            payment=payment,
             taxRate=data['taxRate'],
             shippingPrice=data['shippingPrice'],
             totalPrice=data['totalPrice']

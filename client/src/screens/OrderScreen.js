@@ -211,6 +211,7 @@ const OrderScreen = ({ match , history }) => {
                                     </Row>
                                 </ListGroup.Item>
                              )}
+                            
                             <ListGroup.Item className="py-3">
                                 {/* Heading */}
                                 
@@ -220,11 +221,11 @@ const OrderScreen = ({ match , history }) => {
                                         {/* Shipping Info */}
                                         <p className="">
                                             <strong>Name: </strong>
-                                            {order.user.first_name}&nbsp;{order.user.last_name}
+                                            {order.shippingAddress.name}
                                         </p>
                                         <p className="">
                                             <strong>Phone Number: </strong>
-                                            {order.user.phone}
+                                            {order.shippingAddress.phone}
                                         </p>
                                         <p className="">
                                             <strong>Address: </strong>
@@ -277,6 +278,21 @@ const OrderScreen = ({ match , history }) => {
                                 <ListGroup.Item>
                                     <h4>Order Summary</h4>
                                 </ListGroup.Item>
+                                 <ListGroup.Item>
+                                    <Row className="py-1">
+                                        <Col >Payment Method:</Col>
+                                        <Col className="text-right text-capitalize">{order.payment.method}</Col>
+                                    </Row>
+                                    <Row className="py-1">
+                                        <Col md={4}>Payment Status:</Col>
+                                        <Col className="text-right">
+                                            <p className="text-success">Paid on&nbsp;
+                                                {order.payment.lastUpdated.substring(0,10)} ,&nbsp; 
+                                                {order.payment.lastUpdated.substring(11,19)}
+                                            </p>
+                                            </Col>
+                                    </Row>
+                                </ListGroup.Item> 
                                 <ListGroup.Item>
                                     <Row className="py-1">
                                         <Col md={4}>Subtotal:</Col>
@@ -297,37 +313,10 @@ const OrderScreen = ({ match , history }) => {
                                         <Col className="text-right"><strong>${order.totalPrice}</strong></Col>
                                     </Row>
                                 </ListGroup.Item>  
-                                <ListGroup.Item>
-                                    <Row className="py-1">
-                                        <Col >Payment Method:</Col>
-                                        <Col className="text-right">{order.paymentMethod}</Col>
-                                    </Row>
-                                    <Row className="py-1">
-                                        <Col md={4}>Payment Status:</Col>
-                                        <Col className="text-right">
-                                            {order.isPaid ? 
-                                                <p className="text-success">Paid on {order.paymentDate.substring(0,10)} , {order.paymentDate.substring(11,19)}</p>
-                                                : <p className="text-danger">Not Paid</p>}
-                                            </Col>
-                                    </Row>
-                                </ListGroup.Item> 
-                                {/*------ Paypal Payment Integration (Not for admin user)----- */}
-                                {(!order.isPaid && !userInfo.isSystemAdmin && !userInfo.isStoreManager) && (
-                                    <ListGroup.Item>
-                                        {loadingPayment && <Loader />}
-                                        {!sdkReady ? (
-                                            <Loader/>
-                                        ) : (
-                                            <PayPalButton 
-                                                amount={order.totalPrice}
-                                                onSuccess={successPaymentHandler}
-                                            />   
-                                        )}
-                                    </ListGroup.Item>   
-                                )}
-
+                               
+                                
                                 {/* Update Order Status - Admin and Store Manager */}
-                                {((userInfo.isSystemAdmin || userInfo.isStoreManager) && order.isPaid) 
+                                {((userInfo.isSystemAdmin || userInfo.isStoreManager)) 
                                      
                                     && (
                                         !order.isDelivered ? (

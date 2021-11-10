@@ -49,7 +49,6 @@ export const createOrder = (order) => async(dispatch, getState) => {
             }
 
         }
-        console.log(config)
 
         //send out POST api request with data passed in
         const { data } = await axios.post(
@@ -66,14 +65,6 @@ export const createOrder = (order) => async(dispatch, getState) => {
             payload: data
         })    
 
-        //clear cart once order is created successfully
-        dispatch({
-            type: CART_CLEAR_ITEMS,
-            payload: data
-        })   
-        //remove from local storage
-        localStorage.removeItem('cartItems')
-       
     }
     //if error is caught  -- error message comes from backend
     catch(error){

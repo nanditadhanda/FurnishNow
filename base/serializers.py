@@ -74,7 +74,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payment
-        fields = ('_id', 'user', 'status', 'totalAmount',
+        fields = ('_id', 'user', 'status', 'method', 'totalAmount',
                   'amountPaid', 'dateCreated', 'lastUpdated', )  # all fields
 
 
@@ -100,6 +100,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     orderItems = serializers.SerializerMethodField(read_only=True)
     shippingAddress = serializers.SerializerMethodField(read_only=True)
+    payment = serializers.SerializerMethodField(read_only=True)
     user = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -124,6 +125,14 @@ class OrderSerializer(serializers.ModelSerializer):
             address = False
 
         return address
+
+    # get payment data associated with order
+    def get_payment(self, obj):
+        # Payment information associated with order
+        payment = obj.payment
+        serializer = PaymentSerializer(payment, many=False)
+
+        return serializer.data
 
     # get user data associated with order
     def get_user(self, obj):

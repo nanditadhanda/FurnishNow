@@ -111,16 +111,13 @@ class Order(models.Model):
 
     # fields and attributes
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    paymentMethod = models.CharField(max_length=200, null=True, blank=True)
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, null=True)
     taxRate = models.DecimalField(
         max_digits=7, decimal_places=2, null=True, blank=True)
     shippingPrice = models.DecimalField(
         max_digits=7, decimal_places=2, null=True, blank=True)
     totalPrice = models.DecimalField(
         max_digits=7, decimal_places=2, null=True, blank=True)
-    isPaid = models.BooleanField(default=False)
-    paymentDate = models.DateTimeField(
-        auto_now_add=False, null=True, blank=True)
     orderStatus = models.CharField(
         max_length=20, choices=orderStatusChoices.choices, default=orderStatusChoices.PLACED)
     isDelivered = models.BooleanField(default=False)
