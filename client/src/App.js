@@ -32,8 +32,6 @@ import CatalogScreen from './screens/CatalogScreen'
 import AR from './components/AR'
 import AR2 from './components/AR2'
 
-import PlaceOrder2 from './screens/PlaceOrder2'
-
 
 const NoMatchPage = () => {
   return (
@@ -69,8 +67,7 @@ function App() {
           {/* Order and cart screens */}
           <Route  path="/cart" component={CartScreen}/>
           <Route  path="/shipping" component={ShippingScreen}/>
-          {/* <Route  path="/placeorder" component={PlaceOrderScreen}/> */}
-          <Route  path={`/placeorder`} component={PlaceOrder2}/>
+          <Route  path={`/placeorder`} component={PlaceOrderScreen}/>
           <Route  path="/my-orders" component={MyOrderListScreen}/>
           <Route  path="/order/:id" component={OrderScreen}/>
           

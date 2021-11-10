@@ -10,7 +10,7 @@ import { myOrdersList } from '../actions/orderActions'
 
 
 //UI components
-import {Row, Col, Card, Table, ListGroup, Button, Image} from 'react-bootstrap'
+import {Container,Row, Col, Card, Table, ListGroup, Button, Image} from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 
@@ -51,8 +51,8 @@ const MyOrderListScreen = ({history}) => {
 
 
     return (
-        <Row>
-            <Col>
+        <Container className="py-5">
+            
                 <h2 className="pb-4">My Orders</h2>
                 {loading ? (
                     <Loader />
@@ -129,8 +129,8 @@ const MyOrderListScreen = ({history}) => {
                         
                     ))
                 )}
-            </Col>
-        </Row>   )
+            
+        </Container>   )
 }
 
 

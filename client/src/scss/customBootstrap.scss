@@ -30,6 +30,10 @@ p {
   color: $gray-700;
 }
 
+table {
+  border-collapse: unset;
+}
+
 .dropdown-toggle {
   &:after {
     vertical-align: middle;
