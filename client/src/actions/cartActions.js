@@ -2,8 +2,7 @@ import axios from 'axios'
 //import constants
 import {    CART_ADD_PRODUCT, 
             CART_REMOVE_PRODUCT ,
-            CART_SAVE_SHIPPING_ADDRESS,
-            CART_SAVE_PAYMENT_METHOD
+            CART_SAVE_SHIPPING_ADDRESS
         } from '../constants/cartConstants'
 
 //note: function inside a function makes an async function
@@ -50,15 +49,4 @@ export const saveShippingAddress = (data) => (dispatch) => {
 
     //add shipping address to local storage
     localStorage.setItem('shippingAddress', JSON.stringify(data))
-}
-
-//action to save payment method
-export const savePaymentMethod = (data) => (dispatch) => {
-    dispatch({
-        type: CART_SAVE_PAYMENT_METHOD,
-        payload: data
-    })
-
-    //save payment method to local storage
-    localStorage.setItem('paymentMethod', JSON.stringify(data))
 }

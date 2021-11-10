@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 # import models
 from accounts.models import User
-from .models import Product, Category, Order, OrderItem, ShippingAddress, Review
+from .models import Product, Category, Order, OrderItem, ShippingAddress, Review, Payment
 
 # import user serializer
 from accounts.serializers import UserSerializer
@@ -54,6 +54,28 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ('id', 'name', 'slug', 'products')  # all fields
+
+
+# Payment serializer
+class PaymentAllSerializer(serializers.ModelSerializer):
+
+    #user = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Payment
+        fields = ('__all__')  # all fields
+
+# Payment serializer
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+
+    #user = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Payment
+        fields = ('_id', 'user', 'status', 'totalAmount',
+                  'amountPaid', 'dateCreated', 'lastUpdated', )  # all fields
 
 
 # Shipping Address serializer

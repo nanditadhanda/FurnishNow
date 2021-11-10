@@ -86,7 +86,7 @@ function CartScreen({ match, location, history }) {
                     {/* If there are no items in cart */}
                     {cartItems.length === 0 ? (
                         <Message>
-                            There are no items in the cart <Link to="/">Go To Home</Link>
+                            There are no items in the cart <Link to="/products/all">Shop Now</Link>
                         </Message>
                     ) 
                     // Else if there are items found in cart: 

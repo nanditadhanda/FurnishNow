@@ -3,7 +3,7 @@ import {    CART_ADD_PRODUCT,
             CART_REMOVE_PRODUCT ,
             CART_SAVE_SHIPPING_ADDRESS,
 
-            CART_SAVE_PAYMENT_METHOD,
+            CART_SAVE_PAYMENT_STATUS,
 
             CART_CLEAR_ITEMS ,
         } from '../constants/cartConstants'
@@ -61,14 +61,6 @@ export const cartReducer = (state = { cartItems: [] , shippingAddress: {} } , ac
                 ...state,
                 shippingAddress: action.payload
             }
-
-        //save payment method in current state with data passed in action.payload
-         case CART_SAVE_PAYMENT_METHOD:
-            return {
-                ...state,
-                paymentMethod: action.payload
-            }
-        
         //clear cart once order is placed
         case CART_CLEAR_ITEMS:
             return {

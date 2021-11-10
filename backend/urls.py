@@ -24,6 +24,7 @@ urlpatterns = [
     # path('api/', include('base.urls')),
     path('api/products/', include('base.urls.product_urls')),
     path('api/categories/', include('base.urls.category_urls')),
+    path('api/payment/', include('base.urls.payment_urls')),
     path('api/orders/', include('base.urls.order_urls')),
     path('api/users/', include('accounts.urls')),
 ]

@@ -23,6 +23,14 @@ class reviewAdmin(admin.ModelAdmin):
     readonly_fields = ('user', 'product')
 
 
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('_id', 'paymentID', 'totalAmount', 'amountPaid',
+                    'status', 'dateCreated', 'lastUpdated')
+    # readonly fields
+    readonly_fields = ['user', '_id', 'paymentID', 'method', 'totalAmount', 'amountPaid',
+                       'status', 'dateCreated', 'lastUpdated']
+
+
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('_id', 'orderDate', 'totalPrice',
                     'orderStatus')
@@ -42,6 +50,7 @@ class OrderItemAdmin(admin.ModelAdmin):
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Review, reviewAdmin)
+admin.site.register(Payment, PaymentAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderItem, OrderItemAdmin)
 admin.site.register(ShippingAddress)

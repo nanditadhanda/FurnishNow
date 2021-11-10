@@ -1,10 +1,8 @@
 # order_view.py - all order views
-
-import stripe
 from datetime import datetime
-from base.serializers import OrderSerializer
+from base.serializers import OrderSerializer, PaymentSerializer
 from accounts.models import User
-from base.models import Product, Order, OrderItem, ShippingAddress
+from base.models import Payment, Product, Order, OrderItem, ShippingAddress
 from django.shortcuts import render
 from django.http import JsonResponse
 
@@ -20,134 +18,6 @@ from rest_framework import serializers, status
 # import serializers (models converted to JSON format)
 
 # import datetime library
-
-# import stripe
-
-# stripe payment key
-stripe.api_key = 'sk_test_51JouiJFWKt2oGMYrCH4MHhAv57SJbClJ73AQXkthmZiCbZDjMLVsAnJXVIJoBopelRv7DrghoBAcf8vUHBNIz8rc00jdLQR7Mi'
-
-# payment intent
-
-# intent = stripe.PaymentIntent.create(
-#     amount=1099,
-#     currency='myr',
-#     payment_method_types=["card", "grabpay", "fpx"],
-# )
-
-
-# payment test
-
-
-@api_view(['POST'])
-def test_payment(request):
-
-    data = request.data
-    amount = int(float(data['amount']) * 100)
-    intent = stripe.PaymentIntent.create(
-        amount=amount,
-        currency='myr',
-        # payment_method_types=['card', 'grabpay', 'fpx'],
-        payment_method_types=['card', 'fpx', 'grabpay', 'alipay', ],
-    )
-    return Response(status=status.HTTP_200_OK, data=intent)
-
-
-@api_view(['POST'])
-def createIntent(request):
-
-    data = request.data
-    amount = data['amount']
-    payment_intent = stripe.PaymentIntent.create(
-        # amount=1050, currency='myr',
-        # payment_method_types=['fpx', 'grabpay', 'alipay', 'card'],
-        # payment_method='card',
-        # receipt_email='test@example.com'
-
-        amount=amount,
-        currency='myr',
-        payment_method_types=["fpx", "card", "grabpay"],
-    )
-    return Response(status=status.HTTP_200_OK, data=payment_intent.client_secret)
-
-
-# save payment info to stripe
-@api_view(['POST'])
-@ permission_classes([IsAuthenticated])
-def save_stripe_info(request):
-    # check user datails passed in request
-    user = request.user
-    # check data passed into request
-    data = request.data
-
-    amount = int(float(data['amount']) * 100)
-
-    # set variables
-    email = data['email']
-    payment_method_id = data['payment_method_id']
-
-    #-------- 1 stripe customer account / details --------#
-    # checking if customer with provided email already exists
-    customer_data = stripe.Customer.list(email=email).data
-
-    # if the array is empty it means the email has not been used yet
-    if len(customer_data) == 0:
-        # creating customer
-        customer = stripe.Customer.create(
-            email=email, payment_method=payment_method_id)
-
-    else:
-        customer = customer_data[0]
-
-    #-------- 2 Payment intent --------#
-    payment = stripe.PaymentIntent.create(
-        customer=customer,
-        payment_method=payment_method_id,
-        currency='myr',
-        amount=amount,
-        confirm=True
-    )
-
-    print(payment)
-    return Response(status=status.HTTP_200_OK,
-                    data={
-                        'data': {
-                            'customer_id': customer.id,
-                            'payment_id': payment.id,
-                            'status': payment.status
-                        }
-                    })
-
-
-# dynamic payments
-@api_view(['POST'])
-@ permission_classes([IsAuthenticated])
-def createPayment(request):
-    # check user datails passed in request
-    user = request.user
-    # check data passed into request
-    data = request.data
-
-    # amount = int(float(data['amount']) * 100)
-
-    #payment_method_type = data['paymentMethodType']
-
-    # parameters for payment intent
-    params = {
-        'payment_method_types': ['fpx'],
-        'amount': 1000,
-        'currency': 'myr'
-    }
-
-    try:
-        intent = stripe.PaymentIntent.create(**params)
-
-        # Send PaymentIntent details to the front end.
-        return JsonResponse({'clientSecret': intent.client_secret})
-    except stripe.error.StripeError as e:
-        return JsonResponse({'error': {'message': str(e)}}), 400
-    except Exception as e:
-        return JsonResponse({'error': {'message': str(e)}}), 400
-
 
 # ----- Create New Order -------
 @ api_view(['POST'])  # POST request to add data to database

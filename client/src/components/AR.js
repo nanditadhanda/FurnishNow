@@ -404,7 +404,7 @@ const updateMsg = ({show, error}) => {
         }
         {modelPlaced && 
             <>
-              <Button id="resetModel" onClick={resetHandler} >Reset</Button>
+              {/* <Button id="resetModel" onClick={resetHandler} >Reset</Button> */}
                {show && 
                     <div className="py-2">
                     <Message variant="success" >    

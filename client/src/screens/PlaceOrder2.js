@@ -1,17 +1,15 @@
 import React, {useState, useEffect} from 'react'
-import axios from 'axios'
 
 //routing
 import { Link } from 'react-router-dom'
 
 //Redux imports
 import { useDispatch, useSelector } from 'react-redux'
-//Import action
-import { createOrder } from '../actions/orderActions'
-import { savePaymentInfo } from '../actions/paymentActions'
-import { savePaymentStatus } from '../actions/cartActions'
+
+//import actions
+import { updatePaymentInfo } from '../actions/paymentActions'
+
 //Import constant
-import { ORDER_CREATE_RESET , ORDER_PAYMENT_RESET} from '../constants/orderConstants'
 
 //UI components
 import {Container, Row, Col, Button, ListGroup, Image, Card} from 'react-bootstrap'
@@ -20,8 +18,6 @@ import CheckoutSteps from '../components/CheckoutSteps'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 
-//paypal
-import Paypal from '../components/Paypal'
 
 
 //---------- STRIPE PAYMENT COMPONENTS -------------//
@@ -32,8 +28,12 @@ import Checkout from "../components/Checkout"
 //dev-based publishable key
 const stripePromise = loadStripe('pk_test_51JouiJFWKt2oGMYrbH8o342vopUMr6GOLRwDT6BJNKgimEMj8zUH2tyyik8goKyNcoW1sWk0q0G8vY57faN3TNVD00uewso2Ax');
 
+const PlaceOrderScreen = ({history, location}) => {
 
-const PlaceOrderScreen = ({history}) => {
+    
+    const [params, setParams] = useState('')
+    const [redirect, setRedirect] = useState(false)
+
     
     //-----------Authentications and page access control -------------//
 
@@ -45,7 +45,10 @@ const PlaceOrderScreen = ({history}) => {
     //select cart state
     const cart = useSelector(state => state.cart)
     //destructure state and extract shippingAddress
-    const { cartItems, shippingAddress, payment } = cart
+    const { cartItems, shippingAddress } = cart
+
+    const paymentUpdate = useSelector(state => state.paymentUpdate)
+    const {info:paymentInfo} = paymentUpdate
 
     //conditions to check to allow user to access place order screen
     useEffect(() => {
@@ -63,7 +66,17 @@ const PlaceOrderScreen = ({history}) => {
             history.push('/shipping')
         }
 
-    }, [history, userInfo, cartItems, shippingAddress])
+       //check if the URL sends back the payment intent and client secret key
+        const queryString = require('query-string');
+
+        if(location.search){
+            const parsed = queryString.parse(location.search);
+            setParams(parsed)
+            setRedirect(true)
+        }
+        
+
+    }, [history, userInfo, cartItems, shippingAddress, location.search])
 
 
     //----------dynamic cart values--------//
@@ -82,116 +95,61 @@ const PlaceOrderScreen = ({history}) => {
     //---------- Payment-----------------//
 
     //set states
-    const [paymentMethod, setPaymentMethod] = useState('card')
     const [amount, setAmount] = useState(0)
     let [clientSecret, setClientSecret] = useState('')
     let [paymentID, setPaymentID] = useState('')
 
-    //-----------Placing an order --------------//
+    //-----------Paying for an order --------------//
 
-    const orderPayment = useSelector(state => state.orderPayment)
-
-    const {error: errorPayment, loading: loadingPayment, paymentStatus } = orderPayment
-
-    // orderCreate state
-    const orderCreate = useSelector(state => state.orderCreate)
-    //destructure state
-    const {order, error: orderError, success:orderSuccess, loading:orderLoading} = orderCreate
-
+    
     //set dispatch
     const dispatch = useDispatch()
-
-    const [options, setOptions] = useState('')
     
-    const [stripeLoading, setStripeLoading] = useState(true)
+    const [loading, setLoading] = useState(true)
     
 
     useEffect(()=> {
         if(cart.totalPrice > 0) {
             setAmount(cart.totalPrice )
         }
-        //get client_secret
-        console.log('paymentstatus 1: ', payment)
-        if(payment !== ''){
-            (async () => {
-            if(amount>0 && clientSecret === ''){
-                //fetch client secret
-                const response = await axios.post('/api/orders/payment/test-payment/', 
-                                                {'email': userInfo.email,
-                                                'amount':amount}
-                                            )                       
-                // set client secret
-                    const cs = await response.data.clientSecret
-                    const pid = await response.data.id
-                    setClientSecret(cs)  
-                    setPaymentID(pid)
-                    setStripeLoading(false)  
-                }    
-            })()
 
-            if(clientSecret !== ''){
-                const paymentStatus = dispatch(savePaymentInfo({
-                    'paymentID' : paymentID
-                }))
-                console.log("payment status:" ,paymentStatus)
-            }
-
-            if(!stripeLoading){
-                setOptions({
-                    clientSecret: clientSecret,
-                    appearance : {
-                        theme: 'stripe'
-                    }
+        if(redirect ){
+            setClientSecret(params.payment_intent_client_secret)   
+        }else{
+            //if total amount is set and clientsecret is not loaded
+            if(amount !== 0 && clientSecret === ''){
+                // Create PaymentIntent as soon as the page loads
+                fetch("/api/payment/create-payment-intent/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 'amount' : amount,
+                                        'email' : userInfo.email }),
                 })
-            
+                .then((res) => res.json())
+                .then((data) => {setClientSecret(data.clientSecret); setPaymentID(data.id)});
             }
         }
-        else{
-            // const {paymentID, error, loading, status} = 
+        if(clientSecret !== ''){
+            setLoading(false)
         }
-        
 
-    },[amount, cart.totalPrice, stripeLoading, paymentStatus])
+    }, [cart.totalPrice, amount, clientSecret, userInfo.email, redirect, params])
     //use effect
-    useEffect(() => {
-        
-        // if(paymentStatus){
-        // //place order if payment is successfull
-        // if(paymentStatus.status === 'succeeded')
-        //     dispatch(createOrder({
-        //         orderItems: cart.cartItems,
-        //         shippingAddress: cart.shippingAddress,
-        //         paymentMethod: paymentMethod,
-        //         itemsPrice: cart.itemsPrice,
-        //         shippingPrice : cart.shippingPrice,
-        //         taxRate: cart.taxRate,
-        //         totalPrice: cart.totalPrice,
-        //     }))
 
-        //     if(orderSuccess){
-        //         history.push(`/order/${order._id}`)
-        //         //reset orderCreate state once order has been created
-        //         dispatch({
-        //             type: ORDER_CREATE_RESET,
-        //         })
-
-        //         //reset payment status
-        //         dispatch({
-        //             type: ORDER_PAYMENT_RESET,
-        //         })
-        //     }
-        // }
-       
-    }, [dispatch, orderSuccess, history, order, orderPayment, cart, paymentStatus, paymentMethod])
-
+    const appearance = {
+        theme: 'stripe',
+    };
+    const options = {
+        clientSecret,
+        appearance,
+    };
+    
     return (
         <section className="py-5    ">
             {/* Checkout Steps */}
             <CheckoutSteps step1 step2 step3 step4/>
 
             <Container >
-                {orderLoading && <Loader />}
-                 {orderError && <Message variant="danger">Failed to place order. {orderError}</Message>}
                 <Row>
                     <Col md={8} lg={7}>
                         {/* Shipping */}
@@ -297,55 +255,20 @@ const PlaceOrderScreen = ({history}) => {
                                 </ListGroup.Item>
                                 <ListGroup.Item>
                                     <h5>Payment</h5>
-                                     {( paymentStatus && paymentStatus.status === 'succeeded') && (
-                                    
-                                        <Message variant="success">Payment Successfully Processed</Message>
-                                    
-                                )}
-                                {( paymentStatus && paymentStatus.status === 'requires_action') && (
-                                    
-                                        <Message variant="danger">Payment could not be processed. Please refresh the browser window and try again after a few minutes</Message>
                                    
-                                )}
-                               
-                                </ListGroup.Item>
-
-
-                                <ListGroup.Item>
-
-                                    {loadingPayment ? 
-                                    // if payment is loading, show loader
-                                        (<><Loader/> 
-                                            <p className="text-danger">Processing Payment...</p>
-                                        </>
-                                        )
-                                        :
-
                                     
-                                    //else show checkout form
-                                        paymentMethod !== 'paypal' ? (
-                                            (options === ''  || !clientSecret) ? <Loader/>
-                                                :
-                                                    <Elements stripe={stripePromise} options={options} >
-                                                        <Checkout amount={cart.totalPrice} method={paymentMethod} paymentID={paymentID}/>
-                                                    </Elements>
+                                    {clientSecret && !loading ?
+                                        <Elements options={options} stripe={stripePromise}>
+                                            <Checkout amount={amount} paymentID={paymentID} params={params} redirect={redirect}/>
+                                        </Elements>
 
-                                                )
                                         :
-                                         <Paypal/>
-                                        
+                                        <Loader/>
                                     }
-                                    {/* <div className="d-grid">
-                                        <Button 
-                                            type="button" 
-                                            className="btn-block"
-                                            disabled={cart.cartItems === 0}
-                                            onClick={placeOrder}>
-                                            Place Order
-                                        </Button>
-                                    </div> */}
-                                    
                                 </ListGroup.Item>
+
+                                
+                                
                             </ListGroup>
                         </Card>
                     </Col>

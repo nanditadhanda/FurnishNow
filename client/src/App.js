@@ -1,6 +1,7 @@
 import React from 'react'
+
 //routing and redirecting
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, Link} from 'react-router-dom'
 
 //import header-footer components
 import Header from './components/Header'
@@ -8,6 +9,7 @@ import Footer from './components/Footer'
 
 //import bootstrap components
 import {Container} from 'react-bootstrap'
+import Message from './components/Message'
 
 //import app screens
 import HomeScreen from './screens/HomeScreen'
@@ -17,7 +19,6 @@ import LoginScreen from './screens/LoginScreen'
 import RegisterScreen from './screens/RegisterScreen'
 import ProfileScreen from './screens/ProfileScreen'
 import ShippingScreen from './screens/ShippingScreen'
-import PaymentScreen from './screens/PaymentScreen'
 import PlaceOrderScreen from './screens/PlaceOrderScreen'
 import OrderScreen from './screens/OrderScreen'
 import MyOrderListScreen from './screens/myOrderListScreen'
@@ -29,9 +30,19 @@ import ProductEditScreen from './screens/ProductEditScreen'
 import OrderListScreen from './screens/OrderListScreen'
 import CatalogScreen from './screens/CatalogScreen'
 import AR from './components/AR'
+import AR2 from './components/AR2'
+
+import PlaceOrder2 from './screens/PlaceOrder2'
 
 
-
+const NoMatchPage = () => {
+  return (
+    <Container className="py-5">
+      <h3 className="mb-4">404 - Page not found</h3>
+      <Message variant="warning">Oops! The page you are requesting for is not found. <Link to="/">Go To Home</Link></Message>
+    </Container>
+  );
+};
 
 function App() {
   return (
@@ -42,6 +53,8 @@ function App() {
       {/* app body screens*/}
       <main >
         {/* register routing to different screens based on URL path */}
+
+        <Switch>
           <Route  path="/products/:category" component={CatalogScreen}/>         
 
           <Route path="/" component={HomeScreen} exact/>
@@ -56,8 +69,8 @@ function App() {
           {/* Order and cart screens */}
           <Route  path="/cart" component={CartScreen}/>
           <Route  path="/shipping" component={ShippingScreen}/>
-          <Route  path="/payment" component={PaymentScreen}/>
-          <Route  path="/placeorder" component={PlaceOrderScreen}/>
+          {/* <Route  path="/placeorder" component={PlaceOrderScreen}/> */}
+          <Route  path={`/placeorder`} component={PlaceOrder2}/>
           <Route  path="/my-orders" component={MyOrderListScreen}/>
           <Route  path="/order/:id" component={OrderScreen}/>
           
@@ -72,6 +85,14 @@ function App() {
       
           {/* Unauthorized access redirect screen */}
           <Route  path="/accessdenied" component={AuthorizationErrorScreen}/>
+
+          <Route  path="/ar" component={AR2}/>
+
+          {/* If unmatching URL is found */}
+          <Route component={NoMatchPage} />
+
+        </Switch>
+          
         
 
                

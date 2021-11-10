@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { listOrders } from '../actions/orderActions'
 
 //UI components
-import {Table, Button} from 'react-bootstrap'
+import {Table, Button, Container} from 'react-bootstrap'
 import {RiCheckFill, RiCloseFill} from 'react-icons/ri'
 import { IoTrashSharp } from 'react-icons/io5'
 import {IoMdPersonAdd} from 'react-icons/io'
