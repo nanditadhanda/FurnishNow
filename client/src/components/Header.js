@@ -59,9 +59,6 @@ const Header = () => {
     return (
 
         <header className="sticky-top">
-            
-
-           
             <Navbar variant="dark" bg="dark" className="p-l-4 p-1" collapseOnSelect  expand="lg">
                 <Container fluid>
                     <div className="d-flex">
@@ -92,14 +89,17 @@ const Header = () => {
                 <div className="d-flex">
                     <Navbar.Collapse id="navbarScroll" >
                     <Nav
-                    className="mr-auto my-2 mt-1 my-lg-0 right"
-                    style={{ maxHeight: '100px' }}
-                    navbarScroll
+                        className="mr-auto my-2 mt-1 my-lg-0 right"
+                        style={{ maxHeight: '100px' }}
+                        navbarScroll
                     >
-                        {/*  Cart  */}
-                        <LinkContainer to="/cart">
-                            <Nav.Link className="cart" ><TiShoppingCart className="fs-2 pe-1 mb-1" /><Badge pill bg="primary" className={cartItems.length === 0 ? "invisible" : "visible"}>{cartItems.length}</Badge>Cart</Nav.Link>                  
-                        </LinkContainer>
+                        {/*  Cart - appear only to customer  */}
+
+                        {(!userInfo || (userInfo && !(userInfo.isStoreManager || userInfo.isSystemAdmin))) &&
+                            <LinkContainer to="/cart">
+                                <Nav.Link className="cart" ><TiShoppingCart className="fs-2 pe-1 mb-1" /><Badge pill bg="primary" className={cartItems.length === 0 ? "invisible" : "visible"}>{cartItems.length}</Badge>Cart</Nav.Link>                  
+                            </LinkContainer>
+                        }
 
 
                         {/* if user is logged in, display user dropdown */}   
@@ -124,9 +124,11 @@ const Header = () => {
                                         <LinkContainer to="/admin/productlist">
                                             <NavDropdown.Item ><BiPackage className="fs-2 pe-2 mb-1 "/>Products</NavDropdown.Item>
                                         </LinkContainer>
+
                                         <LinkContainer to="/admin/orderlist">
                                             <NavDropdown.Item ><RiMoneyDollarBoxLine className=" fs-2 pe-2 mb-1 "/>Orders</NavDropdown.Item>
                                         </LinkContainer>
+
                                         <LinkContainer to="/admin/reports">
                                             <NavDropdown.Item ><GoGraph className=" fs-3 pe-2 ms-1 mb-1 "/>Reports</NavDropdown.Item>
                                         </LinkContainer>
@@ -145,6 +147,7 @@ const Header = () => {
                              </NavDropdown>
                         )
                         : 
+                        // else - user is not logged in
                         (<LinkContainer to="/login">
                             <Nav.Link ><MdPerson className="fs-2 pe-1 mb-1"/>Account</Nav.Link>
                         </LinkContainer>)
