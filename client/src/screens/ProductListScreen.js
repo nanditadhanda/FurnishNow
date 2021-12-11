@@ -11,14 +11,16 @@ import { listProducts, deleteProduct, createProduct } from '../actions/productAc
 //import constant
 import {PRODUCT_CREATE_RESET} from '../constants/productConstants'
 //UI components
-import {Table, Button, Container} from 'react-bootstrap'
+import {Row, Col, Table, Button, Container} from 'react-bootstrap'
 import { IoTrashSharp } from 'react-icons/io5'
 import {IoMdAddCircleOutline} from 'react-icons/io'
 import {MdEdit} from 'react-icons/md'
+import { AiFillEye} from 'react-icons/ai'
 
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import Paginate from '../components/Paginate'
+import SideBar from '../components/SideBar'
 
 const ProductListScreen = ({history}) => {
     //set dispatch
@@ -55,12 +57,12 @@ const ProductListScreen = ({history}) => {
         
         dispatch({type: PRODUCT_CREATE_RESET})
 
-        if(!userInfo.isSystemAdmin){
+        if(!userInfo.isSystemAdmin && !userInfo.isStoreManager){
             history.push("/accessdenied")
         }
         
         if(createSuccess){
-            history.push(`/admin/product/${productCreated._id}/edit`)
+            history.push(`/store-manager/product/${productCreated._id}/edit`)
         }
         else{            
             dispatch(listProducts(keyword, ordering, filter))
@@ -83,72 +85,92 @@ const ProductListScreen = ({history}) => {
     }
 
     return (
-        <Container className="py-5">
-            <h1>Products</h1>
-            {// loading while performing create action
-                createLoading && <Loader />
-            }
-            {//error when creating product
-                createError && <Message variant="danger">{createError}</Message>                  
-            }
+        <Row>
+            <SideBar></SideBar>
+            <Col>
+                <Container className="py-5">
+                <h1 className="mb-5">Products</h1>
+                {// loading while performing create action
+                    createLoading && <Loader />
+                }
+                {//error when creating product
+                    createError && <Message variant="danger">{createError}</Message>                  
+                }
 
-            {// loading while performing delete action
-                deleteLoading && <Loader />
-            }
-            {//error when deleting
-                deleteError && <Message variant="danger">{deleteError}</Message>                  
-            }
-            { /*show loader if loading */
-            loading ? <Loader />
-                /*else if an error occured, display error message */
-                : error ? <Message variant="danger">{error}</Message>
-                /*else show page content */
-                : ( <>
-                    <div className="d-flex flex-row-reverse mb-3"> 
-                        <Button variant="outline-success" onClick={createProductHandler}>
-                            <IoMdAddCircleOutline className="me-2 mb-1 fs-5"/>Add Product 
-                        </Button>                        
-                    </div>
-                    <Table striped bordered responsive className="table-sm">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>                                
-                                <th>Brand</th>
-                                <th>Category</th>
-                                <th>Price (MYR)</th>
-                                
-                                <th></th>
-                            </tr>                            
-                        </thead>
-                        <tbody>
-                            {products.map(product => (
-                                <tr key={product._id}>
-                                    <td>{product._id}</td>
-                                    <td>{product.name}</td>                                    
-                                    <td>{product.brand}</td>
-                                    <td>{product.category}</td>
-                                    <td>{product.salePrice}</td>
-                                    <td className="text-center">
-                                        <LinkContainer to={`/admin/product/${product._id}/edit`}>
-                                            <Button variant="outline-success"   className="btn-icon me-2"><MdEdit/></Button>
-                                        </LinkContainer>
-                                        
-                                        <Button variant="outline-danger"  className="btn-icon" onClick={() => deleteHandler(product._id)}><IoTrashSharp /></Button>
-                                    </td>
-                                        
-                                </tr>
-                            ))}
-                           
+                {// loading while performing delete action
+                    deleteLoading && <Loader />
+                }
+                {//error when deleting
+                    deleteError && <Message variant="danger">{deleteError}</Message>                  
+                }
+                { /*show loader if loading */
+                loading ? <Loader />
+                    /*else if an error occured, display error message */
+                    : error ? <Message variant="danger">{error}</Message>
+                    /*else show page content */
+                    : ( <>
+
+                        {userInfo.isStoreManager && 
+                            <div className="d-flex flex-row-reverse mb-3"> 
+                                <Button variant="outline-success" onClick={createProductHandler}>
+                                    <IoMdAddCircleOutline className="me-2 mb-1 fs-5"/>Add Product 
+                                </Button>                        
+                            </div>
+                        
+                        }
+                        
+                        <Table striped bordered responsive className="table-sm">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>                                
+                                    <th>Brand</th>
+                                    <th>Category</th>
+                                    <th>Price (MYR)</th>
+                                    
+                                    <th></th>
+                                </tr>                            
+                            </thead>
+                            <tbody>
+                                {products.map(product => (
+                                    <tr key={product._id}>
+                                        <td>{product._id}</td>
+                                        <td>{product.name}</td>                                    
+                                        <td>{product.brand}</td>
+                                        <td>{product.category}</td>
+                                        <td>{product.salePrice}</td>
+                                        <td className="text-center">
+                                            <LinkContainer to={`/product/${product.category_slug}/${product._id}`}>
+                                                <Button variant="outline-primary"   className="btn-icon me-2"><AiFillEye/></Button>
+                                            </LinkContainer>
+                                            {userInfo && userInfo.isStoreManager &&
+                                                <>
+                                                    <LinkContainer to={`/store-manager/product/${product._id}/edit`}>
+                                                        <Button variant="outline-success"   className="btn-icon me-2"><MdEdit/></Button>
+                                                    </LinkContainer>
+                                                    <Button variant="outline-danger"  className="btn-icon" onClick={() => deleteHandler(product._id)}><IoTrashSharp /></Button>
+                                                </>
+                                            }
+                                            </td>
+                                            
+                                    </tr>
+                                ))}
                             
-                        </tbody>
+                                
+                            </tbody>
 
-                    </Table>
-                    <Paginate path="/admin/productlist" page={page} pages={pages}/>
-                    </>
-                )}
+                        </Table>
+                        <Paginate path="/admin/productlist" page={page} pages={pages}/>
+                        </>
+                    )}
+                
+            </Container>
             
-        </Container>
+            </Col>
+            
+
+        </Row>
+        
     )
 }
 

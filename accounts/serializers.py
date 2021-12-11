@@ -46,7 +46,7 @@ class UserSerializer(serializers.ModelSerializer):
         return last_name
 
     def get_isStoreManager(self, obj):
-        isStoreManager = obj.is_admin
+        isStoreManager = obj.is_storeManager
         return isStoreManager
 
     def get_isSystemAdmin(self, obj):

@@ -29,8 +29,8 @@ import ProductListScreen from './screens/ProductListScreen'
 import ProductEditScreen from './screens/ProductEditScreen'
 import OrderListScreen from './screens/OrderListScreen'
 import CatalogScreen from './screens/CatalogScreen'
-import AR from './components/AR'
 import AR2 from './components/AR2'
+import StoreManagerDashboard from './screens/StoreManagerDashboard'
 
 
 const NoMatchPage = () => {
@@ -71,12 +71,15 @@ function App() {
           <Route  path="/my-orders" component={MyOrderListScreen}/>
           <Route  path="/order/:id" component={OrderScreen}/>
           
+          {/* Store Manager Screens */}
+          <Route  path="/store-manager/dashboard" component={StoreManagerDashboard}/>
+          <Route  path="/store-manager/productlist" component={ProductListScreen}/>
+          <Route  path="/store-manager/product/:id/edit" component={ProductEditScreen}/>
 
           {/* Admin Screens */}
           <Route  path="/admin/userlist" component={UserListScreen}/>
           <Route  path="/admin/user/:id/edit" component={EditUserScreen}/>
           <Route  path="/admin/productlist" component={ProductListScreen}/>
-          <Route  path="/admin/product/:id/edit" component={ProductEditScreen}/>
           <Route  path="/admin/orderlist" component={OrderListScreen}/>
           <Route  path="/admin/order/:id" component={OrderScreen}/>
       

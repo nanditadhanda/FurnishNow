@@ -75,12 +75,12 @@ const ProductEditScreen = ({match, history}) => {
 
 
         //authenticate and check if user is logged in and whether they are System Admin
-        if(userInfo && userInfo.isSystemAdmin){
+        if(userInfo && userInfo.isStoreManager){
 
             //if information updated, reset productUpdate state and redirect to product list page
             if(updateSuccess){
                 dispatch({type: PRODUCT_UPDATE_RESET})
-                history.push("/admin/productList")
+                history.push("/store-manager/productList")
             }
             //else - information not updated
             else{            

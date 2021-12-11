@@ -114,54 +114,67 @@ def getProduct(request, pk):
 
 # create product view
 @api_view(['POST'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAuthenticated])
 def createProduct(request):
     user = request.user
 
-    product = Product.objects.create(
-        user=user,
-        name='Sample Name',
-        brand='Sample Brand',
-        costPrice=0.00,
-        salePrice=0.00,
-        description=''
-    )
+    # check if user is store manager
+    if user.is_storeManager:
+        product = Product.objects.create(
+            user=user,
+            name='Sample Name',
+            brand='Sample Brand',
+            costPrice=0.00,
+            salePrice=0.00,
+            description=''
+        )
 
-    serializer = ProductSerializer(product, many=False)
-    return Response(serializer.data)
+        serializer = ProductSerializer(product, many=False)
+        return Response(serializer.data)
+
+    else:
+        return Response({'detail': 'You are not authorized to perform this action'},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 # Update product view
 
 
 @api_view(['PUT'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAuthenticated])
 def updateProduct(request, id):
 
-    # get product to be updated
-    product = Product.objects.get(_id=id)
+    user = request.user
 
-    # data passed in request form
-    data = request.data
+    # check if user is store manager
+    if user.is_storeManager:
+        # get product to be updated
+        product = Product.objects.get(_id=id)
 
-    # update data
-    product.name = data['name']
-    product.brand = data['brand']
-    product.category = Category.objects.get(id=data['category'])
-    product.description = data['description']
-    # product.image = data['image']
-    # product.image3D = data['image3D']
-    product.countInStock = data['countInStock']
-    product.costPrice = data['costPrice']
-    product.salePrice = data['salePrice']
+        # data passed in request form
+        data = request.data
 
-    # save data
-    product.save()
+        # update data
+        product.name = data['name']
+        product.brand = data['brand']
+        product.category = Category.objects.get(id=data['category'])
+        product.description = data['description']
+        # product.image = data['image']
+        # product.image3D = data['image3D']
+        product.countInStock = data['countInStock']
+        product.costPrice = data['costPrice']
+        product.salePrice = data['salePrice']
 
-    # pass into serializer
-    serializer = ProductSerializer(product, many=False)
+        # save data
+        product.save()
 
-    # return
-    return Response(serializer.data)
+        # pass into serializer
+        serializer = ProductSerializer(product, many=False)
+
+        # return
+        return Response(serializer.data)
+    else:
+        return Response({'detail': 'You are not authorized to perform this action'},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 # request to upload image
@@ -186,11 +199,18 @@ def uploadProductImage(request):
 
 # Delete product view
 @ api_view(['DELETE'])
-@ permission_classes([IsAdminUser])
+@ permission_classes([IsAuthenticated])
 def deleteProduct(request, id):
-    product = Product.objects.get(_id=id)
-    product.delete()
-    return Response('Product has been deleted')
+    user = request.user
+
+    # check if user is store manager
+    if user.is_storeManager:
+        product = Product.objects.get(_id=id)
+        product.delete()
+        return Response('Product has been deleted')
+    else:
+        return Response({'detail': 'You are not authorized to perform this action'},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 # leave product review view
@@ -206,10 +226,14 @@ def createProductReview(request, id):
     # retrieve data passed
     data = request.data
 
+    # get order data
+    orderID = data['order']
+    order = Product.objects.get(_id=orderID)
+
     # ------- Leaving a review------------
 
     # 1 - check if review exists
-    reviewExists = product.review_set.filter(user=user).exists()
+    reviewExists = product.review_set.filter(order=order).exists()
 
     if reviewExists:
         # define error message
@@ -229,6 +253,7 @@ def createProductReview(request, id):
         review = Review.objects.create(
             product=product,
             user=user,
+            order=order,
             title=data['title'],
             rating=data['rating'],
             comment=data['comment'],
