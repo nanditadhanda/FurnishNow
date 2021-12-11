@@ -56,7 +56,7 @@ const RegisterScreen = ({location, history}) => {
         e.preventDefault()
 
         //validations
-        if(first_name == "" || last_name == "" || email == "" || password == "" || confirmPassword == ""){
+        if(first_name === "" || last_name === "" || email === "" || password === "" || confirmPassword === ""){
             setMessage("Please fill out all fields")
         }
         else if (password !== confirmPassword){
@@ -88,7 +88,7 @@ const RegisterScreen = ({location, history}) => {
                         <Form.Group controlId="first_name" className="pb-2">
                             <Form.Label>First Name</Form.Label>
                             <Form.Control
-                                required 
+                                 
                                 type="text" 
                                 value={first_name} onChange={(e) => setFirstName(e.target.value)}/>
                         </Form.Group>
@@ -98,7 +98,7 @@ const RegisterScreen = ({location, history}) => {
                         <Form.Group controlId="last_name" className="pb-2">
                             <Form.Label>Last Name</Form.Label>
                             <Form.Control 
-                                required
+                                
                                 type="text" 
                                 value={last_name} onChange={(e) => setLastName(e.target.value)}/>
                         </Form.Group>       
@@ -110,7 +110,7 @@ const RegisterScreen = ({location, history}) => {
                         <Form.Group controlId="email" className="py-3">
                             <Form.Label>Email Address</Form.Label>
                             <Form.Control 
-                                required
+                                
                                 type="email" 
                                 value={email} onChange={(e) => setEmail(e.target.value)}/>
                         </Form.Group>
@@ -122,17 +122,17 @@ const RegisterScreen = ({location, history}) => {
                         <Form.Group controlId="password" className="py-3">
                             <Form.Label>Password</Form.Label>
                             <Form.Control
-                                required 
+                                 
                                 type="password" 
                                 value={password} onChange={(e) => setPassword(e.target.value)}/>
                         </Form.Group>
                     </Col>
                     <Col xs="12" md="6">
                          {/* Password Field */}
-                        <Form.Group controlId="password" className="py-3">
+                        <Form.Group controlId="confirmPassword" className="py-3">
                             <Form.Label>Confirm Password</Form.Label>
                             <Form.Control 
-                                required
+                                
                                 type="password" 
                                 value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
                         </Form.Group>

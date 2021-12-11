@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { listUsers, deleteUser } from '../actions/userActions'
 
 //UI components
-import {Table, Button} from 'react-bootstrap'
+import {Container, Table, Button} from 'react-bootstrap'
 import {RiCheckFill, RiCloseFill} from 'react-icons/ri'
 import { IoTrashSharp } from 'react-icons/io5'
 import {IoMdPersonAdd} from 'react-icons/io'
@@ -60,7 +60,7 @@ const UserListScreen = ({history}) => {
     // }
 
     return (
-        <section>
+        <Container className="py-5">
             <h1>Users</h1>
             { /*show loader if loading */
             loading ? <Loader />
@@ -117,7 +117,7 @@ const UserListScreen = ({history}) => {
                     </>
                 )}
             
-        </section>
+        </Container>
     )
 }
 

@@ -11,7 +11,6 @@ import { myOrdersReducer, orderCreateReducer, orderDetailsReducer, orderListRedu
 import { categoryListReducer } from './reducers/categoryReducers'
 import { paymentReducer, paymentUpdateReducer } from './reducers/paymentReducers'
 
-//register and combine all reducers
 //register and co   mbine all reducers
 const reducer = combineReducers({
     categoryList: categoryListReducer,
