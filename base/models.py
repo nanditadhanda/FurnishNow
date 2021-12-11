@@ -64,24 +64,6 @@ class Product(models.Model):
         return self.name
 
 
-# review table
-class Review(models.Model):
-    # fields and attributes
-    product = models.ForeignKey(
-        Product, on_delete=models.SET_NULL, null=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    title = models.CharField(max_length=200, null=True, blank=True)
-    rating = models.DecimalField(
-        max_digits=3, decimal_places=2, null=True, blank=True)
-    comment = models.TextField(null=True, blank=True)
-    reviewDate = models.DateTimeField(auto_now_add=True)
-    _id = models.AutoField(primary_key=True, editable=False)
-
-    # string method
-    def __str__(self):
-        return str(self.rating)
-
-
 class Payment(models.Model):
     #fields and attributes
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -174,6 +156,26 @@ class ShippingAddress(models.Model):
     # string method
     def __str__(self):
         return str(self.address)
+
+# review table
+
+
+class Review(models.Model):
+    # fields and attributes
+    product = models.ForeignKey(
+        Product, on_delete=models.SET_NULL, null=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    title = models.CharField(max_length=200, null=True, blank=True)
+    rating = models.DecimalField(
+        max_digits=3, decimal_places=2, null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    reviewDate = models.DateTimeField(auto_now_add=True)
+    _id = models.AutoField(primary_key=True, editable=False)
+
+    # string method
+    def __str__(self):
+        return str(self.rating)
 
 
 # report table
