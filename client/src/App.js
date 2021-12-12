@@ -76,6 +76,7 @@ function App() {
           <Route  path="/store-manager/dashboard" component={StoreManagerDashboard}/>
           <Route  path="/store-manager/productlist" component={ProductListScreen}/>
           <Route  path="/store-manager/product/:id/edit" component={ProductEditScreen}/>
+          <Route  path="/store-manager/orderlist" component={OrderListScreen}/>
 
           {/* Admin Screens */}
           <Route  path="/admin/dashboard" component={AdminDashboard}/>

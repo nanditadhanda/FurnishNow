@@ -83,16 +83,24 @@ def addOrderItems(request):
 
 
 @ api_view(['GET'])
-@ permission_classes([IsAdminUser])
+@ permission_classes([IsAuthenticated])
 def getOrders(request):
-    # get all orders
-    orders = Order.objects.all()
 
-    # serialize order data
-    serializer = OrderSerializer(orders, many=True)
+    user = request.user
 
-    # return serialized data
-    return Response(serializer.data)
+    if user.is_staff or user.is_storeManager:
+        # get all orders
+        orders = Order.objects.all()
+
+        # serialize order data
+        serializer = OrderSerializer(orders, many=True)
+
+        # return serialized data
+        return Response(serializer.data)
+    else:
+        # else return error message
+        return Response({'detail': 'You do not have permission to perform this action.'},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 #---- view to get user's orders ------ #
@@ -125,7 +133,7 @@ def getOrderById(request, pk):
         order = Order.objects.get(_id=pk)
 
         # if user is a staff member or if the user passing the request is the same as the user who placed the order
-        if user.is_staff or order.user == user:
+        if user.is_staff or user.is_storeManager or order.user == user:
             serializer = OrderSerializer(order, many=False)
             return Response(serializer.data)
         else:
@@ -155,21 +163,27 @@ def updateOrderToPaid(request, pk):
 
 # PUT request to update order status
 @ api_view(['PUT'])
-@ permission_classes([IsAdminUser])
+@ permission_classes([IsAuthenticated])
 def updateOrderStatus(request, pk):
 
-    # get order data by id passed
-    order = Order.objects.get(_id=pk)
+    user = request.user
 
-    data = request.data
+    if user.is_storeManager:
+        # get order data by id passed
+        order = Order.objects.get(_id=pk)
 
-    order.orderStatus = data['orderStatus']
+        data = request.data
 
-    if(data['orderStatus'] == 'Delivered'):
-        order.isDelivered = True
-        order.deliveredAt = datetime.now()
+        order.orderStatus = data['orderStatus']
 
-    order.lastUpdatedAt = datetime.now()
-    order.save()
+        if(data['orderStatus'] == 'Delivered'):
+            order.isDelivered = True
+            order.deliveredAt = datetime.now()
 
-    return Response('Order status updated')
+        order.lastUpdatedAt = datetime.now()
+        order.save()
+
+        return Response('Order status updated')
+    else:
+        return Response({'detail': 'You are not authorized to perform this action'},
+                        status=status.HTTP_400_BAD_REQUEST)

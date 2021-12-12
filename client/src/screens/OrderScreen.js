@@ -10,19 +10,16 @@ import { getOrderDetails, payOrder, updateOrderStatus } from '../actions/orderAc
 //import constants
 import { ORDER_PAYMENT_RESET, ORDER_STATUS_RESET } from '../constants/orderConstants'
 
-//payment buttons
-import { PayPalButton} from 'react-paypal-button-v2'
 
 //UI components
-import {Container, Row, Col, ListGroup, Image, Card, Form} from 'react-bootstrap'
+import {Container, Row, Col, ListGroup, Image, Card, Form, Button} from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import Button from '@restart/ui/esm/Button'
 import OrderStatusSteps from '../components/OrderStatusSteps'
+import SideBar from '../components/SideBar'
 
-//icons
-import {HiCheckCircle} from 'react-icons/hi'
-import {BiCircle} from 'react-icons/bi'
+import { IoArrowBack } from 'react-icons/io5'
+
 
 
 //Order Screen Function
@@ -72,26 +69,7 @@ const OrderScreen = ({ match , history }) => {
     const orderPayment = useSelector(state => state.orderPayment)
     //destructure state
     const {loading: loadingPayment, success: successPayment} = orderPayment
-    
-    //sdk state
-    const [sdkReady, setSdkReady] = useState(false)
-
-    //PayPal Script
-    const addPayPalScript = () => {
-        //client ID: Abz14EA_LsKtie3zGyRmoIbYd41Bebt5Fd9xJxOSQWenL3kT_7bb1eXZqZe-_RrZjAqiTgMP7F4hgbOX
-        
-        //create custom script element 
-        const script = document.createElement('script')
-        script.type = 'text/javascript'
-        script.src = 'https://www.paypal.com/sdk/js?client-id=Abz14EA_LsKtie3zGyRmoIbYd41Bebt5Fd9xJxOSQWenL3kT_7bb1eXZqZe-_RrZjAqiTgMP7F4hgbOX'
-        script.async = true
-        //once script is loaded, set sdkReady to true
-        script.onload = () =>{
-            setSdkReady(true)
-        }
-        //once sdk is ready, append script to body of app
-        document.body.appendChild(script)
-    }
+ 
 
     //--------------Order Status-------------------//
 
@@ -118,14 +96,6 @@ const OrderScreen = ({ match , history }) => {
             
             
         }   
-        else if(!order.isPaid){
-            if(!window.paypal){
-                addPayPalScript()
-            }
-            else{
-                setSdkReady(true)
-            }
-        }   
     }, [dispatch,order, orderID, successPayment, successStatus])
 
     //payment handler on successful payment
@@ -147,214 +117,248 @@ const OrderScreen = ({ match , history }) => {
     }
 
 
-    return loading ? (
-        // if order details loading, show loader
-        <Loader />
-        ) : error ? (
-            //else if error received, display error message
-            <Message variant="danger">{ error }</Message>
-        ) : (
-            //else display order details
-            <section className="py-5">
-            {order.orderStatus === 'Delivered' ?
-                <OrderStatusSteps step1 step2 step3 step4 />
-                : order.orderStatus === 'Shipped Out'
-                ?   <OrderStatusSteps step1 step2 step3 />
-                : order.orderStatus === 'Packaged'
-                ?   <OrderStatusSteps step1 step2 />
-                :   <OrderStatusSteps step1 />
+    return (
+        <Row>
+            {userInfo && (userInfo.isSystemAdmin || userInfo.isStoreManager) &&
+                <SideBar activeTab={"order"}/>
             }
-            <Container className="py-2"> 
-                <Row>
-                    <Col md={8} lg={7}>
-                        {/* Shipping */}
-                        <ListGroup variant='flush'>
-                            <ListGroup.Item className="py-3"> 
-                                <h3>Order: #{order._id}</h3>
-                                <p>{order.orderDate.substring(0,10)} , {order.orderDate.substring(11,19)}</p>
-                                <strong>Order Status:</strong>
-                                 <p>Order {order.orderStatus}</p>
-                                <strong>Last Updated:</strong>
-                                <p>{order.lastUpdatedAt.substring(0,10)}, {order.lastUpdatedAt.substring(11,19)}</p>
-                            </ListGroup.Item>
-                            {/* user details */}
-                             {(userInfo.isSystemAdmin || userInfo.isStoreManager) && (
-                                <ListGroup.Item className="py-3">
-                                    <h4 className="mb-4">Customer Details</h4>
-                                    <Row>
-                                        <Col xs={6} md={6}>
-                                         <p className="">
-                                            <strong>ID: </strong>
-                                            {order.user._id}
-                                        </p>
-                                        </Col>
-                                        <Col xs={6} md={6}>
-                                        <p className="">
-                                            <strong>Name: </strong>
-                                            {order.user.first_name}&nbsp;{order.user.last_name}
-                                        </p>
-                                        </Col> 
-                                    </Row>
-                                    <Row>
-                                        <Col xs={6} md={6}>
-                                         <p className="">
-                                            <strong>Email: </strong>
-                                            {order.user.email}
-                                        </p>
-                                        </Col>
-                                        <Col xs={6} md={6}>
-                                        <p className="">
-                                            <strong>Phone: </strong>
-                                            {order.user.phone}
-                                        </p>
-                                        </Col> 
-                                    </Row>
-                                </ListGroup.Item>
-                             )}
-                            
-                            <ListGroup.Item className="py-3">
-                                {/* Heading */}
-                                
-                                <h4 className="mb-4">Shipping Details</h4>
-                                <Row>
-                                    <Col xs={10} md={11}>
-                                        {/* Shipping Info */}
-                                        <p className="">
-                                            <strong>Name: </strong>
-                                            {order.shippingAddress.name}
-                                        </p>
-                                        <p className="">
-                                            <strong>Phone Number: </strong>
-                                            {order.shippingAddress.phone}
-                                        </p>
-                                        <p className="">
-                                            <strong>Address: </strong>
-                                            {order.shippingAddress.address}, 
-                                            {' '}
-                                            {order.shippingAddress.city} {order.shippingAddress.zipCode}, 
-                                            {' '}
-                                            {order.shippingAddress.state}, 
-                                            {' '}
-                                            {order.shippingAddress.country}
-                                        </p>
-                                    </Col>
-                                   
-                                </Row>
-                                
-                            </ListGroup.Item>
+            <Col className="m-0 p-0">
+                <main>
+                    { // if order details loading, show loader
+                        loading ? ( <Loader />) 
 
-                            {/* Order Items */}
-                            <ListGroup.Item className="py-3">
-                                <Row>
-                                    <Col xs={10} md={11}>
-                                        <h4 className="mb-4">Order Items</h4>
-                                    </Col>
-                                </Row> 
-                                <ListGroup variant="flush">
-                                    {/* Map out items in order */}
-                                    {order.orderItems.map((item, index) => (
-                                        <ListGroup.Item key="index">
-                                            <Row>
-                                                {/* Product Image */}
-                                                <Col md={2} xs={3}>
-                                                    <Image src={item.image} alt={item.name} fluid rounded></Image>
-                                                </Col>
-                                                {/* Product Name */}
-                                                <Col><Link to={`/product/${item.category_slug}/${item.product}`}>{item.name}</Link></Col>
-                                                {/* Quantity and Price */}
-                                                <Col md={4}>{item.qty} x ${item.price}&nbsp;&nbsp;=&nbsp;&nbsp; ${(parseFloat(item.qty * item.price)).toFixed(2)}</Col>
-                                            </Row>
-                                        </ListGroup.Item>
-                                    ))}
-                                </ListGroup>
-                            </ListGroup.Item>
-                        
-                        </ListGroup>
+                        //else if error received, display error message
+                        : error ? (<Message variant="danger">{ error }</Message>) 
 
-                    </Col>
-                    <Col md={4}>
-                        <Card>
-                            <ListGroup variant="flush">
-                                <ListGroup.Item>
-                                    <h4>Order Summary</h4>
-                                </ListGroup.Item>
-                                 <ListGroup.Item>
-                                    <Row className="py-1">
-                                        <Col >Payment Method:</Col>
-                                        <Col className="text-right text-capitalize">{order.payment.method}</Col>
+                        //else display order details
+                        : ( <section className="py-3">
+                                <Container className="mb-5">
+                                    <Row>
+                                        <Col lg={7} className='ms-2'>
+                                            <Link to={userInfo.isStoreManager ? "/store-manager/orderlist" 
+                                                        : userInfo.isSystemAdmin ? "/admin/orderlist"
+                                                        :  "/my-orders"}>
+                                                <Button variant="outline-secondary"><IoArrowBack /> Back</Button>
+                                            </Link>
+                                        </Col>
                                     </Row>
-                                    <Row className="py-1">
-                                        <Col md={4}>Payment Status:</Col>
-                                        <Col className="text-right">
-                                            <p className="text-success">Paid on&nbsp;
-                                                {order.payment.lastUpdated.substring(0,10)} ,&nbsp; 
-                                                {order.payment.lastUpdated.substring(11,19)}
-                                            </p>
-                                            </Col>
-                                    </Row>
-                                </ListGroup.Item> 
-                                <ListGroup.Item>
-                                    <Row className="py-1">
-                                        <Col md={4}>Subtotal:</Col>
-                                        <Col className="text-right">${order.itemsPrice}</Col>
-                                    </Row>
-                                    <Row className="py-1">
-                                        <Col >Shipping:</Col>
-                                        <Col className="text-right">${order.shippingPrice}</Col>
-                                    </Row>
-                                    <Row className="py-1">
-                                        <Col >Tax (SST - 6%):</Col>
-                                        <Col className="text-right">${order.taxRate}</Col>
-                                    </Row>
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    <Row className="py-1">
-                                        <Col ><strong>Grand Total:</strong></Col>
-                                        <Col className="text-right"><strong>${order.totalPrice}</strong></Col>
-                                    </Row>
-                                </ListGroup.Item>  
-                               
+
+                                </Container>
                                 
-                                {/* Update Order Status - Admin and Store Manager */}
-                                {((userInfo.isSystemAdmin || userInfo.isStoreManager)) 
-                                     
-                                    && (
-                                        !order.isDelivered ? (
-                                            <ListGroup.Item>
-                                                {loadingStatus && <Loader />}
-                                                {errorStatus && <Message variant="danger">{errorStatus}</Message>}
-                                                
-                                                <Form>
-                                                    <Form.Select aria-label="Order Status" defaultValue={order.orderStatus} onChange={changeStatus}>
-                                                        <option>Order Status</option>
-                                                        <option value="Placed">Placed</option>
-                                                        <option value="Packaged">Packaged</option>
-                                                        <option value="Shipped">Shipped Out</option>
-                                                        <option value="Delivered">Delivered</option>
-                                                    </Form.Select>
-                                                    <div className="d-grid my-3">
-                                                        <Button type="button" className="btn-primary btn" onClick={orderStatusHandler}>Update Order Status</Button>
-                                                    </div>
-                                                </Form>
-                                            </ListGroup.Item>   
-                                        )
-                                        : (
-                                            <ListGroup.Item> 
-                                                <Message variant="success" >Order Completed</Message>
+                            {order.orderStatus === 'Delivered' ?
+                                <OrderStatusSteps step1 step2 step3 step4 />
+                                : order.orderStatus === 'Shipped Out'
+                                ?   <OrderStatusSteps step1 step2 step3 />
+                                : order.orderStatus === 'Packaged'
+                                ?   <OrderStatusSteps step1 step2 />
+                                :   <OrderStatusSteps step1 />
+                            }
+                            <Container className="py-2"> 
+                                <Row>
+                                    <Col md={8} lg={7}>
+                                        {/* Shipping */}
+                                        <ListGroup variant='flush'>
+                                            <ListGroup.Item className="py-3"> 
+                                                <h3>Order: #{order._id}</h3>
+                                                <p>{order.orderDate.substring(0,10)} , {order.orderDate.substring(11,19)}</p>
+                                                <strong>Order Status:</strong>
+                                                <p>Order {order.orderStatus}</p>
+                                                <strong>Last Updated:</strong>
+                                                <p>{order.lastUpdatedAt.substring(0,10)}, {order.lastUpdatedAt.substring(11,19)}</p>
                                             </ListGroup.Item>
-                                        )
+                                            {/* user details */}
+                                            {(userInfo.isSystemAdmin || userInfo.isStoreManager) && (
+                                                <ListGroup.Item className="py-3">
+                                                    <h4 className="mb-4">Customer Details</h4>
+                                                    <Row>
+                                                        <Col xs={6} md={6}>
+                                                        <p className="">
+                                                            <strong>ID: </strong>
+                                                            {order.user._id}
+                                                        </p>
+                                                        </Col>
+                                                        <Col xs={6} md={6}>
+                                                        <p className="">
+                                                            <strong>Name: </strong>
+                                                            {order.user.first_name}&nbsp;{order.user.last_name}
+                                                        </p>
+                                                        </Col> 
+                                                    </Row>
+                                                    <Row>
+                                                        <Col xs={6} md={6}>
+                                                        <p className="">
+                                                            <strong>Email: </strong>
+                                                            {order.user.email}
+                                                        </p>
+                                                        </Col>
+                                                        <Col xs={6} md={6}>
+                                                        <p className="">
+                                                            <strong>Phone: </strong>
+                                                            {order.user.phone}
+                                                        </p>
+                                                        </Col> 
+                                                    </Row>
+                                                </ListGroup.Item>
+                                            )}
+                                            
+                                            <ListGroup.Item className="py-3">
+                                                {/* Heading */}
+                                                
+                                                <h4 className="mb-4">Shipping Details</h4>
+                                                <Row>
+                                                    <Col xs={10} md={11}>
+                                                        {/* Shipping Info */}
+                                                        <p className="">
+                                                            <strong>Name: </strong>
+                                                            {order.shippingAddress.name}
+                                                        </p>
+                                                        <p className="">
+                                                            <strong>Phone Number: </strong>
+                                                            {order.shippingAddress.phone}
+                                                        </p>
+                                                        <p className="">
+                                                            <strong>Address: </strong>
+                                                            {order.shippingAddress.address}, 
+                                                            {' '}
+                                                            {order.shippingAddress.city} {order.shippingAddress.zipCode}, 
+                                                            {' '}
+                                                            {order.shippingAddress.state}, 
+                                                            {' '}
+                                                            {order.shippingAddress.country}
+                                                        </p>
+                                                    </Col>
+                                                
+                                                </Row>
+                                                
+                                            </ListGroup.Item>
 
-                                        )}
-                                    
-                                
-                                                       
-                            </ListGroup>
-                        </Card>
-                    </Col>
-                </Row>
-            </Container>
-            </section>
-        )
+                                            {/* Order Items */}
+                                            <ListGroup.Item className="py-3">
+                                                <Row>
+                                                    <Col xs={10} md={11}>
+                                                        <h4 className="mb-4">Order Items</h4>
+                                                    </Col>
+                                                </Row> 
+                                                <ListGroup variant="flush">
+                                                    {/* Map out items in order */}
+                                                    {order.orderItems.map((item, index) => (
+                                                        <ListGroup.Item key="index">
+                                                            <Row>
+                                                                {/* Product Image */}
+                                                                <Col md={2} xs={3}>
+                                                                    <Image src={item.image} alt={item.name} fluid rounded></Image>
+                                                                </Col>
+                                                                {/* Product Name */}
+                                                                <Col>
+                                                                    <Link to={`/product/${item.category_slug}/${item.product}`}>{item.name}</Link>
+                                                                    
+                                                                    <p className="my-2">{item.qty} x ${item.price}&nbsp;&nbsp;=&nbsp;&nbsp; ${(parseFloat(item.qty * item.price)).toFixed(2)}</p>
+                                                                </Col>
+                                                                {/* Quantity and Price */}
+                                                                
+                                                                <Col sm={2}>{((!userInfo.isSystemAdmin || !userInfo.isStoreManager)) && order.isDelivered  && (
+                                            
+                                                                    <Button variant="outline-success" className="btn " type='button' >Rate</Button>
+                                            
+                                                            )}</Col>
+                                                            </Row>
+                                                        </ListGroup.Item>
+                                                    ))}
+                                                </ListGroup>
+                                            </ListGroup.Item>
+                                        
+                                        </ListGroup>
+
+                                    </Col>
+                                    <Col md={4}>
+                                        <Card>
+                                            <ListGroup variant="flush">
+                                                <ListGroup.Item>
+                                                    <h4>Order Summary</h4>
+                                                </ListGroup.Item>
+                                                <ListGroup.Item>
+                                                    <Row className="py-1">
+                                                        <Col >Payment Method:</Col>
+                                                        <Col className="text-right text-capitalize">{order.payment.method}</Col>
+                                                    </Row>
+                                                    <Row className="py-1">
+                                                        <Col md={4}>Payment Status:</Col>
+                                                        <Col className="text-right">
+                                                            <p className="text-success">Paid on&nbsp;
+                                                                {order.payment.lastUpdated.substring(0,10)} ,&nbsp; 
+                                                                {order.payment.lastUpdated.substring(11,19)}
+                                                            </p>
+                                                            </Col>
+                                                    </Row>
+                                                </ListGroup.Item> 
+                                                <ListGroup.Item>
+                                                    <Row className="py-1">
+                                                        <Col md={4}>Subtotal:</Col>
+                                                        <Col className="text-right">${order.itemsPrice}</Col>
+                                                    </Row>
+                                                    <Row className="py-1">
+                                                        <Col >Shipping:</Col>
+                                                        <Col className="text-right">${order.shippingPrice}</Col>
+                                                    </Row>
+                                                    <Row className="py-1">
+                                                        <Col >Tax (SST - 6%):</Col>
+                                                        <Col className="text-right">${order.taxRate}</Col>
+                                                    </Row>
+                                                </ListGroup.Item>
+                                                <ListGroup.Item>
+                                                    <Row className="py-1">
+                                                        <Col ><strong>Grand Total:</strong></Col>
+                                                        <Col className="text-right"><strong>${order.totalPrice}</strong></Col>
+                                                    </Row>
+                                                </ListGroup.Item>  
+                                            
+                                                
+                                                {/* Update Order Status -  Store Manager */}
+                                                {((userInfo.isStoreManager)) 
+                                                    
+                                                    && (
+                                                        !order.isDelivered ? (
+                                                            <ListGroup.Item>
+                                                                {loadingStatus && <Loader />}
+                                                                {errorStatus && <Message variant="danger">{errorStatus}</Message>}
+                                                                
+                                                                <Form>
+                                                                    <Form.Select aria-label="Order Status" defaultValue={order.orderStatus} onChange={changeStatus}>
+                                                                        <option>Order Status</option>
+                                                                        <option value="Placed">Placed</option>
+                                                                        <option value="Packaged">Packaged</option>
+                                                                        <option value="Shipped">Shipped Out</option>
+                                                                        <option value="Delivered">Delivered</option>
+                                                                    </Form.Select>
+                                                                    <div className="d-grid my-3">
+                                                                        <Button type="button" className="btn-primary btn" onClick={orderStatusHandler}>Update Order Status</Button>
+                                                                    </div>
+                                                                </Form>
+                                                            </ListGroup.Item>   
+                                                        )
+                                                        : (
+                                                            <ListGroup.Item> 
+                                                                <Message variant="success" >Order Completed</Message>
+                                                            </ListGroup.Item>
+                                                        )
+
+                                                        )}
+                        
+                                            </ListGroup>
+                                        </Card>
+                                        
+                                        
+                                    </Col>
+                                </Row>
+                            </Container>
+                            </section>
+                        )
+                    }
+                </main>
+
+            </Col>
+        </Row>
+    )
 }
 
 export default OrderScreen

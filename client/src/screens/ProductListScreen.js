@@ -57,7 +57,7 @@ const ProductListScreen = ({history}) => {
         
         dispatch({type: PRODUCT_CREATE_RESET})
 
-        if(!userInfo.isSystemAdmin && !userInfo.isStoreManager){
+        if(!userInfo || (userInfo && !userInfo.isSystemAdmin && !userInfo.isStoreManager)){
             history.push("/accessdenied")
         }
         
@@ -86,7 +86,7 @@ const ProductListScreen = ({history}) => {
 
     return (
         <Row>
-            <SideBar></SideBar>
+            <SideBar activeTab="product"></SideBar>
             <Col>
                 <Container className="py-5">
                 <h1 className="mb-5">Products</h1>
@@ -110,7 +110,7 @@ const ProductListScreen = ({history}) => {
                     /*else show page content */
                     : ( <>
 
-                        {userInfo.isStoreManager && 
+                        {userInfo && userInfo.isStoreManager && 
                             <div className="d-flex flex-row-reverse mb-3"> 
                                 <Button variant="outline-success" onClick={createProductHandler}>
                                     <IoMdAddCircleOutline className="me-2 mb-1 fs-5"/>Add Product 
