@@ -27,8 +27,6 @@ import { ORDER_CREATE_REQUEST,
         ORDER_STATUS_FAIL,
 } from '../constants/orderConstants'
 
-import { CART_CLEAR_ITEMS } from '../constants/cartConstants'
-
 //create new order action
 export const createOrder = (order) => async(dispatch, getState) => {
      //try-catch exception

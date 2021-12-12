@@ -1,14 +1,8 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React, {useState, useEffect} from 'react'
 import Products from '../components/Products'
-
-import { useHistory } from 'react-router'
 
 //redux
 import { useDispatch, useSelector } from 'react-redux'
-
-//import actions
-
-import { listCategories } from '../actions/categoryActions'
 
 //UI components
 import {Container, Row, Col, Form, Nav, Button} from 'react-bootstrap'
@@ -18,12 +12,6 @@ import Rating from '../components/Rating'
 //Icons
 import {AiOutlineLine} from 'react-icons/ai'
 import Message from '../components/Message'
-
-
-
-
-
-
 
 const CatalogScreen = ({match}) => {
 
@@ -71,8 +59,6 @@ const CatalogScreen = ({match}) => {
     //apply filter
     const applyFilterHandler = (e) => {
         e.preventDefault()
-        console.log("prev:", filter)
-
         
         if((Number(price_max)<=Number(price_min)) && (price_max !=='' && price_min !== '')){
             setErrorFilter("Min price cannot be greater than or equal to max price")
@@ -88,8 +74,7 @@ const CatalogScreen = ({match}) => {
                  
         }
         else{
-            setErrorFilter("Please select filters to apply")       
-            
+            setErrorFilter("Please select filters to apply")                 
         }
     }
 
@@ -105,14 +90,12 @@ const CatalogScreen = ({match}) => {
                       
         setCategories(categoryList.categories)   
 
-        
-
     }, [dispatch, categories, categoryList, categoryFilter, categoryActive, filter])
 
     return (
         <section>
             <Row>
-                <Col md={4} xl={3} className="px-0 bg-light">
+                <Col md={4} xl={3} className="px-0 pb-5 bg-light">
                     <div >
                         <h5 className="px-5 pt-5">Categories</h5>
                         <Nav className="flex-column py-2 nav-side" variant="pills">
