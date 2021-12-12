@@ -1,16 +1,17 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useDispatch , useSelector} from 'react-redux'
+import { useHistory } from 'react-router-dom'
 //header component 
 import { LinkContainer } from 'react-router-bootstrap'
 import {Container, Navbar, Nav, NavDropdown, Badge} from 'react-bootstrap'
 import Search from './Search'
-import { useHistory } from 'react-router-dom'
+
 
 
 //icons
 import {MdPerson} from 'react-icons/md'
 import {TiShoppingCart} from 'react-icons/ti'
-import {RiShoppingBasketLine, RiMoneyDollarBoxLine} from 'react-icons/ri'
+import {RiShoppingBasketLine, RiMoneyDollarBoxLine, RiDashboardFill} from 'react-icons/ri'
 import {BiLogOutCircle, BiPackage} from 'react-icons/bi'
 import {GoGraph} from 'react-icons/go'
 import {FiUsers} from 'react-icons/fi'
@@ -24,6 +25,9 @@ import {listCategories} from '../actions/categoryActions'
 //header function
 const Header = () => {
 
+    const [userType, setUserType] = useState('')
+
+    //define hooks
     const history = useHistory();
 
 //----logged in user----
@@ -54,6 +58,16 @@ const Header = () => {
         dispatch(listCategories())
     }, [dispatch])
 
+    useEffect(() => {
+        if(userInfo){
+            if(userInfo.isStoreManager){
+               setUserType("/store-manager")
+            }
+            if(userInfo.isSystemAdmin){
+                setUserType("/admin")
+            }
+        }
+    }, [userInfo])
     
 
     return (
@@ -62,29 +76,33 @@ const Header = () => {
             <Navbar variant="dark" bg="dark" className="p-l-4 p-1" collapseOnSelect  expand="lg">
                 <Container fluid>
                     <div className="d-flex">
-                        <LinkContainer to="/">
+                        
+                        <LinkContainer to={(userInfo && !userInfo.isSystemAdmin) ? "/" : "/admin/dashboard"}>
                             <Navbar.Brand><img alt="Furnish Now" src="/logo.svg" width="150px"/></Navbar.Brand> 
                         </LinkContainer>
-                       
-                            
-                        <LinkContainer to="/Products">
-                            <NavDropdown title="Shop By Category" id="basic-nav-dropdown">
-                                <LinkContainer to="/products/all">
-                                    <NavDropdown.Item>All Categories</NavDropdown.Item>
-                                </LinkContainer>
-                                <NavDropdown.Divider />
-                                {(!loading && !error) && (
-                                    categories.map(category => (
-                                    <LinkContainer key={category._id} to={`/products/${category.slug}`}>
-                                        <NavDropdown.Item>{category.name}</NavDropdown.Item>
-                                    </LinkContainer>            
-                                ))
-                                ) }
-                                
-                        </NavDropdown>  
-                    </LinkContainer>
+
+                        {(!userInfo || (userInfo && !userInfo.isSystemAdmin)) &&   
+                            <LinkContainer to="/Products">
+                                <NavDropdown title={userInfo && userInfo.isStoreManager ? "View Catalog" : "Shop By Category"} id="basic-nav-dropdown">
+                                    <LinkContainer to="/products/all">
+                                        <NavDropdown.Item>All Categories</NavDropdown.Item>
+                                    </LinkContainer>
+                                    <NavDropdown.Divider />
+                                    {(!loading && !error) && (
+                                        categories.map(category => (
+                                        <LinkContainer key={category._id} to={`/products/${category.slug}`}>
+                                            <NavDropdown.Item>{category.name}</NavDropdown.Item>
+                                        </LinkContainer>            
+                                    ))
+                                    ) }        
+                                </NavDropdown>  
+                            </LinkContainer>
+                        }
                     </div>
-                <Search />
+                
+                {/* Search Bar - not available for system admin */}
+                {(!userInfo || (userInfo && !userInfo.isSystemAdmin)) && <Search />}
+                
                 
                 <div className="d-flex">
                     <Navbar.Collapse id="navbarScroll" >
@@ -107,29 +125,33 @@ const Header = () => {
                              <NavDropdown 
                             //  if user is system admin
                                 title={userInfo.isSystemAdmin ? 
-                                            ("Admin: " + (userInfo.first_name + " " + userInfo.last_name)) 
-                                            //  if user is store manager
-                                            : userInfo.isStoreManager ? ("Store Manager: " + (userInfo.first_name + " " + userInfo.last_name)) 
-                                            //if normal user
-                                               : (userInfo.first_name + " " + userInfo.last_name)}  align={{ lg: 'end' }}>
+                                    ("Admin: " + (userInfo.first_name + " " + userInfo.last_name)) 
+                                    //  if user is store manager
+                                    : userInfo.isStoreManager ? ("Store Manager: " + (userInfo.first_name + " " + userInfo.last_name)) 
+                                    //if normal user
+                                        : (userInfo.first_name + " " + userInfo.last_name)}  align={{ lg: 'end' }}>
 
                                 {/* dropdown options for system admin or store manager */}
                                 {(userInfo.isSystemAdmin || userInfo.isStoreManager) && (
                                     <>
+                                        <LinkContainer to={userType+"/dashboard"}>
+                                            <NavDropdown.Item ><RiDashboardFill className="fs-2 pe-2 mb-1 "/>Dashboard</NavDropdown.Item>
+                                        </LinkContainer>
+                                        <NavDropdown.Divider />
                                         {userInfo.isSystemAdmin && (
                                             <LinkContainer to="/admin/userlist">
                                                 <NavDropdown.Item ><FiUsers className="fs-3 pe-2 ms-1 mb-1 "/>Users</NavDropdown.Item>
                                             </LinkContainer>
                                         )}
-                                        <LinkContainer to="/admin/productlist">
+                                        <LinkContainer to={userType+"/productlist"}>
                                             <NavDropdown.Item ><BiPackage className="fs-2 pe-2 mb-1 "/>Products</NavDropdown.Item>
                                         </LinkContainer>
 
-                                        <LinkContainer to="/admin/orderlist">
+                                        <LinkContainer to={userType+"/orderlist"}>
                                             <NavDropdown.Item ><RiMoneyDollarBoxLine className=" fs-2 pe-2 mb-1 "/>Orders</NavDropdown.Item>
                                         </LinkContainer>
 
-                                        <LinkContainer to="/admin/reports">
+                                        <LinkContainer to={userType+"/reports"}>
                                             <NavDropdown.Item ><GoGraph className=" fs-3 pe-2 ms-1 mb-1 "/>Reports</NavDropdown.Item>
                                         </LinkContainer>
                                         <NavDropdown.Divider />
@@ -139,9 +161,11 @@ const Header = () => {
                                 <LinkContainer to="/profile">
                                     <NavDropdown.Item ><MdPerson className="fs-2 pe-2 mb-1 "/>My Profile</NavDropdown.Item>
                                 </LinkContainer>
-                                <LinkContainer to="/my-orders">
-                                    <NavDropdown.Item ><RiShoppingBasketLine className="fs-2 pe-2 mb-1 "/>My Orders</NavDropdown.Item>
-                                </LinkContainer>
+                                {(userInfo && (!userInfo.isSystemAdmin && !userInfo.isStoreManager)) &&
+                                    <LinkContainer to="/my-orders">
+                                        <NavDropdown.Item ><RiShoppingBasketLine className="fs-2 pe-2 mb-1 "/>My Orders</NavDropdown.Item>
+                                    </LinkContainer>
+                                }
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item onClick={logoutHandler}><BiLogOutCircle className="fs-2 pe-2 mb-1 "/>Logout</NavDropdown.Item>
                              </NavDropdown>

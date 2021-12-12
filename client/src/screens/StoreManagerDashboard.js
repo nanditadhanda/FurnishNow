@@ -4,15 +4,17 @@ import React from 'react'
 import SideBar from '../components/SideBar'
 
 //Bootstrap imports
-import { Container } from 'react-bootstrap'
+import { Container, Row,  Col } from 'react-bootstrap'
 const StoreManagerDashboard = () => {
     return (
-        <section>
+        <Row>
             <SideBar></SideBar>
-            <Container>
-                
-            </Container>       
-        </section>
+            <Col>
+                <main>
+                    
+                </main>
+            </Col>       
+        </Row>
     )
 }
 
