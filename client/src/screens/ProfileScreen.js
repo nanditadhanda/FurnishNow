@@ -9,10 +9,11 @@ import { getUserDetails, updateUserProfile } from '../actions/userActions'
 import { USER_PROFILE_UPDATE_RESET} from '../constants/userConstants'
 
 //UI components
-import {Form, Row, Col, Button} from 'react-bootstrap'
+import {Form, Row, Col, Button, Container} from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
+import SideBar from '../components/SideBar'
 
 const ProfileScreen = ({history}) => {
 
@@ -20,9 +21,11 @@ const ProfileScreen = ({history}) => {
     const [first_name, setFirstName] = useState('')
     const [last_name, setLastName] = useState('')
     const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [message, setMessage] = useState('')
+    const [success, setSuccess] = useState(false)
 
     //define dispatch
     const dispatch = useDispatch()
@@ -41,7 +44,7 @@ const ProfileScreen = ({history}) => {
 
     //get userUpdateProfile state to check if information has been updated
     const userUpdateProfile = useSelector(state => state.userUpdateProfile)
-    const {success} = userUpdateProfile
+    const {success: updateSuccess, loading: updateLoading, error: updateError} = userUpdateProfile
 
     //check if user is already logged in
     useEffect(() => {
@@ -51,29 +54,34 @@ const ProfileScreen = ({history}) => {
         }
         else {
             //if user is logged in but no profile details are found or user details are updated successfully
-            if(!user || !user.first_name || success || userInfo._id !== user._id){
+            if(!user || !user.first_name || updateSuccess || userInfo._id !== user._id){
                 //if profile is successfully updated, reset userUpdateProfile state
-                dispatch({type: USER_PROFILE_UPDATE_RESET})
-
-                //get user profile details
-                dispatch(getUserDetails('profile'))      
+                dispatch({type: USER_PROFILE_UPDATE_RESET})           
+                //get user profile details    
+                dispatch(getUserDetails('profile')) 
+                if(updateSuccess){
+                    setSuccess(true)    
+                }                      
             }
-            else{
+            else{      
                 setFirstName(user.first_name)
                 setLastName(user.last_name)
                 setEmail(user.email)
+                setPhone(user.phone_number)
+                
             }
         }
     },
     //set dependencies
-    [history, dispatch, userInfo, user, success])
+    [history, dispatch, userInfo, user, updateSuccess])
 
     const submitHandler = (e) => {
         //prevent refresh or redirect to another page
         e.preventDefault()
+        setSuccess(false) 
 
         //validations
-        if(first_name == "" || last_name == "" || email == "" ){
+        if(first_name === "" || last_name === "" || email === "" || phone ==='' ){
             setMessage("Please fill out all fields")
         }
         else if (password !== confirmPassword){
@@ -86,86 +94,110 @@ const ProfileScreen = ({history}) => {
                 'first_name': first_name,
                 'last_name': last_name,
                 'email': email,
+                'phone_number': phone,
                 'password' : password}))   
             
             //reset error message
-            setMessage("")      
+            setMessage("")        
         }   
     }
 
 
     return (
-        <FormContainer title="Profile" lg="7"  shadow="shadow-sm">
-            {loading && <Loader />}
+        <Row className="w-100">
+            {(userInfo.isSystemAdmin || userInfo.isStoreManager) &&
+                <SideBar activeTab="profile"/>
+            }
+            <Col>
+                <main  className="py-4">
+                    <FormContainer title="Profile" lg="8"  shadow="shadow-sm">
+                        {(loading || updateLoading) && <Loader />}
 
-            {/* Error */}
-            {message && <Message variant="danger" dismissable="true" show={message ? true : false}>Error: {message}</Message>}
+                        {/* Error */}
+                        {message && <Message variant="danger" dismissable="true" show={message ? true : false}>Error: {message}</Message>}
 
-            {error && <Message variant="danger" dismissable="true" show={error ? true : false}>Error: {error}</Message>}
+                        {(error || updateError) && <Message variant="danger" dismissable="true" show={(error || updateError) ? true : false}>Error: {error ? error : updateError}</Message>}
 
-            {/* Registration Form */}
-            <Form onSubmit={submitHandler}>
-                <Row>
-                    <Col md="6" xs="12" >
-                        {/* First Name Field */}
-                        <Form.Group controlId="first_name" className="pb-2">
-                            <Form.Label>First Name</Form.Label>
-                            <Form.Control
-                                required 
-                                type="text" 
-                                value={first_name} onChange={(e) => setFirstName(e.target.value)}/>
-                        </Form.Group>
-                    </Col>
-                    <Col md="6" xs="12">
-                        {/* Last Name Field */}
-                        <Form.Group controlId="last_name" className="pb-2">
-                            <Form.Label>Last Name</Form.Label>
-                            <Form.Control 
-                                required
-                                type="text" 
-                                value={last_name} onChange={(e) => setLastName(e.target.value)}/>
-                        </Form.Group>       
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                         {/* Email Field */}
-                        <Form.Group controlId="email" className="py-3">
-                            <Form.Label>Email Address</Form.Label>
-                            <Form.Control 
-                                required
-                                type="email" 
-                                value={email} onChange={(e) => setEmail(e.target.value)}/>
-                        </Form.Group>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs="12" md="6">
-                         {/* Password Field */}
-                        <Form.Group controlId="password" className="py-3">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control 
-                                type="password" 
-                                value={password} onChange={(e) => setPassword(e.target.value)}/>
-                        </Form.Group>
-                    </Col>
-                    <Col xs="12" md="6">
-                         {/* Password Field */}
-                        <Form.Group controlId="password" className="py-3">
-                            <Form.Label>Confirm Password</Form.Label>
-                            <Form.Control 
-                                type="password" 
-                                value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
-                        </Form.Group>
-                    </Col>
-                </Row>
+                        {/* successfully updated */}
+                        {success && <Message variant="success" dismissable="true" show={message ? true : false}>Successfully Updated Profile Information </Message>}
+
+                        {/* Registration Form */}
+                        <Form onSubmit={submitHandler}>
+                            <Row>
+                                <Col md="6" xs="12" >
+                                    {/* First Name Field */}
+                                    <Form.Group controlId="first_name" className="pb-2">
+                                        <Form.Label>First Name</Form.Label>
+                                        <Form.Control
+                                            required 
+                                            type="text" 
+                                            value={first_name} onChange={(e) => setFirstName(e.target.value)}/>
+                                    </Form.Group>
+                                </Col>
+                                <Col md="6" xs="12">
+                                    {/* Last Name Field */}
+                                    <Form.Group controlId="last_name" className="pb-2">
+                                        <Form.Label>Last Name</Form.Label>
+                                        <Form.Control 
+                                            required
+                                            type="text" 
+                                            value={last_name} onChange={(e) => setLastName(e.target.value)}/>
+                                    </Form.Group>       
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs="12" md="6">
+                                    {/* Email Field */}
+                                    <Form.Group controlId="email" className="py-3">
+                                        <Form.Label>Email Address</Form.Label>
+                                        <Form.Control 
+                                            required
+                                            type="email" 
+                                            value={email} onChange={(e) => setEmail(e.target.value)}/>
+                                    </Form.Group>
+                                </Col>
+                                 <Col xs="12" md="6">
+                                    {/* Phone Field */}
+                                    <Form.Group controlId="phone" className="py-3">
+                                        <Form.Label>Phone Number</Form.Label>
+                                        <Form.Control 
+                                            type="text" 
+                                            value={phone} onChange={(e) => setPhone(e.target.value)}/>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs="12" md="6">
+                                    {/* Password Field */}
+                                    <Form.Group controlId="password" className="py-3">
+                                        <Form.Label>Password</Form.Label>
+                                        <Form.Control 
+                                            type="password" 
+                                            value={password} onChange={(e) => setPassword(e.target.value)}/>
+                                    </Form.Group>
+                                </Col>
+                                <Col xs="12" md="6">
+                                    {/* Password Field */}
+                                    <Form.Group controlId="password" className="py-3">
+                                        <Form.Label>Confirm Password</Form.Label>
+                                        <Form.Control 
+                                            type="password" 
+                                            value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            
+                            {/* Submit Button */}
+                            <div className="d-grid">
+                                <Button type="submit" variant="primary" className="my-3">Update</Button>
+                            </div>  
+                        </Form>
+                    </FormContainer>
+
+                </main>
                 
-                {/* Submit Button */}
-                <div className="d-grid">
-                    <Button type="submit" variant="primary" className="my-3">Update</Button>
-                </div>  
-            </Form>
-        </FormContainer>
+            </Col>
+        </Row>      
     )
 }
 

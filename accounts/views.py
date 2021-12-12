@@ -63,7 +63,7 @@ def updateUserProfile(request):
     user.last_name = data['last_name']
     user.username = data['email']
     user.email = data['email']
-
+    user.phone_number = data['phone_number']
     # if password value changed then update password
     if data['password'] != '':
         user.password = make_password(data['password'])
