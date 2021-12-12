@@ -8,10 +8,10 @@ const AdminDashboard = () => {
     return (
         
         <Row >
-            <SideBar></SideBar>  
+            <SideBar activeTab="dashboard" />
             <Col>
                 <main>
-                    
+
                 </main>
             </Col> 
         </Row>                   

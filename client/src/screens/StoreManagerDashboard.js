@@ -8,7 +8,7 @@ import { Container, Row,  Col } from 'react-bootstrap'
 const StoreManagerDashboard = () => {
     return (
         <Row>
-            <SideBar></SideBar>
+            <SideBar activeTab="dashboard" />
             <Col>
                 <main>
                     
