@@ -10,6 +10,7 @@ import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Review from '../components/Review'
 import AR from '../components/AR'
+import ModelViewer from '../components/ModelViewer'
 // import products from '../products'
 
 
@@ -189,7 +190,14 @@ const ProductScreen = ({ match, history }) => {
                                                 <Col className="lh-base">{product.description}</Col>
                                             </Row>
                                         </ListGroupItem>
-                                        <ListGroupItem><AR model3D={product.model3D} productID={productID} max={product.countInStock} /></ListGroupItem>
+                                        {/* AR and Model Viewer Buttons */}
+                                        <ListGroupItem>
+                                                <div className="d-flex flex-wrap">
+                                                    <ModelViewer model3D={product.model3D} product={product} max={product.countInStock} /> 
+                                                    <AR model3D={product.model3D} productID={productID} max={product.countInStock} />
+                                                </div>
+                                            
+                                        </ListGroupItem>
                                     </ListGroup>
                                 </Col>
                                 <Col >

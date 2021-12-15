@@ -17,7 +17,7 @@ import Loader from './Loader'
 
 
 
-const AR = ({model3D="", productID, max}) => {
+const AR = ({model3D="", productID, max, tooltipPlacement="bottom"}) => {
 
   //----------- initializing states, variables and constants ----------//
 
@@ -56,16 +56,9 @@ const AR = ({model3D="", productID, max}) => {
   let scene = null;
   let camera = null;
   let model = null;
-  
-  let mixer = null;
-  let action = null;
   let reticle = null;
-  let lastFrame = Date.now();
-
 
   const [modelPlaced, setModelPlaced] = useState(false)
-
-
 
   //initial scene
   const initScene = (gl, session) => {
@@ -85,7 +78,7 @@ const AR = ({model3D="", productID, max}) => {
       model3D,
       (gltf) => {
         model = gltf.scene;
-        model.scale.set(1.0, 1.0, 1.0);
+        model.scale.set(0.5, 0.5, 0.5);
         model.castShadow = true;
         model.receiveShadow = true;
         // mixer = new THREE.AnimationMixer(model);
@@ -102,10 +95,11 @@ const AR = ({model3D="", productID, max}) => {
     light.position.y = 5;
     scene.add(light);
 
-    // create and configure three.js renderer with XR support
+    // create and configure three.js renderer with XR support - WebGLRendererhandles rendering to the session's base layer.
     renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
+      preserveDrawingBuffer: true,
       autoClear: true,
       context: gl,
     })
@@ -205,7 +199,6 @@ const AR = ({model3D="", productID, max}) => {
 
   function onRequestSessionError(ex) {
     setInfo("Failed to start AR session.")
-    console.error(ex.message);
   }
 
 
@@ -242,9 +235,6 @@ const AR = ({model3D="", productID, max}) => {
           document
             .getElementById("overlay")
             .removeEventListener("click", placeObject);
-          // document
-          //   .getElementById("overlay")
-          //   .addEventListener("click", toggleAnimation);
 
           
         }
@@ -252,23 +242,6 @@ const AR = ({model3D="", productID, max}) => {
         
       }
 
-      // function toggleAnimation() {
-      //   if (action.isRunning()) {
-      //     action.stop();
-      //     action.reset();
-      //   } else {
-      //     action.play();
-      //   }
-      // }
-
-      // // Utility function to update animated objects
-      // function updateAnimation() {
-      //   let dt = (Date.now() - lastFrame) / 1000;
-      //   lastFrame = Date.now();
-      //   if (mixer) {
-      //     mixer.update(dt);
-      //   }
-      // }
 
       function onXRFrame(t, frame) {
         let session = frame.session;
@@ -302,12 +275,6 @@ const AR = ({model3D="", productID, max}) => {
         renderer.render(scene, camera);
       }
 
-
-      function resetHandler (){
-        
-        console.log("reset")
-      }
-
       
     
 
@@ -321,8 +288,8 @@ const AR = ({model3D="", productID, max}) => {
     if(navigator.xr){
       navigator.xr.isSessionSupported('immersive-ar').then((isSupported) => {
         setSupported(isSupported)
-        if (isSupported && model3D !== null) {
-          setXRButton('View in AR')
+        if (isSupported && model3D !== null ) {
+          setXRButton('View Live AR')
           setPopoverTitle('3D model using immersive-AR')
           setPopoverDesc(
               <div>
@@ -334,24 +301,36 @@ const AR = ({model3D="", productID, max}) => {
                   <li>Once Reticle appears, tap on the screen to place the object.</li>
                 </ol>
                  <p className="text-justify text-danger"><strong>Please Note: </strong>FurnishNow ensures your privacy is not breached. Data from your camera will not be recorded or stored in any form. Your camera will not be accessed when AR-mode is not active.</p>
+                 <p className="text-success text-justify">
+                    Alternatively, you may enjoy our interactive 3D model preview of the product.
+                </p>
               </div>)
         } else if (isSupported && model3D === null){
-          setXRButton('3D model unavailable')
           setPopoverTitle('3D model unavailable')
           setPopoverDesc(`3D model is not available for this product. We apologize for the inconvenience caused`)
         }   else{
-          setXRButton('AR not supported')
-          setPopoverTitle('Immersive-AR Pre-requisites')
-          setPopoverDesc(<div>
-                              <p className="text-justify">AR is not supported on your browser window. Please open application on a mobile device with one of the following mobile web browers to enjoy our immersive AR experience: </p>
-                              <ul>
-                                <li>Chrome: version 79+</li>
-                                <li>Opera: version 66+</li>
-                                <li>Edge: version 79+</li>
-                                <li>Mozilla: version 90+</li>
-                                <li className="text-danger">Safari: Not Supported</li>
-                              </ul>
-                            </div>) 
+          setXRButton('Live AR not supported')
+          setPopoverTitle(`Immersive-AR Pre-requisites`)
+          setPopoverDesc(
+          <div>
+              <p className="text-justify">Live AR is not supported on your browser window. Please open application on a mobile device with one of the following mobile web browers to enjoy our immersive AR experience: </p>
+              <ul>
+                <li>Chrome: version 79+</li>
+                <li>Opera: version 66+</li>
+                <li>Edge: version 79+</li>
+                <li>Mozilla: version 90+</li>
+                <li className="text-danger">Safari: Not Supported</li>
+              </ul>
+              {model3D === null ? 
+                  <p className="text-danger text-justify">
+                      Note: 3D model is not available for this product. We apologize for the inconvenience caused
+                  </p>
+                  :
+                  <p className="text-success text-justify">
+                    In the meantime, please enjoy our interactive 3D model preview of the product
+                  </p>
+              }
+          </div>) 
         }    
       }) 
     }
@@ -397,10 +376,12 @@ const updateMsg = ({show, error}) => {
       <div className="info-area">
         <div id="info">{info}</div>  
         {/* If WebXR is supported on device and 3D model is */}
-        { (supported && model3D !== null) ?
+        { model3D !== null && (
+          (supported) ?
           <Button id="xr-button" className="btn-success" onClick={onButtonClicked}>{xrButton}</Button>
-            :
-              <Button className="btn-secondary" id="xr-button" disabled>{xrButton}</Button>
+           :
+           <Button className="btn-secondary" id="xr-button" disabled>{xrButton}</Button>
+         )
         }
         {modelPlaced && 
             <>
@@ -424,7 +405,7 @@ const updateMsg = ({show, error}) => {
               </div>
             </>}
            {xrSession ===  null && 
-            <PopoverTooltip title={popoverTitle} content={popoverDesc}/>}
+            <PopoverTooltip title={popoverTitle} content={popoverDesc} placement={tooltipPlacement}/>}
             {xrSession && loading && 
               <div className="d-flex align-items-center ">
                 <Loader />

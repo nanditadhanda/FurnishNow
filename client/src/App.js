@@ -29,7 +29,6 @@ import ProductListScreen from './screens/ProductListScreen'
 import ProductEditScreen from './screens/ProductEditScreen'
 import OrderListScreen from './screens/OrderListScreen'
 import CatalogScreen from './screens/CatalogScreen'
-import AR2 from './components/AR2'
 import StoreManagerDashboard from './screens/StoreManagerDashboard'
 import AdminDashboard from './screens/AdminDashboard'
 
@@ -88,9 +87,6 @@ function App() {
       
           {/* Unauthorized access redirect screen */}
           <Route  path="/accessdenied" component={AuthorizationErrorScreen}/>
-
-          <Route  path="/ar" component={AR2}/>
-
           {/* If unmatching URL is found */}
           <Route component={NoMatchPage} />
 
