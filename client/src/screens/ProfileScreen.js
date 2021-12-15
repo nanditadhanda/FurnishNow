@@ -9,7 +9,7 @@ import { getUserDetails, updateUserProfile } from '../actions/userActions'
 import { USER_PROFILE_UPDATE_RESET} from '../constants/userConstants'
 
 //UI components
-import {Form, Row, Col, Button, Container} from 'react-bootstrap'
+import {Form, Row, Col, Button} from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'

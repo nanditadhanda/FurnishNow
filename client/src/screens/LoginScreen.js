@@ -18,6 +18,7 @@ const LoginScreen = ({location, history}) => {
     //set states
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [message, setMessage] = useState('')
     const [redirect] = useState(location.search ? location.search.split('=')[1]: '/')
     const dispatch = useDispatch()
 
@@ -47,26 +48,38 @@ const LoginScreen = ({location, history}) => {
 
 
     //submit login function
-    const submitHandler = (e) => {
+    const loginHandler = (e) => {
         //prevent refresh or redirect to another page
         e.preventDefault()
 
-        //dispatch login info
-        dispatch(login(email, password))
+        //----validations---//
 
+        //empty fields
+        if(email === "" || password === "" ){
+            setMessage("Please fill out all fields")
+        }
+        //email regex validation
+        else if(!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email))){
+            setMessage("Invalid email address entered")
+        }
+        //if no errors
+        else{
+            //dispatch login action
+            dispatch(login(email, password))
+        }
     }
 
     return (
         <FormContainer title="Sign In" lg="5" shadow="shadow">
             {loading && <Loader />}
-            {error && <Message variant="danger" dismissable="true" show={error ? true : false}>Error: {error}</Message>}
-                <Form onSubmit={submitHandler}>
+            {(error || message)&& <Message variant="danger" dismissable="true" show={error ? true : false}>Error: {error ? error : message}</Message>}
+                <Form onSubmit={loginHandler}>
 
                     {/* Email Field */}
                     <Form.Group controlId="email">
                         <Form.Label>Email Address</Form.Label>
                         <Form.Control 
-                            type="email" 
+                            type="text" 
                             value={email} onChange={(e) => setEmail(e.target.value)}/>
                     </Form.Group>
 
@@ -78,7 +91,7 @@ const LoginScreen = ({location, history}) => {
                             value={password} onChange={(e) => setPassword(e.target.value)}/>
                     </Form.Group>
 
-                    {/* Submit Button */}
+                    {/* Sign In Submit Button */}
                     <div className="d-grid">
                         <Button type="submit" variant="primary" className="my-3">Sign In</Button>
                     </div>   

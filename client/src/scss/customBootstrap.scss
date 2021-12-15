@@ -77,8 +77,42 @@ header {
   }
 }
 
+//tabs style
+.nav-tabs {
+  .nav-link{
+    color: $secondary;
+    border: 3px solid transparent;
+    transition: border 0.5s ease-in;
+
+    &:hover {
+      border-color: transparent;
+      color: darken($secondary, 0.5);
+      background-color: $light;
+    }
+
+    &.active{
+      border-color: transparent;
+      border-bottom: 3px solid $success;
+      color: $success;
+    }
+
+    
+  }
+}
+
+//footer
 footer{
   background-color: #eef1f4;
+
+  .nav-link {
+    color: $secondary;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: darken($secondary, 8%);
+    }
+  }
 }
 
 .cart {

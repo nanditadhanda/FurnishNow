@@ -20,6 +20,7 @@ const RegisterScreen = ({location, history}) => {
     const [first_name, setFirstName] = useState('')
     const [last_name, setLastName] = useState('')
     const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [message, setMessage] = useState('')
@@ -56,7 +57,7 @@ const RegisterScreen = ({location, history}) => {
         e.preventDefault()
 
         //validations
-        if(first_name === "" || last_name === "" || email === "" || password === "" || confirmPassword === ""){
+        if(first_name === "" || last_name === "" || email === "" || phone === "" || password === "" || confirmPassword === ""){
             setMessage("Please fill out all fields")
         }
         else if (password !== confirmPassword){
@@ -64,7 +65,7 @@ const RegisterScreen = ({location, history}) => {
         }
         else {
             //dispatch registeration info to register action
-             dispatch(register(first_name, last_name, email, password))
+             dispatch(register(first_name, last_name, email, phone, password))
 
             //reset error message
             setMessage("")            
@@ -105,7 +106,7 @@ const RegisterScreen = ({location, history}) => {
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <Col  xs="12" md="6">
                          {/* Email Field */}
                         <Form.Group controlId="email" className="py-3">
                             <Form.Label>Email Address</Form.Label>
@@ -113,6 +114,15 @@ const RegisterScreen = ({location, history}) => {
                                 
                                 type="email" 
                                 value={email} onChange={(e) => setEmail(e.target.value)}/>
+                        </Form.Group>
+                    </Col>
+                     <Col xs="12" md="6">
+                        {/* Phone Field */}
+                        <Form.Group controlId="phone" className="py-3">
+                            <Form.Label>Phone Number</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                value={phone} onChange={(e) => setPhone(e.target.value)}/>
                         </Form.Group>
                     </Col>
                 </Row>

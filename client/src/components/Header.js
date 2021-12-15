@@ -77,7 +77,7 @@ const Header = () => {
                 <Container fluid>
                     <div className="d-flex">
                         
-                        <LinkContainer to={(userInfo && !userInfo.isSystemAdmin) ? "/" : "/admin/dashboard"}>
+                        <LinkContainer to={!userInfo || (userInfo && !userInfo.isSystemAdmin) ? "/" : "/admin/dashboard"}>
                             <Navbar.Brand><img alt="Furnish Now" src="/logo.svg" width="150px"/></Navbar.Brand> 
                         </LinkContainer>
 

@@ -13,6 +13,7 @@ import { USER_UPDATE_RESET } from '../constants/userConstants'
 
 //UI components
 import {Form, Row, Col, Button} from 'react-bootstrap'
+import SideBar from '../components/SideBar'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
@@ -31,6 +32,7 @@ const EditUserScreen = ({match, history}) => {
     const [phone_number, setPhone] = useState('')
     const [isSystemAdmin, setAdmin] = useState('false')
     const [isStoreManager, setStoreManager] = useState('false')
+    const [role, setRole] = useState('')
 
 
     //define dispatch
@@ -49,8 +51,6 @@ const EditUserScreen = ({match, history}) => {
     const userUpdateAccount = useSelector(state => state.userUpdateAccount)
     //destructure state
     const { error: updateError, loading:updateLoading, success:updateSuccess} = userUpdateAccount
-
-   
 
     //use effect react hook
     useEffect(() => {
@@ -80,6 +80,12 @@ const EditUserScreen = ({match, history}) => {
                     setPhone(user.phone_number)
                     setAdmin(user.isSystemAdmin)
                     setStoreManager(user.isStoreManager)
+
+                    if(user.isSystemAdmin){
+                        setRole('systemAdmin')
+                    } else{
+                        setRole('storeManager')
+                    }
                 }
             }        
         }
@@ -89,6 +95,16 @@ const EditUserScreen = ({match, history}) => {
         }
      
     }, [dispatch, userInfo, user, user_id, history, updateSuccess])
+
+    useEffect(()=>{
+        if(role === "systemAdmin"){
+            setStoreManager(false)
+            setAdmin(true)
+        }else{
+            setStoreManager(true)
+            setAdmin(false)
+        }
+    },[role])
 
     const submitHandler = (e) => {
         //prevent refresh or redirect to another page
@@ -110,95 +126,111 @@ const EditUserScreen = ({match, history}) => {
     // displayed to user
     return (
 
-        <div>
-            <Link to="/admin/userlist">
-                <Button variant="outline-secondary"><IoArrowBack /> Back</Button>
-            </Link>
-            
-            <FormContainer title="Edit User" lg="7"  shadow="shadow-sm">
-                {/* If loading when updated */}
-                {updateLoading && <Loader/>}
+        <Row className="w-100">
+            <SideBar activeTab="dashboard" />
+            <Col>
+                <Link to="/admin/userlist">
+                    <Button variant="outline-secondary"><IoArrowBack /> Back</Button>
+                </Link>
+                
+                <FormContainer title="Edit User" lg="7"  shadow="shadow-sm">
+                    {/* If loading when updated */}
+                    {updateLoading && <Loader/>}
 
-                {/* if any error while updating */}
-                {updateError && <Message variant="danger" dismissable="true">Error:{updateError}</Message>}
+                    {/* if any error while updating */}
+                    {updateError && <Message variant="danger" dismissable="true">Error:{updateError}</Message>}
 
-                {/* If data is still loading (not update instance), show loader */}
-                {loading ? <Loader />
-                    //if error is encountered, show error message
-                    : error ? <Message variant="danger">Error: {error}</Message>
+                    {/* If data is still loading (not update instance), show loader */}
+                    {loading ? <Loader />
                         //if error is encountered, show error message
-                        : (
-                        <Form onSubmit={submitHandler}>
-                            {/* User Edit Form */}
-                            <Row>
-                                <Col md="6" xs="12" >
-                                    {/* First Name Field */}
-                                    <Form.Group controlId="first_name" className="pb-2">
-                                        <Form.Label>First Name</Form.Label>
-                                        <Form.Control
-                                            type="text" 
-                                            value={first_name} onChange={(e) => setFirstName(e.target.value)}/>
-                                    </Form.Group>
-                                </Col>
-                                <Col md="6" xs="12">
-                                    {/* Last Name Field */}
-                                    <Form.Group controlId="last_name" className="pb-2">
-                                        <Form.Label>Last Name</Form.Label>
-                                        <Form.Control 
-                                            type="text" 
-                                            value={last_name} onChange={(e) => setLastName(e.target.value)}/>
-                                    </Form.Group>       
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col xs="12" md="6">
-                                    {/* Email Field */}
-                                    <Form.Group controlId="email" className="py-3">
-                                        <Form.Label>Email Address</Form.Label>
-                                        <Form.Control 
-                                            type="email" 
-                                            value={email} onChange={(e) => setEmail(e.target.value)}/>
-                                    </Form.Group>
-                                </Col>
-                                <Col xs="12" md="6">
-                                    {/* Phone Field */}
-                                    <Form.Group controlId="phone_number" className="py-3">
-                                        <Form.Label>Phone Number</Form.Label>
-                                        <Form.Control 
-                                            type="text" 
-                                            value={phone_number} onChange={(e) => setPhone(e.target.value)}/>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col xs="12" md="6">
-                                    {/* Is Admin Checkbox Field */}
-                                    <Form.Group controlId="isSystemAdmin" className="py-3">
-                                        <Form.Check
-                                            label="System Admin" 
-                                            type="checkbox" 
-                                            checked={isSystemAdmin} onChange={(e) => setAdmin(e.target.checked)}/>
-                                    </Form.Group>
-                                </Col>
-                                <Col xs="12" md="6">
-                                    {/* Is Store Manager Checkbox Field */}
-                                    <Form.Group controlId="isStoreManager" className="py-3">
-                                        <Form.Check
-                                            label="Store Manager" 
-                                            type="checkbox" 
-                                            checked={isStoreManager} onChange={(e) => setStoreManager(e.target.checked)}/>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                            
-                            {/* Submit Button */}
-                            <div className="d-grid">
-                                <Button type="submit" variant="primary" className="my-3">Update</Button>
-                            </div>  
-                        </Form>
-                    )}
-            </FormContainer>
-        </div>
+                        : error ? <Message variant="danger">Error: {error}</Message>
+                            //if error is encountered, show error message
+                            : (
+                            <Form onSubmit={submitHandler}>
+                                {/* User Edit Form */}
+                                <Row>
+                                    <Col md="6" xs="12" >
+                                        {/* First Name Field */}
+                                        <Form.Group controlId="first_name" className="pb-2">
+                                            <Form.Label>First Name</Form.Label>
+                                            <Form.Control
+                                                disabled
+                                                type="text" 
+                                                value={first_name} onChange={(e) => setFirstName(e.target.value)}/>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md="6" xs="12">
+                                        {/* Last Name Field */}
+                                        <Form.Group controlId="last_name" className="pb-2">
+                                            <Form.Label>Last Name</Form.Label>
+                                            <Form.Control 
+                                                disabled
+                                                type="text" 
+                                                value={last_name} onChange={(e) => setLastName(e.target.value)}/>
+                                        </Form.Group>       
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col xs="12" md="6">
+                                        {/* Email Field */}
+                                        <Form.Group controlId="email" className="py-3">
+                                            <Form.Label>Email Address</Form.Label>
+                                            <Form.Control 
+                                                type="email" 
+                                                value={email} onChange={(e) => setEmail(e.target.value)}/>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col xs="12" md="6">
+                                        {/* Phone Field */}
+                                        <Form.Group controlId="phone_number" className="py-3">
+                                            <Form.Label>Phone Number</Form.Label>
+                                            <Form.Control 
+                                                disabled
+                                                type="text" 
+                                                value={phone_number} onChange={(e) => setPhone(e.target.value)}/>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    
+                                        {/* Is Admin Checkbox Field */}
+                                        <Form.Group controlId="isSystemAdmin" className="py-3" >
+                                            <Form.Label>Staff Role</Form.Label>
+                                            <Col xs="12" md="6">
+                                                <Form.Check
+                                                    label="System Admin" 
+                                                    type="radio" 
+                                                    name="role"
+                                                    id="systemAdmin"
+                                                    checked={role==="systemAdmin"}
+                                                    onChange={(e) => setRole(e.target.id)}
+                                                />
+                                            </Col>
+                                            <Col xs="12" md="6">
+                                                <Form.Check
+                                                    label="Store Manager" 
+                                                    type="radio" 
+                                                    name="role"
+                                                    id="storeManager"
+                                                    checked={role==="storeManager"}
+                                                    onChange={(e) => setRole(e.target.id)}
+                                                />
+                                            </Col>
+                                        </Form.Group>
+                                    
+                                
+                                </Row>
+                                
+                                {/* Submit Button */}
+                                <div className="d-grid">
+                                    <Button type="submit" variant="primary" className="my-3">Update</Button>
+                                </div>  
+                            </Form>
+                        )}
+                </FormContainer>
+            </Col>
+            
+        </Row>
     )
 }
 

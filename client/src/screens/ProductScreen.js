@@ -248,8 +248,9 @@ const ProductScreen = ({ match, history }) => {
                                                 {/*Buttons */}
 
                                                 <Row>
-                                                    <Col md={12} className="mt-3 mb-2">  
-                                                        {(userInfo && (!userInfo.isSystemAdmin)) && (
+                                                    <Col md={12} className="mt-3 mb-2">
+                                                          {/* if not logged in OR logged in and user is not system admin  */}
+                                                        {(!userInfo || ( userInfo && !userInfo.isSystemAdmin)) && (
                                                             /* If user is logged in and user is staff member */
                                                             (userInfo && userInfo.isStoreManager) ?
                                                                 (<LinkContainer to={`/store-manager/product/${productID}/edit`}>

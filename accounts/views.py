@@ -92,7 +92,8 @@ def adminUpdateUser(request, id):
     user.email = data['email']
     user.phone_number = data['phone_number']
     user.is_staff = data['isSystemAdmin']
-    user.is_admin = data['isStoreManager']
+    user.is_admin = data['isSystemAdmin']
+    user.is_storeManager = data['isStoreManager']
 
     # save user info
     user.save()
@@ -128,9 +129,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
 
-        # data['username'] = self.user.username
-        # data['email'] = self.user.email
-
+        # data recieved from post request sent into user serializer
         serializer = UserSerializerWithToken(self.user).data
 
         # loop through data in serializer
@@ -160,6 +159,7 @@ def registerUser(request):
             last_name=data['last_name'],
             username=data['email'],
             email=data['email'],
+            phone_number=data['phone'],
             password=make_password(data['password'])
         )
 
