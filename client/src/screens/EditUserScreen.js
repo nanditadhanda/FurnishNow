@@ -12,7 +12,7 @@ import { getUserDetails, updateUser } from '../actions/userActions'
 import { USER_UPDATE_RESET } from '../constants/userConstants'
 
 //UI components
-import {Form, Row, Col, Button} from 'react-bootstrap'
+import {Form, Row, Col, Button, Breadcrumb} from 'react-bootstrap'
 import SideBar from '../components/SideBar'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
@@ -129,9 +129,25 @@ const EditUserScreen = ({match, history}) => {
         <Row className="w-100">
             <SideBar activeTab="dashboard" />
             <Col>
-                <Link to="/admin/userlist">
-                    <Button variant="outline-secondary"><IoArrowBack /> Back</Button>
-                </Link>
+                {/* <Link to="/admin/userlist">
+                    <Button variant="outline-secondary" className="mx-4 mt-3"><IoArrowBack /> Back</Button>
+                </Link> */}
+                {/* Navigation breadcrumb   */}
+                    <Row className="pt-4 ms-3">
+                        <Col>
+                            <Breadcrumb>
+                                <Breadcrumb.Item>
+                                    <Link to="/admin/dashboard">Dashboard</Link>
+                                </Breadcrumb.Item>
+                                <Breadcrumb.Item>
+                                    <Link to="/admin/userlist">Users</Link>
+                                </Breadcrumb.Item>
+                                <Breadcrumb.Item active>
+                                    Edit Staff
+                                </Breadcrumb.Item>
+                            </Breadcrumb>
+                        </Col>
+                    </Row>
                 
                 <FormContainer title="Edit User" lg="7"  shadow="shadow-sm">
                     {/* If loading when updated */}
@@ -191,34 +207,31 @@ const EditUserScreen = ({match, history}) => {
                                         </Form.Group>
                                     </Col>
                                 </Row>
-                                <Row>
-                                    
-                                        {/* Is Admin Checkbox Field */}
-                                        <Form.Group controlId="isSystemAdmin" className="py-3" >
-                                            <Form.Label>Staff Role</Form.Label>
-                                            <Col xs="12" md="6">
-                                                <Form.Check
-                                                    label="System Admin" 
-                                                    type="radio" 
-                                                    name="role"
-                                                    id="systemAdmin"
-                                                    checked={role==="systemAdmin"}
-                                                    onChange={(e) => setRole(e.target.id)}
-                                                />
-                                            </Col>
-                                            <Col xs="12" md="6">
-                                                <Form.Check
-                                                    label="Store Manager" 
-                                                    type="radio" 
-                                                    name="role"
-                                                    id="storeManager"
-                                                    checked={role==="storeManager"}
-                                                    onChange={(e) => setRole(e.target.id)}
-                                                />
-                                            </Col>
-                                        </Form.Group>
-                                    
-                                
+                                <Row>                                    
+                                    {/* Is Admin Checkbox Field */}
+                                    <Form.Group controlId="isSystemAdmin" className="py-3" >
+                                        <Form.Label>Staff Role</Form.Label>
+                                        <Col xs="12" md="6">
+                                            <Form.Check
+                                                label="System Admin" 
+                                                type="radio" 
+                                                name="role"
+                                                id="systemAdmin"
+                                                checked={role==="systemAdmin"}
+                                                onChange={(e) => setRole(e.target.id)}
+                                            />
+                                        </Col>
+                                        <Col xs="12" md="6">
+                                            <Form.Check
+                                                label="Store Manager" 
+                                                type="radio" 
+                                                name="role"
+                                                id="storeManager"
+                                                checked={role==="storeManager"}
+                                                onChange={(e) => setRole(e.target.id)}
+                                            />
+                                        </Col>
+                                    </Form.Group>
                                 </Row>
                                 
                                 {/* Submit Button */}

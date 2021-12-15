@@ -15,6 +15,11 @@ import {
     USER_REGISTER_FAIL,
     USER_REGISTER_SUCCESS,
 
+    USER_STAFF_REGISTER_REQUEST,
+    USER_STAFF_REGISTER_FAIL,
+    USER_STAFF_REGISTER_SUCCESS,
+    USER_STAFF_REGISTER_RESET,
+
     USER_DETAILS_REQUEST,
     USER_DETAILS_FAIL,
     USER_DETAILS_SUCCESS,
@@ -103,7 +108,7 @@ export const logout = () => (dispatch) => {
 }
 
 //register user action
-export const register = (first_name, last_name, email, password) => async(dispatch) => {
+export const register = (first_name, last_name, email, phone, password) => async(dispatch, getState) => {
      //try-catch exception
     try {
         //dispatch action to throw user_registration_request
@@ -114,7 +119,6 @@ export const register = (first_name, last_name, email, password) => async(dispat
             headers : {
                 'Content-type' : 'application/json'
             }
-
         }
         //load data by making api call - post request
         const { data } = await axios.post(
@@ -123,8 +127,8 @@ export const register = (first_name, last_name, email, password) => async(dispat
                 'last_name' : last_name,
                 'username' : email, 
                 'email' : email,
-                'password' : password
-                
+                'phone_number' : phone,
+                'password' : password                
             },
             config
             )
@@ -154,6 +158,58 @@ export const register = (first_name, last_name, email, password) => async(dispat
                     : error.message
         })
 
+    }
+}
+
+//register staff user action
+export const registerStaff = (first_name, last_name, email,phone_number, password,  isSystemAdmin, isStoreManager) => async(dispatch, getState) => {
+     //try-catch exception
+    try {
+        //dispatch action to throw user_registration_request
+        dispatch({ type: USER_STAFF_REGISTER_REQUEST })
+        
+        //get user info (object) of logged in user from userLogin state
+        const { userLogin : { userInfo } } = getState()
+        
+        //configuration of put request with user authentication token
+        const config = {
+            headers : {
+                'Content-type' : 'application/json',
+                //authorization token to allow us to retrieve user info
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        //load data by making api call - post request
+        const { data } = await axios.post(
+            '/api/users/register-staff/',
+            {   'first_name' : first_name,
+                'last_name' : last_name,
+                'username' : email, 
+                'email' : email,
+                'phone_number' : phone_number,
+                'password' : password,
+                'isSystemAdmin' : isSystemAdmin,
+                'isStoreManager' : isStoreManager                
+            },
+            config
+            )
+
+        //if no error is caught - throw in USER_LOGIN_SUCCESS action
+        dispatch({
+            type: USER_STAFF_REGISTER_SUCCESS,
+            payload: data
+        })
+
+    }
+    //if error is caught  -- error message comes from backend
+    catch(error){
+        dispatch({
+            type: USER_STAFF_REGISTER_FAIL,
+            payload: error.response && error.response.data.detail 
+                    ? error.response.data.detail
+                    : error.message
+        })
     }
 }
 

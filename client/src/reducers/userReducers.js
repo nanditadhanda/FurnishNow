@@ -9,6 +9,11 @@ import {
     USER_REGISTER_FAIL,
     USER_REGISTER_SUCCESS,
 
+    USER_STAFF_REGISTER_REQUEST,
+    USER_STAFF_REGISTER_FAIL,
+    USER_STAFF_REGISTER_SUCCESS,
+    USER_STAFF_REGISTER_RESET,
+
     USER_DETAILS_REQUEST,
     USER_DETAILS_FAIL,
     USER_DETAILS_SUCCESS,
@@ -80,6 +85,33 @@ export const userRegisterReducer = (state = { }, action) => {
         
         //clear state if action is logout
         case USER_LOGOUT:
+            return { }
+        
+        //return state by default
+        default:
+            return state
+    }
+
+}
+
+//User register staff member reducers
+export const userStaffRegisterReducer = (state = { }, action) => {
+    //check action type passed in reducer
+    switch(action.type){
+        //if request to register, set loading to true
+        case USER_STAFF_REGISTER_REQUEST:
+            return { loading: true }
+
+        //if successfully registered, set loading to false and set userInfo state to data passed in payload
+        case USER_STAFF_REGISTER_SUCCESS:
+            return { loading: false, userStaffInfo: action.payload, success:true }
+
+        //if error, return error message in state
+        case USER_STAFF_REGISTER_FAIL:
+            return { loading: false, error: action.payload }
+        
+        //clear state if action is logout
+        case USER_STAFF_REGISTER_RESET:
             return { }
         
         //return state by default

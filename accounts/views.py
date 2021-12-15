@@ -74,6 +74,42 @@ def updateUserProfile(request):
     # return serialized data
     return Response(serializer.data)
 
+    # POST request to register new user
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def registerStaffUser(request):
+    # data from request passed
+    data = request.data
+
+    print(data['email'])
+
+    # try exception
+    try:
+        user = User.objects.create(
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+            username=data['email'],
+            email=data['email'],
+            phone_number=data['phone_number'],
+            password=make_password(data['password']),
+            is_staff=data['isSystemAdmin'],
+            is_admin=data['isSystemAdmin'],
+            is_storeManager=data['isStoreManager'],
+
+        )
+        # serialize data in JSON format
+        serializer = UserSerializerWithToken(user, many=False)
+
+        return Response(serializer.data)
+
+    # exception
+    except:
+        # error message dictionary
+        message = {'detail': 'User with this email already exists'}
+        return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['PUT'])  # PUT REST api method to update data
 # can only access if authorization token is provided

@@ -7,7 +7,7 @@ const FormContainer = ({children, title = "", lg=6 , shadow="", bg="light", bord
              
             <Row className="justify-content-md-center">
                 <Col xs={12} md={6} lg={lg}>
-                    <Card className={`p-5 mt-4  ${shadow} ${border}`} bg={bg}>
+                    <Card className={`p-5  ${shadow} ${border}`} bg={bg}>
                     {title !== "" ?<h1 className="text-center pb-3">{title}</h1> : ""}
                     {children} 
                     </Card>

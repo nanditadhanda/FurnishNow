@@ -131,8 +131,7 @@ const RegisterScreen = ({location, history}) => {
                          {/* Password Field */}
                         <Form.Group controlId="password" className="py-3">
                             <Form.Label>Password</Form.Label>
-                            <Form.Control
-                                 
+                            <Form.Control                                 
                                 type="password" 
                                 value={password} onChange={(e) => setPassword(e.target.value)}/>
                         </Form.Group>
@@ -141,8 +140,7 @@ const RegisterScreen = ({location, history}) => {
                          {/* Password Field */}
                         <Form.Group controlId="confirmPassword" className="py-3">
                             <Form.Label>Confirm Password</Form.Label>
-                            <Form.Control 
-                                
+                            <Form.Control                                
                                 type="password" 
                                 value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
                         </Form.Group>

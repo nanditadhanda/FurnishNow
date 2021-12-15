@@ -142,7 +142,6 @@ const ProductScreen = ({ match, history }) => {
                         <section>
 
                             {/* Navigation breadcrumb   */}
-
                             <Row>
                                 <Col>
                                     <Breadcrumb>

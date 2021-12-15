@@ -1,5 +1,7 @@
 import React, {useEffect} from 'react'
 
+import { LinkContainer } from 'react-router-bootstrap'
+
 //Redux imports
 import { useDispatch, useSelector } from 'react-redux'
 //Import userList action
@@ -62,19 +64,23 @@ const UserListScreen = ({history}) => {
                             /*else show page content */
                             : ( 
                                 <Tabs defaultActiveKey="staff"  className="my-4">
-                                    <Tab eventKey="staff" title="Staff">
-                                        
+
+                                    {/* Staff Accounts List Tab */}
+
+                                    <Tab eventKey="staff" title="Staff">                                        
                                         <div className="d-flex justify-content-between my-5">   
                                             <h4 className=''>Staff Accounts</h4>
-                                            <Button variant="outline-success">
-                                                <IoMdPersonAdd className="me-2 mb-1 fs-5"/>Add Staff User 
-                                            </Button>                              
-                                        </div>
-                                        
+                                            <LinkContainer to="/admin/user/add">
+                                                <Button variant="outline-success">
+                                                    <IoMdPersonAdd className="me-2 mb-1 fs-5"/>Add Staff User 
+                                                </Button>  
+                                            </LinkContainer>                                                                        
+                                        </div>                                        
                                         <Users type="staff" users={users}/>
                                     </Tab>
-                                    <Tab eventKey="customers" title="Customers">
-                                        
+
+                                    {/* Customer Accounts List Tab */}
+                                    <Tab eventKey="customers" title="Customers">                                        
                                         <h4 className='my-5 pb-3'>Customer Accounts</h4>
                                         <Users type="customers" users={users}/>
                                     </Tab>
