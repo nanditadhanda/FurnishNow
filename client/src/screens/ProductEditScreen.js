@@ -18,10 +18,11 @@ import {listCategories } from '../actions/categoryActions'
 import {PRODUCT_UPDATE_RESET} from '../constants/productConstants'
 
 //UI components
-import {Form, Row, Col, Button, FloatingLabel, Image, Container} from 'react-bootstrap'
+import {Form, Row, Col, Button, FloatingLabel, Container} from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
+import SideBar from '../components/SideBar'
 
 //icons
 import { IoArrowBack } from 'react-icons/io5'
@@ -31,18 +32,22 @@ const ProductEditScreen = ({match, history}) => {
     const productID = match.params.id
 
     //set default local states
-    const [name, setName] = useState('')
+    const [productName, setName] = useState('')
     const [brand, setBrand] = useState('')
     const [category, setCategory] = useState('')
     const [category_id, setCategoryID] = useState('')
     const [description, setDescription] = useState('')
     const [imagePath, setImagePath] = useState('')
-   // const [image3D, setImage3D] = useState('')
+    const [model3D, setModel3D] = useState('')
     const [countInStock, setCountInStock] = useState('')
     const [costPrice, setCostPrice] = useState(0.00)
     const [salePrice, setSalePrice] = useState(0.00)
     const [uploading, setUploading] = useState(false)
     const [file, setFile] = useState('')
+    const [file3D, setFile3D] = useState('')
+
+    const [message, setMessage] = useState('')
+    const [valError, setValError] = useState(false)
 
     //define dispatch
     const dispatch = useDispatch()
@@ -71,16 +76,16 @@ const ProductEditScreen = ({match, history}) => {
     //use effect react hook
     useEffect(() => {
 
-        // setCategories(categoryList.categories)
-
+        console.log(file)
 
         //authenticate and check if user is logged in and whether they are System Admin
         if(userInfo && userInfo.isStoreManager){
 
             //if information updated, reset productUpdate state and redirect to product list page
             if(updateSuccess){
+                setMessage('Product Updated Successfully')
                 dispatch({type: PRODUCT_UPDATE_RESET})
-                history.push("/store-manager/productList")
+                // history.push("/store-manager/productList")
             }
             //else - information not updated
             else{            
@@ -101,7 +106,7 @@ const ProductEditScreen = ({match, history}) => {
                     setDescription(product.description)
                     setImagePath(product.image)
                     
-                   // setImage3D(product.image3D)
+                    setModel3D(product.model3D)
                     setCountInStock(product.countInStock)
                     setCostPrice(product.costPrice)
                     setSalePrice(product.salePrice)
@@ -114,27 +119,65 @@ const ProductEditScreen = ({match, history}) => {
              history.push("/accessdenied")
         }
      
-    }, [categoryList, dispatch, userInfo, updateSuccess, product, productID, history])
+    }, [categoryList, dispatch, userInfo, updateSuccess, product, productID, history, file])
 
     const submitHandler = (e) => {
         //prevent refresh or redirect to another page
         e.preventDefault()
 
-        if(file !== ""){
-            uploadFileHandler()
+       //validations
+        if(productName === '' || brand === "" || costPrice === '' || salePrice === '' || countInStock === ''){
+            setValError(true)
+            setMessage("Error: Please fill out all required fields")
+
+            setCostPrice(0.00)
+            setSalePrice(0.00)
+            setCountInStock(0)
+        
+        }
+        //if incorrect 3D model or incorrect image extension
+        else if((file3D !== "" &&  typeof(file3D) != 'undefined' && file3D.name.split('.').pop() !== 'glb') 
+            || (file !== "" && typeof(file) != 'undefined' && (file.name.split('.').pop() !== 'jpg' 
+            || file.name.split('.').pop() !== 'png'))) {
             setFile('')
-        }        
-        dispatch(updateProduct({
-            _id: productID,
-            name,
-            brand,
-            category,
-            description,
-            // image3D,
-            countInStock,
-            costPrice,
-            salePrice
-        }))
+            setFile3D('')
+            setValError(true)      
+            setMessage("Error: Incorrect file format uploaded. Acceptable image extensions: '.jpg', '.png'. Acceptable 3D model formats: '.glb'")
+        }
+        else if(isNaN(parseFloat(costPrice))
+                 || isNaN(parseFloat(salePrice))
+                 || isNaN(parseInt(countInStock))){
+            setValError(true)      
+            setMessage("Error: Incorrect number format")
+        }
+        else if (costPrice < 0 || salePrice < 0 || countInStock < 0){
+            setValError(true) 
+            setMessage("Error: Currency or Count in Stock values cannot be negative")
+        }
+        else{
+            setValError(false)
+            setMessage('')
+
+            if(file !== "" || file3D !== ""){
+                uploadFileHandler()
+                setFile('')
+                setFile3D('')
+            } 
+            dispatch(updateProduct({
+                _id: productID,
+                name: productName,
+                brand,
+                category,
+                description,
+                // model3D,
+                countInStock,
+                costPrice,
+                salePrice
+            }))
+
+        }
+
+        
 
        // 
     }
@@ -149,7 +192,13 @@ const ProductEditScreen = ({match, history}) => {
         const formData = new FormData()
 
         //add file + product ID to FormData function (same names as backend variables)
-        formData.append('image', file)
+
+        if(file !== null ){
+            formData.append('image', file)
+        }
+        if(file3D !== null){
+            formData.append('model3D', file3D)
+        }    
         formData.append('product_id', productID)
 
         //set uploading to true
@@ -166,12 +215,10 @@ const ProductEditScreen = ({match, history}) => {
 
             //send POST request
             const {data} = await axios.post(
-                '/api/products/upload-image', 
+                '/api/products/upload-file', 
                 formData,
                 config
             )
-
-            //setImage(data)
 
             //set uploading to true
             setUploading(false)
@@ -189,173 +236,197 @@ const ProductEditScreen = ({match, history}) => {
         e.preventDefault()
         const value = e.target.value        
         setCategory(value)
-
-        console.log("value: ", value)
     }
 
 
     // displayed to user
     return (
 
-        <Container className="py-5">
-            <Row>
-                <Col lg={7}>
-                     <Link to="/admin/productList">
-                        <Button variant="outline-secondary"><IoArrowBack /> Back</Button>
-                    </Link>
-                </Col>
+        <Row className='w-100'>
+            <SideBar activeTab="product" />
+            <Col>
+                <Container className="py-5">
+                    <Row>
+                        <Col lg={7}>
+                            <Link to="/store-manager/productList">
+                                <Button variant="outline-secondary"><IoArrowBack /> Back</Button>
+                            </Link>
+                        </Col>
 
-            </Row>
-           
-            
-            <FormContainer title="Edit Product" lg="7"  shadow="shadow-sm">
-                {/* If loading when updated */}
-                {updateLoading && <Loader/>}
+                    </Row>               
+                    
+                    <FormContainer title="Edit Product" lg="7"  shadow="shadow-sm">
+                        {/* If loading when updated */}
+                        {updateLoading && <Loader/>}
 
-                {/* if any error while updating */}
-                {updateError && <Message variant="danger" dismissable="true">Error:{updateError}</Message>}
+                        {/* if any error while updating */}
+                        {updateError && <Message variant="danger" dismissable="true">Error:{updateError}</Message>}
 
-                {/* If data is still loading (not update instance), show loader */}
-                {loading ? <Loader />
-                    //if error is encountered, show error message
-                    : error ? <Message variant="danger">Error: {error}</Message>
-                        //if error is encountered, show error message
-                        : (
-                        <Form onSubmit={submitHandler}>
-                            {/* User Edit Form */}
-                            <Row>
-                                <Col  xs="12" >
-                                    {/* Name Field */}
-                                    <Form.Group controlId="name" className="pb-3">
-                                        <Form.Label>Name</Form.Label>
-                                        <Form.Control
-                                            type="text" 
-                                            value={name} onChange={(e) => setName(e.target.value)}/>
-                                    </Form.Group>
-                                </Col>
-                                
-                                
-                            </Row>
-                            <Row>
-                                <Col xs="12" md="6">
-                                    {/* Category */}
-                                    <Form.Group id="category" className="pb-3">
-                                        <Form.Label>Category</Form.Label>
-                                        <Form.Select aria-label="Category" defaultValue={product.category_id} onChange={selectCategoryHandler}>
-                                            <option>Select Category</option>
-                                            {categories !=='' && (categories.map((category)=> (
-                                                <option 
-                                                    key={category.id}
-                                                    value={category.id}
-                                                    selected={category === category.id} >
-                                                    
-                                                    {category.name}
-                                                </option>
-                                            )))}                                            
-                                        </Form.Select> 
+                        {/* If data is still loading (not update instance), show loader */}
+                        {loading ? <Loader />
+                            //if error is encountered, show error message
+                            : error ? <Message variant="danger">Error: {error}</Message>
+                                //if error is encountered, show error message
+                                : (
+                                <>
+                                {message && <Message variant={valError? "danger" : "success"}>{message}</Message>}
+                                <Form onSubmit={submitHandler}>
+                                    {/* User Edit Form */}
+                                    <Row>
+                                        <Col  xs="12" >
+                                            {/* productName Field */}
+                                            <Form.Group controlId="productName" className="pb-3">
+                                                <Form.Label>Name</Form.Label>
+                                                <Form.Control
+                                                    type="text" 
+                                                    value={productName} onChange={(e) => setName(e.target.value)}/>
+                                            </Form.Group>
+                                        </Col>                                     
                                         
-                                    </Form.Group>    
-                                </Col>
-                                <Col md="6" xs="12">
-                                    {/* Brand Field */}
-                                    <Form.Group controlId="brand" className="pb-3">
-                                        <Form.Label>Brand</Form.Label>
-                                        <Form.Control 
-                                            type="text" 
-                                            value={brand} onChange={(e) => setBrand(e.target.value)}/>
-                                    </Form.Group>       
-                                </Col>
-                                
-                            </Row>
-                            <Row>
-                                <Col xs="12" md="6" lg="4">
-                                    {/* Count In Stock */}
-                                    <Form.Group controlId="countInStock" className="pb-3">
-                                        <Form.Label>Count In Stock</Form.Label>
-                                        <Form.Control 
-                                            type="text" 
-                                            value={countInStock} onChange={(e) => setCountInStock(e.target.value)}/>
-                                    </Form.Group>
-                                </Col>
-                                <Col xs="12" md="6" lg="4">
-                                    {/* Cost Price */}
-                                    <Form.Group controlId="costPrice" className="pb-3">
-                                        <Form.Label>Cost Price</Form.Label>
-                                        <Form.Control
-                                            label="Cost Price" 
-                                            type="number" 
-                                            value={costPrice} onChange={(e) => setCostPrice(e.target.value)}/>
-                                    </Form.Group>
-                                </Col>
-                                <Col xs="12" md="6" lg="4">
-                                    {/* Sale Price */}
-                                    <Form.Group controlId="salePrice" className="pb-3">
-                                        <Form.Label>Sale Price</Form.Label>
-                                        <Form.Control                                            
-                                            type="number" 
-                                            value={salePrice} onChange={(e) => setSalePrice(e.target.value)}/>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                            <Row>  
-                                                              
-                                <Col >
-                                    <Form.Group controlId="image" className="pb-4">                                      
-                                        <Form.Label>Product Image</Form.Label>
-                                        <Form.Control 
-                                            readOnly
-                                            className="mb-2"
-                                            type="text" 
-                                            value={imagePath} 
-                                            onChange={(e) => setImagePath(e.target.value)}/> 
+                                    </Row>
+                                    <Row>
+                                        <Col xs="12" md="6">
+                                            {/* Category */}
+                                            <Form.Group id="category" className="pb-3">
+                                                <Form.Label>Category</Form.Label>
+                                                <Form.Select aria-label="Category" defaultValue={product.category_id} onChange={selectCategoryHandler}>
+                                                    {categories !=='' && (categories.map((category)=> (
+                                                        <option 
+                                                            key={category.id}
+                                                            value={category.id}
+                                                            selected={category === category.id} >
+                                                            
+                                                            {category.name}
+                                                        </option>
+                                                    )))}                                            
+                                                </Form.Select> 
+                                                
+                                            </Form.Group>    
+                                        </Col>
+                                        <Col md="6" xs="12">
+                                            {/* Brand Field */}
+                                            <Form.Group controlId="brand" className="pb-3">
+                                                <Form.Label>Brand</Form.Label>
+                                                <Form.Control 
+                                                    type="text" 
+                                                    value={brand} onChange={(e) => setBrand(e.target.value)}/>
+                                            </Form.Group>       
+                                        </Col>
                                         
-                                        <Form.Control 
-                                            type="file"
-                                            id="image-file"
-                                            label="Select File"
-                                            custom
-                                            onChange={(e) => setFile(e.target.files[0])}
-                                        />
-                                        {/* if image is uploading */}
-                                        {uploading && <Loader />}
+                                    </Row>
+                                    <Row>
+                                        <Col xs="12" md="6" lg="4">
+                                            {/* Count In Stock */}
+                                            <Form.Group controlId="countInStock" className="pb-3">
+                                                <Form.Label>Count In Stock</Form.Label>
+                                                <Form.Control 
+                                                    type="number" 
+                                                    value={countInStock} onChange={(e) => setCountInStock(e.target.value)}/>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col xs="12" md="6" lg="4">
+                                            {/* Cost Price */}
+                                            <Form.Group controlId="costPrice" className="pb-3">
+                                                <Form.Label>Cost Price</Form.Label>
+                                                <Form.Control
+                                                    label="Cost Price" 
+                                                    type="number" 
+                                                    value={costPrice} onChange={(e) => setCostPrice(e.target.value)}/>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col xs="12" md="6" lg="4">
+                                            {/* Sale Price */}
+                                            <Form.Group controlId="salePrice" className="pb-3">
+                                                <Form.Label>Sale Price</Form.Label>
+                                                <Form.Control                                            
+                                                    type="number" 
+                                                    value={salePrice} onChange={(e) => setSalePrice(e.target.value)}/>
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                    <Row>  
+                                                                    
+                                        <Col >
+                                            <Form.Group className="pb-4">                                      
+                                                <Form.Label>Product Image</Form.Label>
+                                                <Form.Control 
+                                                    readOnly
+                                                    className="mb-2"
+                                                    type="text" 
+                                                    value={imagePath} 
+                                                    onChange={(e) => setImagePath(e.target.value)}/> 
+                                                
+                                                <Form.Control 
+                                                    type="file"
+                                                    id="image-file"
+                                                    label="Select File"
+                                                    custom
+                                                    onChange={(e) => setFile(e.target.files[0])}
+                                                />
+                                                {/* if image is uploading */}
+                                                {uploading && <Loader />}
+                                            
+                                            </Form.Group> 
+                                                
+                                        </Col>
+                                        
+                                    </Row>
+                                    <Row>  
+                                                                    
+                                        <Col >
+                                            <Form.Group className="pb-4">                                      
+                                                <Form.Label>3D Model</Form.Label>
+                                                <Form.Control 
+                                                    readOnly
+                                                    className="mb-2"
+                                                    type="text" 
+                                                    value={model3D} 
+                                                    onChange={(e) => setModel3D(e.target.value)}/> 
+                                                
+                                                <Form.Control 
+                                                    type="file"
+                                                    id="model3D-file"
+                                                    label="Select File"
+                                                    custom
+                                                    className='mb-2'
+                                                    onChange={(e) => setFile3D(e.target.files[0])}
+                                                />
+                                                <small>Note: Please upload 3D model with .glb extension only</small>
+                                                {/* if image is uploading */}
+                                                {uploading && <Loader />}
+                                            
+                                            </Form.Group> 
+                                                
+                                        </Col>
+                                        
+                                    </Row>
+                    
+                                    <Row>
+                                        <Col xs="12">
+                                            {/* Description */}
+                                            <FloatingLabel controlId="desciption" className="pb-3" label="Description" >
+                                                <Form.Control
+                                                    style={{ height: '100px' }}                                            
+                                                    as="textarea" 
+                                                    value={description} onChange={(e) => setDescription(e.target.value)}/>
+                                            </FloatingLabel>
+
+                                        </Col>
+                                    </Row>
                                     
-                                    </Form.Group> 
-                                          
-                                </Col>
-                                
-                            </Row>
-                            <Row>
-                                <Col xs="12" md="6">
-                                    {/* Count In Stock */}
-                                    {/* <Form.Group controlId="image3D" className="py-3">
-                                        <Form.Label>3D Image</Form.Label>
-                                        <Form.Control 
-                                            type="text" 
-                                            value={image3D} onChange={(e) => setImage3D(e.target.value)}/>
-                                    </Form.Group> */}
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col xs="12">
-                                    {/* Description */}
-                                    <FloatingLabel controlId="desciption" className="pb-3" label="Description" >
-                                        <Form.Control
-                                            style={{ height: '100px' }}                                            
-                                            as="textarea" 
-                                            value={description} onChange={(e) => setDescription(e.target.value)}/>
-                                    </FloatingLabel>
+                                    {/* Submit Button */}
+                                    <div className="d-grid">
+                                        <Button type="submit" variant="primary" className="my-3">Update</Button>
+                                    </div>  
+                                </Form>
+                                </>
+                            )}
+                    </FormContainer>
+                </Container>
+            </Col>
+        </Row>
 
-                                </Col>
-                            </Row>
-                            
-                            {/* Submit Button */}
-                            <div className="d-grid">
-                                <Button type="submit" variant="primary" className="my-3">Update</Button>
-                            </div>  
-                        </Form>
-                    )}
-            </FormContainer>
-        </Container>
+        
     )
 }
 

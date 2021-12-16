@@ -179,22 +179,31 @@ def updateProduct(request, id):
 
 # request to upload image
 @ api_view(['POST'])
-def uploadProductImage(request):
+def uploadProductFile(request):
 
-    # get the data passed in from front end
-    data = request.data
+    try:
 
-    # set product ID
-    product_id = data['product_id']
+        # get the data passed in from front end
+        data = request.data
 
-    # retrieve product
-    product = Product.objects.get(_id=product_id)
+        # set product ID
+        product_id = data['product_id']
 
-    # upload image to product
-    product.image = request.FILES.get('image')
-    product.save()
+        # retrieve product
+        product = Product.objects.get(_id=product_id)
 
-    return Response('Image was uploaded')
+        # upload image to product
+        if(data['image']):
+            product.image = request.FILES.get('image')
+        if(data['model3D']):
+            product.model3D = request.FILES.get('model3D')
+        product.save()
+
+        return Response('Image was uploaded')
+
+    except Exception as e:
+        return Response({'detail': str(e)},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 # Delete product view
