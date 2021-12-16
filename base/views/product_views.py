@@ -54,7 +54,7 @@ def getProducts(request):
     products = Product.objects.filter(name__icontains=query).order_by(sort)
 
     dict_params = dict(request.query_params.lists())
-    print("list:", dict_params)
+
     filter = ProductFilter(request.GET, queryset=products)
     if filter.is_valid():
         products = filter.qs
@@ -62,7 +62,7 @@ def getProducts(request):
     # pagination
     page = request.query_params.get('page')
     # return 10 products per page
-    paginator = Paginator(products, 10)
+    paginator = Paginator(products, 9)
 
     # ----pagination exception handling---
 

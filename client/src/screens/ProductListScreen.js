@@ -12,16 +12,19 @@ import { listProducts, deleteProduct, createProduct } from '../actions/productAc
 import {PRODUCT_CREATE_RESET} from '../constants/productConstants'
 //UI components
 import {Row, Col, Table, Button, Container} from 'react-bootstrap'
-import { IoTrashSharp } from 'react-icons/io5'
-import {IoMdAddCircleOutline} from 'react-icons/io'
-import {MdEdit} from 'react-icons/md'
-import { AiFillEye} from 'react-icons/ai'
 
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import Paginate from '../components/Paginate'
 import SideBar from '../components/SideBar'
 import Search from '../components/Search'
+
+//icons
+import { IoTrashSharp } from 'react-icons/io5'
+import {IoMdAddCircleOutline} from 'react-icons/io'
+import {MdEdit} from 'react-icons/md'
+import { AiFillEye} from 'react-icons/ai'
+import {HiSortDescending, HiSortAscending} from 'react-icons/hi'
 
 const ProductListScreen = ({history}) => {
     //set dispatch
@@ -49,9 +52,12 @@ const ProductListScreen = ({history}) => {
 
 
     //ordering and filter
-    const [filter, setFilter] = useState('')
+    const [filter] = useState('')
     const [ordering, setOrdering] = useState('_id')
     const [searchPath, setSearchPath] = useState('')
+
+    const tableTitle = ['ID', 'Name', 'Brand', 'Category' , 'Price']
+    const [sort] = useState(['_id' , 'name', 'brand', 'category__name', 'salePrice'])
     
     let keyword = history.location.search
 
@@ -76,8 +82,9 @@ const ProductListScreen = ({history}) => {
             dispatch(listProducts(keyword, ordering, filter))
         }
 
-    },[dispatch, history, userInfo, deleteSuccess, createSuccess, productCreated, keyword,ordering, filter])
+        console.log(sort, ordering)
 
+    },[dispatch, history, userInfo, deleteSuccess, createSuccess, productCreated, sort, keyword,ordering, filter])
 
     //delete user
     const deleteHandler = (id) => {
@@ -90,6 +97,25 @@ const ProductListScreen = ({history}) => {
     //create product
     const createProductHandler = () => {
         dispatch(createProduct())
+    }
+
+    //
+
+    const orderingHandler = (order, i) => {
+        setOrdering(order)
+
+        //toggle between assending and descending
+        if(sort[i].substring(0,1) === '-'){
+           sort[i] = sort[i].slice(1)
+        }else{
+            //reverse minus operator for all other tables
+            for(let j = 0; j < sort.length ; j++){
+                if(sort[j].substring(0,1) === '-'){
+                    sort[j] = sort[j].slice(1)
+                }
+            }
+            sort[i] = '-' + sort[i]
+        }
     }
 
     return (
@@ -129,12 +155,19 @@ const ProductListScreen = ({history}) => {
                         <Table striped bordered responsive className="table-sm">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>                                
-                                    <th>Brand</th>
-                                    <th>Category</th>
-                                    <th>Price (MYR)</th>
-                                    
+                                    {tableTitle.map((title, index) => (
+                                        <th key={index} 
+                                            className={`table-sort-header
+                                                ${(('-'+ordering) === sort[index] 
+                                                || ordering === ('-'+sort[index])) 
+                                                && "active"}`}>
+                                            <Button onClick={()=>orderingHandler(sort[index], index)} className="d-flex justify-content-between align-items-center">
+                                                {title}
+                                                {/* ascending or descending icon based on neg/positive value */}
+                                                {sort[index].substring(0,1) === '-' ?  <HiSortAscending/> : <HiSortDescending/> }
+                                            </Button>     
+                                        </th>
+                                    ))}
                                     <th></th>
                                 </tr>                            
                             </thead>

@@ -6,9 +6,17 @@ from .models import *  # import all models to create database tables
 
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
+    ordering = ['name']
 
 
 class ProductAdmin(admin.ModelAdmin):
+    def get_field_queryset(self, db, db_field, request):
+        queryset = super().get_field_queryset(db, db_field, request)
+        if db_field.name == 'category':
+            queryset = queryset.order_by('name')
+
+        return queryset
+
     list_display = ('name', 'brand', 'category', 'salePrice', 'countInStock')
     prepopulated_fields = {'slug': ('name',)}
 
