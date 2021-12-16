@@ -101,7 +101,7 @@ const Header = () => {
                     </div>
                 
                 {/* Search Bar - not available for system admin */}
-                {(!userInfo || (userInfo && !userInfo.isSystemAdmin)) && <Search />}
+                {(!userInfo || (userInfo && !userInfo.isSystemAdmin)) && <Search title="Search Catalog"/>}
                 
                 
                 <div className="d-flex">

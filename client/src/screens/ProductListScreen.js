@@ -21,6 +21,7 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import Paginate from '../components/Paginate'
 import SideBar from '../components/SideBar'
+import Search from '../components/Search'
 
 const ProductListScreen = ({history}) => {
     //set dispatch
@@ -50,7 +51,8 @@ const ProductListScreen = ({history}) => {
     //ordering and filter
     const [filter, setFilter] = useState('')
     const [ordering, setOrdering] = useState('_id')
-
+    const [searchPath, setSearchPath] = useState('')
+    
     let keyword = history.location.search
 
     useEffect(() => { 
@@ -59,6 +61,12 @@ const ProductListScreen = ({history}) => {
 
         if(!userInfo || (userInfo && !userInfo.isSystemAdmin && !userInfo.isStoreManager)){
             history.push("/accessdenied")
+        } else{
+            if(userInfo.isSystemAdmin){
+                setSearchPath('admin/productlist')
+            } else{
+                setSearchPath('store-manager/productlist')
+            }
         }
         
         if(createSuccess){
@@ -90,35 +98,34 @@ const ProductListScreen = ({history}) => {
             <Col>
                 <Container className="py-5">
                 <h1 className="mb-5">Products</h1>
-                {// loading while performing create action
-                    createLoading && <Loader />
+ 
+                {// loading while performing create or delete action
+                    (createLoading || deleteLoading) && <Loader />
                 }
-                {//error when creating product
-                    createError && <Message variant="danger">{createError}</Message>                  
+                {//error when creating or deleting product
+                    (createError || deleteError) && <Message variant="danger">Error: {createError ? createError : deleteError}</Message>                  
                 }
 
-                {// loading while performing delete action
-                    deleteLoading && <Loader />
-                }
-                {//error when deleting
-                    deleteError && <Message variant="danger">{deleteError}</Message>                  
-                }
+                
+                <div className="d-flex mb-5 justify-content-between"> 
+                    <Search path={searchPath} className="mb-3" title="Search Product"/>
+                               
+                    {userInfo && userInfo.isStoreManager && 
+                        <Button variant="outline-success" onClick={createProductHandler}>
+                            <IoMdAddCircleOutline className="me-2 mb-1 fs-5"/>Add Product 
+                        </Button>  
+                    }                      
+                </div>
+                        
+
+
+
                 { /*show loader if loading */
                 loading ? <Loader />
                     /*else if an error occured, display error message */
                     : error ? <Message variant="danger">{error}</Message>
                     /*else show page content */
                     : ( <>
-
-                        {userInfo && userInfo.isStoreManager && 
-                            <div className="d-flex flex-row-reverse mb-3"> 
-                                <Button variant="outline-success" onClick={createProductHandler}>
-                                    <IoMdAddCircleOutline className="me-2 mb-1 fs-5"/>Add Product 
-                                </Button>                        
-                            </div>
-                        
-                        }
-                        
                         <Table striped bordered responsive className="table-sm">
                             <thead>
                                 <tr>
@@ -160,7 +167,7 @@ const ProductListScreen = ({history}) => {
                             </tbody>
 
                         </Table>
-                        <Paginate path="/admin/productlist" page={page} pages={pages}/>
+                        <Paginate path="/admin/productlist" page={page} pages={pages} keyword={keyword}/>
                         </>
                     )}
                 

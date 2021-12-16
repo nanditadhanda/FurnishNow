@@ -1,22 +1,22 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Form, FormControl, Button } from 'react-bootstrap'
 import {FaSearch} from 'react-icons/fa'
 
 import {useHistory} from 'react-router-dom'
 
-const Search = ({path="products/all"}) => {
+const Search = ({path="products/all", title="Search"}) => {
     //set keyword state
     const [keyword, setKeyword] = useState('')  
     
     //set history to redirect user based on URL parameters
-    let history = useHistory()
+    let history = useHistory()    
 
-    
-
-    //clear search bar if keyword is blank
-    if(keyword === ''){
-        history.push(history.location.pathname)
-    }
+    useEffect(() => {
+        //clear search bar if keyword is blank
+        if(keyword === ''){
+            history.push(history.location.pathname)
+        }
+    },[keyword, history])
 
     //submit handler
     const submitHandler = (e) => {
@@ -35,7 +35,7 @@ const Search = ({path="products/all"}) => {
         <Form className="d-flex search" onSubmit={submitHandler}>
             <FormControl
                 type="search"
-                placeholder="Search"
+                placeholder={title}
                 name="search"
                 className="mr-2"
                 aria-label="Search"
