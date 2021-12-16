@@ -93,8 +93,6 @@ def getProducts(request):
         'products': serializer.data,
         'page': page,
         'pages': paginator.num_pages
-
-
     })
 
 

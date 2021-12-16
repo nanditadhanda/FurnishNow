@@ -184,7 +184,9 @@ export const myOrdersReducer = (state = {orders:[]}, action) => {
         case MY_ORDER_LIST_SUCCESS:
             return{
                 loading: false,
-                orders: action.payload
+                orders: action.payload.orders,
+                page: action.payload.page,
+                pages: action.payload.pages
 
             }
         //return error if failed to retrieve order list or if order doesn't exist
@@ -222,7 +224,9 @@ export const orderListReducer = (state = {orders:[]}, action) => {
         case ORDER_LIST_SUCCESS:
             return{
                 loading: false,
-                orders: action.payload
+                orders: action.payload.orders,
+                page: action.payload.page,
+                pages: action.payload.pages
 
             }
         //return error if failed to retrieve order list or if order doesn't exist

@@ -103,8 +103,6 @@ export const getOrderDetails = (id) => async(dispatch, getState) => {
             `/api/orders/${id}`,
             config
             )
-
-        
        
         //if no error is caught - throw in ORDER_CREATE_SUCCESS action
         dispatch({
@@ -126,12 +124,19 @@ export const getOrderDetails = (id) => async(dispatch, getState) => {
 }
 
 //retrieve orders of logged in user action
-export const myOrdersList = ( ) => async(dispatch, getState) => {
+export const myOrdersList = ( page='') => async(dispatch, getState) => {
  
      //try-catch exception
     try {
         //dispatch action to throw request to retrieve order list
         dispatch({ type: MY_ORDER_LIST_REQUEST })
+
+        let path = ''
+
+        //sorting and paginate
+        if(page !==''){
+            path = `${page}`       
+        }
 
         //get user info (object) of logged in user from userLogin state
         const { userLogin : { userInfo } } = getState()
@@ -148,7 +153,7 @@ export const myOrdersList = ( ) => async(dispatch, getState) => {
 
         //send out GET api request with data passed in
         const { data } = await axios.get(
-            `/api/orders/myorders`,
+            `/api/orders/myorders${path}`,
             config
             )
         
@@ -271,19 +276,6 @@ export const saveStripeInfo = (info) => async(dispatch, getState) => {
 export const createPaymentIntent = () => async() => {
      //try-catch exception
     try {
-         
-        //get user info (object) of logged in user from userLogin state
-        // const { userLogin : { userInfo } } = getState()
-        
-        // //configuration of post request with user authentication token
-        // const config = {
-        //     headers : {
-        //         'Content-type' : 'application/json',
-        //         //authorization token to allow logged in user to place order
-        //         Authorization: `Bearer ${userInfo.token}`
-        //     }
-
-        // }
 
         //send out POST api request with data passed in
         const { data } = await axios.post(
@@ -363,12 +355,22 @@ export const updateOrderStatus = (order) => async(dispatch, getState) => {
 
 
 //retrieve orders of logged in user action
-export const listOrders = ( ) => async(dispatch, getState) => {
+export const listOrders = (page='', ordering='' ) => async(dispatch, getState) => {
  
      //try-catch exception
     try {
         //dispatch action to throw request to retrieve order list
         dispatch({ type: ORDER_LIST_REQUEST })
+
+        let path = ''
+
+        //sorting and paginate
+        if(page ===''){
+            path = `?ordering=${ordering}`
+        }
+        else{
+            path = `${page}&ordering=${ordering}`       
+        }
 
         //get user info (object) of logged in user from userLogin state
         const { userLogin : { userInfo } } = getState()
@@ -385,7 +387,7 @@ export const listOrders = ( ) => async(dispatch, getState) => {
 
         //send out GET api request with data passed in
         const { data } = await axios.get(
-            `/api/orders/`,
+            `/api/orders${path}`,
             config
             )
         

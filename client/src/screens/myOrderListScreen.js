@@ -13,6 +13,7 @@ import { myOrdersList } from '../actions/orderActions'
 import {Container,Row, Col, Card, Table, ListGroup, Button, Image} from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import Paginate from '../components/Paginate'
 
 const MyOrderListScreen = ({history}) => {
 
@@ -26,6 +27,8 @@ const MyOrderListScreen = ({history}) => {
     //set dispatch
     const dispatch = useDispatch()
 
+    let paginate = history.location.search
+
     //conditions to check to allow user to access place order screen
     useEffect(() => {
        
@@ -35,10 +38,10 @@ const MyOrderListScreen = ({history}) => {
         }
         else{
              //get order list
-            dispatch(myOrdersList())  
+            dispatch(myOrdersList(paginate))  
         }
        
-    }, [history, userInfo, dispatch])
+    }, [history, userInfo, dispatch, paginate])
 
     //------------------------ Get Order List -------------------- //
     
@@ -47,7 +50,7 @@ const MyOrderListScreen = ({history}) => {
     //get order list state
     const myOrders = useSelector(state => state.myOrders)
     //destructure state
-    const {loading, error, orders} = myOrders
+    const {loading, error, orders, page, pages} = myOrders
 
 
     return (
@@ -59,7 +62,7 @@ const MyOrderListScreen = ({history}) => {
                 ) : error ? (
                     <Message variant="danger">Error: {error}</Message>
                 ) : (
-                    orders.reverse().map(order => (
+                    orders.map(order => (
                         <Card key={order._id} className="my-4 shadow-sm"> 
                             <Card.Header className="d-flex justify-content-between">
                                 <small className="">Order ID: {order._id}</small>   
@@ -119,16 +122,13 @@ const MyOrderListScreen = ({history}) => {
                                     </Table>
                                 </Col>
                                 
-                            </Row>      
-                            <tr >
-                                
-                                
-                                
-                            </tr>
+                            </Row>  
                         </Card>
                         
                     ))
                 )}
+
+                <Paginate path='/my-orders' page={page} pages={pages} />
             
         </Container>   )
 }

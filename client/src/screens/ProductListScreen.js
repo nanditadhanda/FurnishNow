@@ -82,8 +82,6 @@ const ProductListScreen = ({history}) => {
             dispatch(listProducts(keyword, ordering, filter))
         }
 
-        console.log(sort, ordering)
-
     },[dispatch, history, userInfo, deleteSuccess, createSuccess, productCreated, sort, keyword,ordering, filter])
 
     //delete user
@@ -99,21 +97,22 @@ const ProductListScreen = ({history}) => {
         dispatch(createProduct())
     }
 
-    //
-
+    //set sorting feature
     const orderingHandler = (order, i) => {
         setOrdering(order)
 
         //toggle between assending and descending
         if(sort[i].substring(0,1) === '-'){
+            //remove minus operator
            sort[i] = sort[i].slice(1)
         }else{
-            //reverse minus operator for all other tables
+            //reverse minus operator for all other table headers
             for(let j = 0; j < sort.length ; j++){
                 if(sort[j].substring(0,1) === '-'){
                     sort[j] = sort[j].slice(1)
                 }
             }
+            //set minus operator for selected table header
             sort[i] = '-' + sort[i]
         }
     }
@@ -200,7 +199,7 @@ const ProductListScreen = ({history}) => {
                             </tbody>
 
                         </Table>
-                        <Paginate path="/admin/productlist" page={page} pages={pages} keyword={keyword}/>
+                        <Paginate path={`/${searchPath}`} page={page} pages={pages} keyword={keyword} type="products"/>
                         </>
                     )}
                 

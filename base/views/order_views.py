@@ -12,6 +12,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import serializers, status
 
+# import django pagination library
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 # import models
 
@@ -87,16 +90,51 @@ def addOrderItems(request):
 def getOrders(request):
 
     user = request.user
+    sort = request.query_params.get('ordering')
+
+    # if order filter is not applied, by default sort by id
+    if sort == None:
+        sort = '_id'
 
     if user.is_staff or user.is_storeManager:
         # get all orders
-        orders = Order.objects.all()
+        orders = Order.objects.all().order_by(sort)
+
+        # pagination
+        page = request.query_params.get('page')
+        # return 10 products per page
+        paginator = Paginator(orders, 10)
+
+        # ----pagination exception handling---
+
+        # by default, return the data of the page number passed in according to the paginator
+        try:
+            orders = paginator.page(page)
+
+        # if no page number is passed, return the first page
+        except PageNotAnInteger:
+            orders = paginator.page(1)
+
+        # if page number passed returns no data, return the last page in the paginator that has data present in it
+        except EmptyPage:
+            orders = paginator.page(paginator.num_pages)
+
+        # if no page number is passed in from front end, set page to 1 by default
+        if page == None:
+            page = 1
+
+        # convert value of page to integer
+        page = int(page)
 
         # serialize order data
         serializer = OrderSerializer(orders, many=True)
 
         # return serialized data
-        return Response(serializer.data)
+        return Response({
+            'orders': serializer.data,
+            'page': page,
+            'pages': paginator.num_pages
+        })
     else:
         # else return error message
         return Response({'detail': 'You do not have permission to perform this action.'},
@@ -111,11 +149,43 @@ def getMyOrders(request):
     user = request.user
 
     # get all orders of logged in user
-    orders = user.order_set.all()
+    orders = user.order_set.all().order_by('-orderDate')
+
+    # pagination
+    page = request.query_params.get('page')
+    # return 5 products per page
+    paginator = Paginator(orders, 5)
+
+    # ----pagination exception handling---
+
+    # by default, return the data of the page number passed in according to the paginator
+    try:
+        orders = paginator.page(page)
+
+    # if no page number is passed, return the first page
+    except PageNotAnInteger:
+        orders = paginator.page(1)
+
+    # if page number passed returns no data, return the last page in the paginator that has data present in it
+    except EmptyPage:
+        orders = paginator.page(paginator.num_pages)
+
+    # if no page number is passed in from front end, set page to 1 by default
+    if page == None:
+        page = 1
+
+    # convert value of page to integer
+    page = int(page)
+
     # serialize order data
     serializer = OrderSerializer(orders, many=True)
+
     # return serialized data
-    return Response(serializer.data)
+    return Response({
+        'orders': serializer.data,
+        'page': page,
+        'pages': paginator.num_pages
+    })
 
 
 # ------View to get order --------
