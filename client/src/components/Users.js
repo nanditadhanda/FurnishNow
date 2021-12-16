@@ -16,14 +16,14 @@ import {MdEdit} from 'react-icons/md'
 
 const Users = ({type, users}) => {
 
-    const [userList, setUserList] = useState({
-        user : [],
-        checked: []
-    })
+    const [activeStatus, setActiveStatus] = useState([])
 
-    useEffect(()=>{
-        console.log(userList)
-    })
+    useEffect(() => {
+        users.forEach(user => {
+            setActiveStatus(activeStatus.splice(user._id, 0, user.is_active))
+        });
+        
+    }, [users])
 
     //set dispatch
     const dispatch = useDispatch()
@@ -44,6 +44,8 @@ const Users = ({type, users}) => {
         // if(window.confirm("Are you sure you would like to change the active status of this user?")){
         //     console.log("id: ", id)
         // }
+
+        console.log("id: ", id)
         
     }
 
@@ -68,7 +70,7 @@ const Users = ({type, users}) => {
             </thead>
             <tbody>
 
-                {users.map(user => (
+                {users.map((user, index) => (
                     type === 'staff' ?
 
                         (user.isSystemAdmin || user.isStoreManager) &&
@@ -97,22 +99,24 @@ const Users = ({type, users}) => {
 
                     : (!user.isSystemAdmin && !user.isStoreManager) &&
 
+                    
+
                     <tr key={user._id}>
-                            <td>{user._id}</td>
-                            <td>{user.first_name}</td>
-                            <td>{user.last_name}</td>
-                            <td>{user.email}</td>
-                            <td>{user.phone_number}</td>            
-                            <td className="text-center">
-                                <Form.Check 
-                                    type="switch"
-                                    id="custom-switch"
-                                    label=""
-                                    checked={user.is_active}
-                                    onChange={disableHandler(user._id)}
-                                />
-                            </td>             
-                        </tr>
+                        <td>{user._id}</td>
+                        <td>{user.first_name}</td>
+                        <td>{user.last_name}</td>
+                        <td>{user.email}</td>
+                        <td>{user.phone_number}</td>            
+                        <td className="text-center">
+                            <Form.Check 
+                                type="switch"
+                                id="custom-switch"
+                                label=""
+                                checked={user.is_active}
+                                onClick={disableHandler(user._id)}
+                            />
+                        </td>             
+                    </tr>
 
                 ))}
                 

@@ -19,14 +19,13 @@ const CatalogScreen = ({match}) => {
 
     const categoryActive = match.params.category
 
-    console.log("category:", categoryActive)
 
     //category state
     //categories
     const categoryList = useSelector(state => state.categoryList)
 
     const [categories, setCategories] = useState('')
-    let [categoryFilter, setCategoryFilter] = useState('')
+    let [categoryFilter] = useState('')
 
     const [page, setPage] = useState(1)
     const [pages, setPages] = useState(1)
@@ -46,8 +45,6 @@ const CatalogScreen = ({match}) => {
         setKeyword(data.keyword)
         //setFilter(data.filter)
     }
-
-
     
     //orderhandler
 
@@ -82,9 +79,6 @@ const CatalogScreen = ({match}) => {
         setErrorFilter("")  
         setFilter('') 
     }
-
-
-    console.log("keyword:", keyword)
 
     useEffect(()=> {
                       

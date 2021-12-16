@@ -34,9 +34,6 @@ const Products = ({l, xl, val={}, ordering='_id', filter=''}) => {
          count = products.length
     }
    
-
-    
-
     //declare history
     const history = useHistory()
 
@@ -48,9 +45,6 @@ const Products = ({l, xl, val={}, ordering='_id', filter=''}) => {
     if(val !== ''){
         val({page, pages, keyword})
     }
-    
-
-    console.log("keyword:", val)
 
     //useEffect is triggered when component loads
     useEffect(() => {

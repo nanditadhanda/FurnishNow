@@ -52,7 +52,7 @@ const SideBar = ({activeTab}) => {
                 <Nav.Link href={userType+"/dashboard"} className="px-4 " active={activeTab === "dashboard"}>
                     <RiDashboardFill className="fs-3 pe-2 ms-1 mb-1 "/>Dashboard
                 </Nav.Link>
-                {userInfo.isSystemAdmin && (
+                {userInfo && userInfo.isSystemAdmin && (
                     <Nav.Link href="/admin/userlist" active={activeTab === "user"} className="px-4 ">
                         <FiUsers className="fs-3 pe-2 ms-1 mb-1 "/>Users
                     </Nav.Link>

@@ -6,7 +6,7 @@ const Footer = () => {
         <footer className="py-3">
             <Container fluid>
                 <Row>
-                    <Col xs="5" className="text-left">&copy; 2021 FurnishNow</Col>
+                    <Col xs="12" md="5" className="text-left">&copy; 2021 FurnishNow</Col>
                     <Col className="d-flex justify-content-end">
                         <Nav className="text-secondary">     
                             <Nav.Link className="py-0" href="/about">About</Nav.Link>
