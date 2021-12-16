@@ -30,7 +30,7 @@ def getCategory(request, category_slug):
 @api_view(['GET'])
 def getCategories(request):
     # get categories from database
-    categories = Category.objects.all()
+    categories = Category.objects.all().order_by('name')
 
     # serialize into JSON format
     serializer = CategorySerializer(categories, many=True)
