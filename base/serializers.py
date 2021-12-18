@@ -53,7 +53,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'slug', 'products')  # all fields
+        fields = ('id', 'name', 'slug', 'image', 'products')  # all fields
 
 
 # Payment serializer
