@@ -57,8 +57,8 @@ const SideBar = ({activeTab}) => {
                         <FiUsers className="fs-3 pe-2 ms-1 mb-1 "/>Users
                     </Nav.Link>
                 )}
-                <Nav.Link href={userType+"/productlist"} active={activeTab === "product"} className="px-4 ">
-                    <BiPackage className="fs-2 pe-2 mb-1 "/>Products
+                <Nav.Link href={userType+"/manageCatalog"} active={activeTab === "product"} className="px-4 ">
+                    <BiPackage className="fs-2 pe-2 mb-1 "/>Catalog
                 </Nav.Link>
                 <Nav.Link href={userType+"/orderlist"} active={activeTab === "order"} className="px-4 ">
                     <RiMoneyDollarBoxLine className=" fs-2 pe-2 mb-1 "/>Orders

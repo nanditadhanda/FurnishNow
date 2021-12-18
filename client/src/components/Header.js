@@ -143,7 +143,7 @@ const Header = () => {
                                                 <NavDropdown.Item ><FiUsers className="fs-3 pe-2 ms-1 mb-1 "/>Users</NavDropdown.Item>
                                             </LinkContainer>
                                         )}
-                                        <LinkContainer to={userType+"/productlist"}>
+                                        <LinkContainer to={userType+"/manageCatalog"}>
                                             <NavDropdown.Item ><BiPackage className="fs-2 pe-2 mb-1 "/>Products</NavDropdown.Item>
                                         </LinkContainer>
 

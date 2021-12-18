@@ -75,6 +75,7 @@ const CatalogScreen = ({match}) => {
         }
     }
 
+    //clear filters applied
     const clearFilterHandler = () => {
         setErrorFilter("")  
         setFilter('') 
@@ -243,7 +244,7 @@ const CatalogScreen = ({match}) => {
                         </Row>
                         <Products l="5" xl="4" val={getData} ordering={ordering} filter={
                                         filter !== '' ? filter : categoryActive !== 'all'? ('category='+categoryActive) : ''}/> 
-                        <Paginate path={`/products/${categoryActive}`} page={page} pages={pages} keyword={keyword} filter={ filter !== '' ? filter : categoryActive !== 'all'? ('category='+categoryActive) : ''}/>
+                        <Paginate path={`/products/${categoryActive}`} type="products" page={page} pages={pages} keyword={keyword} filter={ filter !== '' ? filter : categoryActive !== 'all'? ('category='+categoryActive) : ''}/>
 
                     </Container>
                     

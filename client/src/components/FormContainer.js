@@ -3,8 +3,7 @@ import {Container, Row, Col, Card} from 'react-bootstrap'
 
 const FormContainer = ({children, title = "", lg=6 , shadow="", bg="light", border="border-0"}) => {
     return (
-         <Container className="py-5 px-3">
-             
+         <Container className="py-5 px-3">      
             <Row className="justify-content-md-center">
                 <Col xs={12} md={6} lg={lg}>
                     <Card className={`p-5  ${shadow} ${border}`} bg={bg}>
@@ -13,8 +12,6 @@ const FormContainer = ({children, title = "", lg=6 , shadow="", bg="light", bord
                     </Card>
                 </Col>
             </Row>
-
-            
         </Container>
     )
 }

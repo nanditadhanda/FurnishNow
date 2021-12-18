@@ -17,6 +17,7 @@ import {listCategories } from '../actions/categoryActions'
 //constants
 import {PRODUCT_UPDATE_RESET} from '../constants/productConstants'
 
+
 //UI components
 import {Form, Row, Col, Button, FloatingLabel, Container} from 'react-bootstrap'
 import Message from '../components/Message'
@@ -35,7 +36,6 @@ const ProductEditScreen = ({match, history}) => {
     const [productName, setName] = useState('')
     const [brand, setBrand] = useState('')
     const [category, setCategory] = useState('')
-    const [category_id, setCategoryID] = useState('')
     const [description, setDescription] = useState('')
     const [imagePath, setImagePath] = useState('')
     const [model3D, setModel3D] = useState('')
@@ -65,8 +65,6 @@ const ProductEditScreen = ({match, history}) => {
     const categoryList = useSelector(state => state.categoryList)
     const {categories} = categoryList
     
-
-
     //get productUpdate state
     const productUpdate = useSelector(state => state.productUpdate)
     //destructure state
@@ -75,8 +73,6 @@ const ProductEditScreen = ({match, history}) => {
 
     //use effect react hook
     useEffect(() => {
-
-        console.log(file)
 
         //authenticate and check if user is logged in and whether they are System Admin
         if(userInfo && userInfo.isStoreManager){
@@ -176,23 +172,15 @@ const ProductEditScreen = ({match, history}) => {
             }))
 
         }
-
-        
-
-       // 
     }
 
     // function to upload images
     const uploadFileHandler = async (e) => {
 
-        //get file passed in
-       // const file = e.target.files[0]
-
         //create FormData() function
         const formData = new FormData()
 
         //add file + product ID to FormData function (same names as backend variables)
-
         if(file !== null ){
             formData.append('image', file)
         }
@@ -227,7 +215,6 @@ const ProductEditScreen = ({match, history}) => {
         catch(error){
             //set uploading to false
             setUploading(false)
-
         }
     }
 
@@ -248,13 +235,11 @@ const ProductEditScreen = ({match, history}) => {
                 <Container className="py-5">
                     <Row>
                         <Col lg={7}>
-                            <Link to="/store-manager/productList">
+                            <Link to="/store-manager/manageCatalog">
                                 <Button variant="outline-secondary"><IoArrowBack /> Back</Button>
                             </Link>
                         </Col>
-
-                    </Row>               
-                    
+                    </Row>                 
                     <FormContainer title="Edit Product" lg="7"  shadow="shadow-sm">
                         {/* If loading when updated */}
                         {updateLoading && <Loader/>}
@@ -281,8 +266,7 @@ const ProductEditScreen = ({match, history}) => {
                                                     type="text" 
                                                     value={productName} onChange={(e) => setName(e.target.value)}/>
                                             </Form.Group>
-                                        </Col>                                     
-                                        
+                                        </Col>                                         
                                     </Row>
                                     <Row>
                                         <Col xs="12" md="6">
@@ -294,8 +278,7 @@ const ProductEditScreen = ({match, history}) => {
                                                         <option 
                                                             key={category.id}
                                                             value={category.id}
-                                                            selected={category === category.id} >
-                                                            
+                                                            selected={category === category.id} >                                                            
                                                             {category.name}
                                                         </option>
                                                     )))}                                            
@@ -344,8 +327,7 @@ const ProductEditScreen = ({match, history}) => {
                                             </Form.Group>
                                         </Col>
                                     </Row>
-                                    <Row>  
-                                                                    
+                                    <Row>                                             
                                         <Col >
                                             <Form.Group className="pb-4">                                      
                                                 <Form.Label>Product Image</Form.Label>
@@ -366,10 +348,8 @@ const ProductEditScreen = ({match, history}) => {
                                                 {/* if image is uploading */}
                                                 {uploading && <Loader />}
                                             
-                                            </Form.Group> 
-                                                
-                                        </Col>
-                                        
+                                            </Form.Group>                                                 
+                                        </Col>                                        
                                     </Row>
                                     <Row>  
                                                                     
@@ -424,9 +404,7 @@ const ProductEditScreen = ({match, history}) => {
                     </FormContainer>
                 </Container>
             </Col>
-        </Row>
-
-        
+        </Row>   
     )
 }
 

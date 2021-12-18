@@ -6,7 +6,9 @@ import { LinkContainer } from 'react-router-bootstrap'
 //Redux imports
 import { useDispatch , useSelector} from 'react-redux'
 //Import userList action
-import { deleteUser } from '../actions/userActions'
+import { deleteUser, updateUser } from '../actions/userActions'
+
+import { USER_UPDATE_RESET } from '../constants/userConstants'
 
 //UI components
 import {Table, Button, Form} from 'react-bootstrap'
@@ -14,16 +16,10 @@ import {RiCheckFill, RiCloseFill} from 'react-icons/ri'
 import { IoTrashSharp } from 'react-icons/io5'
 import {MdEdit} from 'react-icons/md'
 
-const Users = ({type, users}) => {
+const Users = ({type, users, activeStatus}) => {
 
-    const [activeStatus, setActiveStatus] = useState([])
+    const [updated, setUpdated] = useState(false)
 
-    useEffect(() => {
-        users.forEach(user => {
-            setActiveStatus(activeStatus.splice(user._id, 0, user.is_active))
-        });
-        
-    }, [users])
 
     //set dispatch
     const dispatch = useDispatch()
@@ -40,12 +36,24 @@ const Users = ({type, users}) => {
         
     }
 
-    const disableHandler = (id) => {
-        // if(window.confirm("Are you sure you would like to change the active status of this user?")){
-        //     console.log("id: ", id)
-        // }
+    //get userUpdateAccount state
+    const userUpdateAccount = useSelector(state => state.userUpdateAccount)
+    //destructure state
+    const { error: updateError, loading:updateLoading, success:updateSuccess} = userUpdateAccount
 
-        console.log("id: ", id)
+    useEffect(() => {
+        if(updateSuccess){
+            dispatch({type: USER_UPDATE_RESET})    
+        }
+    }, [updateSuccess, dispatch])
+
+
+    const disableHandler = id => e => {
+        
+        let newArr = [...activeStatus] // copying the old datas array
+        newArr[id] = e.target.checked // replace e.target.value with whatever you want to change it to
+        activeStatus = [newArr]
+        setUpdated(true)
         
     }
 
@@ -74,7 +82,7 @@ const Users = ({type, users}) => {
                     type === 'staff' ?
 
                         (user.isSystemAdmin || user.isStoreManager) &&
-                        <tr key={user._id} readonly={(userInfo._id === user._id)}>
+                        <tr key={user._id} readOnly={(userInfo._id === user._id)}>
                             <td>{user._id}</td>
                             <td>{user.first_name}</td>
                             <td>{user.last_name}</td>
@@ -111,9 +119,10 @@ const Users = ({type, users}) => {
                             <Form.Check 
                                 type="switch"
                                 id="custom-switch"
-                                label=""
-                                checked={user.is_active}
-                                onClick={disableHandler(user._id)}
+                                label=""          
+                                checked={activeStatus[user._id]}  
+                                onChange={disableHandler(user._id)}  
+                                                                    
                             />
                         </td>             
                     </tr>

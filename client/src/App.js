@@ -25,13 +25,14 @@ import MyOrderListScreen from './screens/myOrderListScreen'
 import UserListScreen from './screens/UserListScreen'
 import EditUserScreen from './screens/EditUserScreen'
 import AuthorizationErrorScreen from './screens/AuthorizationErrorScreen'
-import ProductListScreen from './screens/ProductListScreen'
+import ManageCatalogScreen from './screens/ManageCatalogScreen'
 import ProductEditScreen from './screens/ProductEditScreen'
 import OrderListScreen from './screens/OrderListScreen'
 import CatalogScreen from './screens/CatalogScreen'
 import StoreManagerDashboard from './screens/StoreManagerDashboard'
 import AdminDashboard from './screens/AdminDashboard'
 import AddUserScreen from './screens/AddUserScreen'
+import AddEditCategoryScreen from './screens/AddEditCategoryScreen'
 
 
 const NoMatchPage = () => {
@@ -74,7 +75,9 @@ function App() {
           
           {/* Store Manager Screens */}
           <Route  path="/store-manager/dashboard" component={StoreManagerDashboard}/>
-          <Route  path="/store-manager/productlist" component={ProductListScreen}/>
+          <Route  path="/store-manager/manageCatalog" component={ManageCatalogScreen}/>
+          <Route  path="/store-manager/category/add" component={AddEditCategoryScreen}/>     
+          <Route  path="/store-manager/category/:slug/edit" component={AddEditCategoryScreen}/>
           <Route  path="/store-manager/product/:id/edit" component={ProductEditScreen}/>
           <Route  path="/store-manager/orderlist" component={OrderListScreen}/>
 
@@ -83,7 +86,7 @@ function App() {
           <Route  path="/admin/userlist" component={UserListScreen}/>
           <Route  path="/admin/user/:id/edit" component={EditUserScreen}/>
           <Route  path="/admin/user/add" component={AddUserScreen}/>
-          <Route  path="/admin/productlist" component={ProductListScreen}/>
+          <Route  path="/admin/manageCatalog" component={ManageCatalogScreen}/>
           <Route  path="/admin/orderlist" component={OrderListScreen}/>
           <Route  path="/admin/order/:id" component={OrderScreen}/>
       
