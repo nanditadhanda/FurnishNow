@@ -8,20 +8,23 @@ import { productListReducer, productDetailsReducer, productDeleteReducer, produc
 import { cartReducer } from './reducers/cartReducers'
 import { userDetailsReducer, userLoginReducer, userRegisterReducer, updateUserProfileReducer, usersListReducer, userDeleteReducer, userUpdateReducer, userStaffRegisterReducer} from './reducers/userReducers'
 import { myOrdersReducer, orderCreateReducer, orderDetailsReducer, orderListReducer, orderPaymentReducer, orderStatusReducer } from './reducers/orderReducers'
-import { categoryListReducer } from './reducers/categoryReducers'
+import { categoryCreateReducer, categoryDeleteReducer, categoryDetailsReducer, categoryListReducer, categoryUpdateReducer } from './reducers/categoryReducers'
 import { paymentReducer, paymentUpdateReducer } from './reducers/paymentReducers'
 
 //register and co   mbine all reducers
 const reducer = combineReducers({
     categoryList: categoryListReducer,
+    categoryCreate: categoryCreateReducer,
+    categoryDetails: categoryDetailsReducer,
+    categoryUpdate: categoryUpdateReducer,
+    categoryDelete: categoryDeleteReducer,
     
     productList: productListReducer,
     productDetails: productDetailsReducer,
     productDelete: productDeleteReducer,
     productCreate: productCreateReducer,
     productUpdate: productUpdateReducer,
-    productCreateReview: productCreateReviewReducer,
-    
+    productCreateReview: productCreateReviewReducer,    
 
     cart: cartReducer ,
 
