@@ -85,7 +85,7 @@ const ProductTab  = ({userInfo, searchPath, history, keyword}) => {
     
     return (
         <>
-            <h1 className="mb-4">Products</h1>
+            <h4 className="mb-4">Products</h4>
  
             {// loading while performing create or delete action
                 (createLoading || deleteLoading) && <Loader />
@@ -132,7 +132,7 @@ const ProductTab  = ({userInfo, searchPath, history, keyword}) => {
                         <tbody>
                             {products.map(product => (
                                 <tr key={product._id}>
-                                    <td>{product._id}</td>
+                                    <td className="text-center">{product._id}</td>
                                     <td>{product.name}</td>                                    
                                     <td>{product.brand}</td>
                                     <td>{product.category}</td>

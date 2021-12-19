@@ -67,7 +67,7 @@ const CategoryTab = ({userInfo, searchPath, history, timer, timedMessage}) => {
 
     return (
         <>
-            <h1 className="mb-4">Categories</h1>           
+            <h4 className="mb-4">Categories</h4>           
                 
             <div className="d-flex mb-5 flex-row-reverse">                             
                 {userInfo && userInfo.isStoreManager && 
