@@ -34,7 +34,6 @@ const EditUserScreen = ({match, history}) => {
     const [isStoreManager, setStoreManager] = useState('false')
     const [role, setRole] = useState('')
 
-
     //define dispatch
     const dispatch = useDispatch()
 
@@ -121,7 +120,6 @@ const EditUserScreen = ({match, history}) => {
             })
         )
     }
-
 
     // displayed to user
     return (

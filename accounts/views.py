@@ -121,15 +121,18 @@ def adminUpdateUser(request, id):
     # get data passed
     data = request.data
 
-    # update existing user data with new data
-    user.first_name = data['first_name']
-    user.last_name = data['last_name']
-    user.username = data['email']
-    user.email = data['email']
-    user.phone_number = data['phone_number']
-    user.is_staff = data['isSystemAdmin']
-    user.is_admin = data['isSystemAdmin']
-    user.is_storeManager = data['isStoreManager']
+    if(data['is_active'] != ''):
+        user.is_active = data['is_active']
+    else:
+        # update existing user data with new data
+        user.first_name = data['first_name']
+        user.last_name = data['last_name']
+        user.username = data['email']
+        user.email = data['email']
+        user.phone_number = data['phone_number']
+        user.is_staff = data['isSystemAdmin']
+        user.is_admin = data['isSystemAdmin']
+        user.is_storeManager = data['isStoreManager']
 
     # save user info
     user.save()
@@ -143,7 +146,7 @@ def adminUpdateUser(request, id):
 
 # GET request to retrieve ALL user data (only for admin user)
 @api_view(['GET'])
-@permission_classes([IsAdminUser])  # only admin user can access
+@permission_classes([IsAuthenticated])  # only admin user can access
 def getUsers(request):
     users = User.objects.all()
     serializer = UserSerializer(users, many=True)
@@ -153,11 +156,14 @@ def getUsers(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAdminUser])  # only admin user can access
+@permission_classes([IsAuthenticated])  # only admin user can access
 def getUserByID(request, id):
-    user = User.objects.get(id=id)
-    serializer = UserSerializer(user, many=False)
-    return Response(serializer.data)
+    try:
+        user = User.objects.get(id=id)
+        serializer = UserSerializer(user, many=False)
+        return Response(serializer.data)
+    except:
+        return Response({'detail': 'User with given user ID does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # extend default TokenObtainPairSerializer with custom class

@@ -1,5 +1,6 @@
 //import axios to make api calls
 import axios from 'axios'
+import { CgNpm } from 'react-icons/cg'
 
 //import constants
 import { ORDER_CREATE_REQUEST,
@@ -355,7 +356,7 @@ export const updateOrderStatus = (order) => async(dispatch, getState) => {
 
 
 //retrieve orders of logged in user action
-export const listOrders = (page='', ordering='' ) => async(dispatch, getState) => {
+export const listOrders = (page='', ordering='', results='10' ,customer='') => async(dispatch, getState) => {
  
      //try-catch exception
     try {
@@ -366,11 +367,21 @@ export const listOrders = (page='', ordering='' ) => async(dispatch, getState) =
 
         //sorting and paginate
         if(page ===''){
-            path = `?ordering=${ordering}`
+            path = `?ordering=${ordering}&results=${results}`
         }
         else{
-            path = `${page}&ordering=${ordering}`       
+            path = `${page}&ordering=${ordering}&results=${results}`       
         }
+
+        if(customer !== ''){
+            path = path+'&customer='+customer
+        }
+        console.log(path)
+        console.log('cust', customer    )
+
+
+        
+        
 
         //get user info (object) of logged in user from userLogin state
         const { userLogin : { userInfo } } = getState()

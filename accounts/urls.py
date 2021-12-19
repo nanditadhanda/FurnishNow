@@ -23,6 +23,5 @@ urlpatterns = [
 
 
     path('update/<str:id>', views.adminUpdateUser, name="admin-update-user"),
-
     path('delete/<str:id>', views.deleteUser, name="delete-user"),
 ]

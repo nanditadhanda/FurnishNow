@@ -90,20 +90,28 @@ def addOrderItems(request):
 def getOrders(request):
 
     user = request.user
+    customer = request.query_params.get('customer')
     sort = request.query_params.get('ordering')
+    results = request.query_params.get('results')
 
     # if order filter is not applied, by default sort by id
     if sort == None:
-        sort = '_id'
+        sort = '-_id'
+
+    if results == None:
+        results = 10
 
     if user.is_staff or user.is_storeManager:
-        # get all orders
-        orders = Order.objects.all().order_by(sort)
+        if customer == None:
+            # get all orders
+            orders = Order.objects.all().order_by(sort)
+        else:
+            orders = Order.objects.filter(user__id=customer).order_by(sort)
 
         # pagination
         page = request.query_params.get('page')
         # return 10 products per page
-        paginator = Paginator(orders, 10)
+        paginator = Paginator(orders, results)
 
         # ----pagination exception handling---
 
