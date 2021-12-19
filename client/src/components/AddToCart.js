@@ -8,7 +8,7 @@ import {addToCart} from '../actions/cartActions'
 
 import {Button} from 'react-bootstrap'
 
-const AddToCart = ({productID, qty=0, msgShow="", qtyError=""}) => {
+const AddToCart = ({productID, qty=0, msgShow=""}) => {
 
     //message
     const [show, setShow] = useState(false)
@@ -26,13 +26,12 @@ const AddToCart = ({productID, qty=0, msgShow="", qtyError=""}) => {
         }else{
             setShow(false)
             setError(true)
-            console.log("Update Quantity Value" , qty)
         }
             // ? history.push(`/cart/${productID}?qty=${productQty}`)
     }
 
     useEffect(() => {
-      msgShow({show, error})  
+      msgShow({show, error}) 
     }, [msgShow, show, error, qty])
 
     return (

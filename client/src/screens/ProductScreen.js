@@ -82,34 +82,44 @@ const ProductScreen = ({ match, history }) => {
     const [status, setStatus] = useState(false)
 
     const [qtyError, setQtyError] = useState(false)
+    const [buyNowError, setBuyNowError] = useState(false)
 
     const updateQty = (qtyInput) => {
         setQuantity(qtyInput.qty)
     }
 
     const updateMsg = ({ show, error }) => {
-        console.log("show: ", show, " error:", error)
         setShow(show)
         setQtyError(error)
     }
 
-
     const buyNowHandler = () => {
-
         if (qty > 0) {
             dispatch(addToCart(productID, qty))
             setStatus(true)
             setQtyError(false)
         }
         else {
-            setQtyError(true)
+            setBuyNowError(true)
         }
     }
 
-    if (status) {
-        history.push("/cart")
-        setStatus(false)
-    }
+    useEffect(()=>{
+        if (status) {
+            history.push("/cart")
+            setStatus(false)
+            setQtyError(false)
+            setBuyNowError(false)
+        }
+
+        if(show){
+            setQtyError(false)
+            setBuyNowError(false)            
+        }
+
+    },[status, history, show])
+
+    
 
 
 
@@ -226,7 +236,7 @@ const ProductScreen = ({ match, history }) => {
                                             {product.countInStock > 0
                                                 && <Row>
                                                         <Col xs={12}>
-                                                            {qtyError &&
+                                                            {(qtyError || buyNowError) &&
                                                                 <Message variant="danger">Error: Select Quantity</Message>}
                                                             {/* Quantity selector */}</Col>
                                                         <Col md={4}>
@@ -268,7 +278,7 @@ const ProductScreen = ({ match, history }) => {
                                                             /* If not logged in or if user is customer */
                                                             :  (product.countInStock > 0 ?
                                                                 (<div className="d-grid"> 
-                                                                    <AddToCart productID={productID} qty={qty} msgShow={updateMsg} />
+                                                                    <AddToCart productID={productID} qty={qty} msgShow={updateMsg}/>
                                                                     <Button className="mt-2 btn-primary" type='button' onClick={buyNowHandler}>Buy Now</Button>
                                                                 
                                                                 </div>)

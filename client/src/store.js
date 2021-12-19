@@ -1,3 +1,5 @@
+/* Redux Store */
+
 //necessary redux imports
 import { createStore, combineReducers, applyMiddleware} from 'redux'
 import thunk from 'redux-thunk'
@@ -11,7 +13,7 @@ import { myOrdersReducer, orderCreateReducer, orderDetailsReducer, orderListRedu
 import { categoryCreateReducer, categoryDeleteReducer, categoryDetailsReducer, categoryListReducer, categoryUpdateReducer } from './reducers/categoryReducers'
 import { paymentReducer, paymentUpdateReducer } from './reducers/paymentReducers'
 
-//register and co   mbine all reducers
+//register and combine all reducers
 const reducer = combineReducers({
     categoryList: categoryListReducer,
     categoryCreate: categoryCreateReducer,

@@ -227,8 +227,7 @@ const AR = ({model3D="", productID, max, tooltipPlacement="bottom"}) => {
           scene.add(model);
           setModelPlaced(true)
 
-          
-
+      
           // start object animation right away
           //toggleAnimation();
           // instead of placing an object we will just toggle animation state
@@ -274,10 +273,6 @@ const AR = ({model3D="", productID, max, tooltipPlacement="bottom"}) => {
         // render the scene
         renderer.render(scene, camera);
       }
-
-      
-    
-
   
   // use effect to initialize component
   useEffect(() => {

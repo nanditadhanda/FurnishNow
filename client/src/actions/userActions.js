@@ -18,7 +18,6 @@ import {
     USER_STAFF_REGISTER_REQUEST,
     USER_STAFF_REGISTER_FAIL,
     USER_STAFF_REGISTER_SUCCESS,
-    USER_STAFF_REGISTER_RESET,
 
     USER_DETAILS_REQUEST,
     USER_DETAILS_FAIL,
@@ -241,8 +240,6 @@ export const getUserDetails = (id) => async(dispatch, getState) => {
             config
             )
 
-            
-
         //if no error is caught - throw in USER_LOGIN_SUCCESS action
         dispatch({
             type: USER_DETAILS_SUCCESS,
@@ -258,7 +255,6 @@ export const getUserDetails = (id) => async(dispatch, getState) => {
                     ? error.response.data.detail
                     : error.message
         })
-
     }
 }
 
@@ -405,10 +401,8 @@ export const deleteUser = (id) => async(dispatch, getState) => {
                     ? error.response.data.detail
                     : error.message
         })
-
     }
 }
-
 
 //update user action
 export const updateUser = (user) => async(dispatch, getState) => {

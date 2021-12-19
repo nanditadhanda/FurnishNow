@@ -110,7 +110,6 @@ export const productDeleteReducer = (state = {}, action) => {
             return state
 
     }
-
 }
 
 //Product Reducers - All products
@@ -160,8 +159,7 @@ export const productUpdateReducer = (state = {product:{}}, action) => {
         //reset state and empty product object
         case PRODUCT_UPDATE_RESET:
             return { product:{}}
-        
-      
+          
         //return state by default
         default:
             return state
