@@ -150,17 +150,6 @@ class ReportEntrySerializer(serializers.Serializer):
     average = serializers.DecimalField(max_digits=15, decimal_places=2)
 
 
-class OrderOnlySerializer(serializers.ModelSerializer):
-    user = UserSerializer(many=False, read_only=True)
-    orderItems = OrderItemSerializer(many=True, read_only=True)
-    payment = PaymentSerializer(many=False, read_only=True)
-
-    class Meta:
-        model = Order
-        fields = ('_id', 'user', 'taxRate', 'shippingPrice', 'totalPrice', 'orderStatus', 'orderDate',
-                  'orderItems', 'payment')   # all fields
-
-
 class MonthlySalesSerializer(serializers.Serializer):
     month = serializers.DateTimeField(read_only=True, format="%B")
     totalOrders = serializers.IntegerField()

@@ -2,7 +2,7 @@
 from datetime import datetime
 from base.serializers import OrderSerializer, PaymentSerializer
 from accounts.models import User
-from base.models import Payment, Product, Order, OrderItem, ShippingAddress
+from base.models import Payment, Product, Order, OrderItem, ShippingAddress, Category
 from django.shortcuts import render
 from django.http import JsonResponse
 
@@ -68,6 +68,7 @@ def addOrderItems(request):
             item = OrderItem.objects.create(
                 product=product,
                 order=order,
+                category=Category.objects.get(id=i['category']),
                 name=product.name,
                 qty=i['qty'],
                 price=i['price'],

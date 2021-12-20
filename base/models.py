@@ -93,9 +93,9 @@ class Order(models.Model):
 
     # fields and attributes
     user = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, related_name="user")
+        User, on_delete=models.SET_NULL, null=True)
     payment = models.ForeignKey(
-        Payment, on_delete=models.CASCADE, null=True, related_name="payment")
+        Payment, on_delete=models.CASCADE, null=True)
     taxRate = models.DecimalField(
         max_digits=7, decimal_places=2, null=True, blank=True)
     shippingPrice = models.DecimalField(
@@ -124,7 +124,7 @@ class OrderItem(models.Model):
     product = models.ForeignKey(
         Product, on_delete=models.SET_NULL, null=True)
     category = models.ForeignKey(
-        Category, blank=False, on_delete=models.SET_DEFAULT, default='5', related_name="orderItems")
+        Category, blank=False, on_delete=models.SET_DEFAULT, default='5')
     name = models.CharField(max_length=200, null=True, blank=True)
     qty = models.IntegerField(null=True, blank=True, default=0)
     price = models.DecimalField(
@@ -141,7 +141,7 @@ class OrderItem(models.Model):
 class ShippingAddress(models.Model):
     # fields and attributes
     order = models.OneToOneField(
-        Order, on_delete=models.CASCADE, null=True, blank=True, related_name="shippingAddress")
+        Order, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200, null=True, blank=True)
     phone = models.CharField(max_length=50, null=True, blank=True)
     address = models.TextField(null=True, blank=True)

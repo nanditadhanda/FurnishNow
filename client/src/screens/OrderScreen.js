@@ -147,7 +147,7 @@ const OrderScreen = ({ match , history }) => {
                                 
                             {order.orderStatus === 'Delivered' ?
                                 <OrderStatusSteps step1 step2 step3 step4 />
-                                : order.orderStatus === 'Shipped Out'
+                                : order.orderStatus === 'Shipped'
                                 ?   <OrderStatusSteps step1 step2 step3 />
                                 : order.orderStatus === 'Packaged'
                                 ?   <OrderStatusSteps step1 step2 />
@@ -285,8 +285,13 @@ const OrderScreen = ({ match , history }) => {
                                                         <Col md={4}>Payment Status:</Col>
                                                         <Col className="text-right">
                                                             <p className="text-success">Paid on&nbsp;
-                                                                {order.payment.lastUpdated.substring(0,10)} ,&nbsp; 
-                                                                {order.payment.lastUpdated.substring(11,19)}
+                                                                {order && order.payment.lastUpdated !== null && (
+                                                                    <>
+                                                                        {order.payment.lastUpdated.substring(0,10)} ,&nbsp; 
+                                                                        {order.payment.lastUpdated.substring(11,19)}
+                                                                    </>
+                                                                )}
+                                                                
                                                             </p>
                                                             </Col>
                                                     </Row>

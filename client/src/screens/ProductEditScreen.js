@@ -10,9 +10,6 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 //Import product details action
 import {listProductDetails, updateProduct } from '../actions/productActions'
-//Import category details action
-import {listCategories } from '../actions/categoryActions'
-
 
 //constants
 import {PRODUCT_UPDATE_RESET} from '../constants/productConstants'

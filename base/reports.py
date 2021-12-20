@@ -8,6 +8,12 @@ from datetime import datetime
 
 
 @dataclass
+class ReportParams:
+    start_date: datetime
+    end_date: datetime
+
+
+@dataclass
 class ReportEntry:
     category: Category
     totalSales: Decimal

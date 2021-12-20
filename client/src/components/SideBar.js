@@ -47,8 +47,8 @@ const SideBar = ({activeTab}) => {
         history.push("/login");
     }   
     return (
-        <Col md={3} xl={2} className="px-0 bg-light">    
-            <Nav className="flex-column py-2 nav-side" variant="pills">   
+        <Col md={3} xl={2} className="px-0 bg-light position-relative" >    
+            <Nav className="flex-column py-2 nav-side sticky-top" variant="pills" style={{'top':'60px'}}>   
                 <Nav.Link href={userType+"/dashboard"} className="px-4 " active={activeTab === "dashboard"}>
                     <RiDashboardFill className="fs-3 pe-2 ms-1 mb-1 "/>Dashboard
                 </Nav.Link>
