@@ -1,4 +1,4 @@
-/* Redux Store */
+/* Redux Store - this file combines all reducers to make the states available globally throughout the website */
 
 //necessary redux imports
 import { createStore, combineReducers, applyMiddleware} from 'redux'
@@ -12,7 +12,7 @@ import { userDetailsReducer, userLoginReducer, userRegisterReducer, updateUserPr
 import { myOrdersReducer, orderCreateReducer, orderDetailsReducer, orderListReducer, orderPaymentReducer, orderStatusReducer } from './reducers/orderReducers'
 import { categoryCreateReducer, categoryDeleteReducer, categoryDetailsReducer, categoryListReducer, categoryUpdateReducer } from './reducers/categoryReducers'
 import { paymentReducer, paymentUpdateReducer } from './reducers/paymentReducers'
-import { reportCategorySalesReducer, reportTotalsReducer } from './reducers/reportReducers'
+import { reportCategorySalesReducer, reportMonthlySalesReducer, reportTotalsReducer } from './reducers/reportReducers'
 
 //register and combine all reducers
 const reducer = combineReducers({
@@ -52,6 +52,7 @@ const reducer = combineReducers({
 
     reportTotals: reportTotalsReducer,
     reportCategorySales: reportCategorySalesReducer,
+    reportMonthlySales: reportMonthlySalesReducer,
    
 })
 

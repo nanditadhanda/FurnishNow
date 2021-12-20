@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react'
 
 import 'chart.js/auto';
-import { Bar} from 'react-chartjs-2';
+import {Chart} from 'react-chartjs-2'
 
-const BarChart = ({labels=[], datasetLabel, data=[], color=''}) => {
+const GraphChart = ({labels=[], datasetLabel, data=[], color='', type}) => {
     const [bgColor, setBgColor] = useState('')
     const [borderColor, setBorderColor] = useState('')
+
+    console.log(data)
 
     //set properties
     useEffect(()=>{
@@ -29,7 +31,8 @@ const BarChart = ({labels=[], datasetLabel, data=[], color=''}) => {
 
     return (
             <div>
-      <Bar
+      <Chart
+        type={type}
         data={{
           labels: labels,
           datasets: [
@@ -38,14 +41,9 @@ const BarChart = ({labels=[], datasetLabel, data=[], color=''}) => {
               data: data,
               backgroundColor: bgColor,
               borderColor: borderColor,
-              borderWidth: 1,
+              borderWidth: 1,              
+              fill: 'origin',
             },
-            // {
-            //   label: 'Quantity',
-            //   data: [47, 52, 67, 58, 9, 50],
-            //   backgroundColor: 'orange',
-            //   borderColor: 'red',
-            // },
           ],
         }}
         height={400}
@@ -72,4 +70,4 @@ const BarChart = ({labels=[], datasetLabel, data=[], color=''}) => {
     )
 }
 
-export default BarChart
+export default GraphChart
