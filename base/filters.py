@@ -1,7 +1,7 @@
 # import django fitlers library
-from django_filters.filters import CharFilter, MultipleChoiceFilter, RangeFilter
+from django_filters.filters import CharFilter, MultipleChoiceFilter, RangeFilter, DateFromToRangeFilter
 from accounts.models import User
-from base.models import Product
+from base.models import Product, Order
 import django_filters
 from rest_framework.filters import OrderingFilter, SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
@@ -26,3 +26,13 @@ class ProductFilter(django_filters.FilterSet):
     class Meta:
         model = Product
         fields = ['category', 'rating', 'price']
+
+
+class OrderFilter(django_filters.FilterSet):
+    date = DateFromToRangeFilter(field_name='orderDate')
+    status = MultipleParamsFilter(
+        field_name='orderStatus', lookup_expr='in')
+
+    class Meta:
+        model = Order
+        fields = ['date', 'status']
