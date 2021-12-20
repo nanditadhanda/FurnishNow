@@ -35,6 +35,10 @@ import AddUserScreen from './screens/AddUserScreen'
 import AddEditCategoryScreen from './screens/AddEditCategoryScreen'
 import ReportScreen from './screens/ReportScreen'
 import CustomerDetailScreen from './screens/CustomerDetailScreen'
+import AboutUsScreen from './screens/AboutUsScreen'
+import ContactScreen from './screens/ContactScreen'
+import PrivacyScreen from './screens/PrivacyScreen'
+import TnCScreen from './screens/TnCScreen'
 
 
 const NoMatchPage = () => {
@@ -57,10 +61,9 @@ function App() {
         {/* register routing to different screens based on URL path */}
 
         <Switch>
-          <Route  path="/products/:category" component={CatalogScreen}/>         
-
-          <Route path="/" component={HomeScreen} exact/>
-          
+          {/* paths without logging in */}     
+          <Route path="/" component={HomeScreen} exact/>            
+          <Route  path="/products/:category" component={CatalogScreen}/>        
           <Route  path="/product/:category/:id" component={ProductScreen}/>
 
           {/* User account screens */}
@@ -96,6 +99,12 @@ function App() {
           <Route  path="/admin/orderlist" component={ManageOrdersScreen}/>
           <Route  path="/admin/order/:id" component={OrderScreen}/>          
           <Route  path="/admin/reports" component={ReportScreen}/>
+
+          {/* Extra pages */}
+          <Route  path="/about" component={AboutUsScreen}/>
+          <Route  path="/contact" component={ContactScreen}/>
+          <Route  path="/privacy" component={PrivacyScreen}/>
+          <Route  path="/tnc" component={TnCScreen}/>
       
           {/* Unauthorized access redirect screen */}
           <Route  path="/accessdenied" component={AuthorizationErrorScreen}/>
