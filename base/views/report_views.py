@@ -2,9 +2,9 @@ from base.models import OrderItem, Category, Order
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
-from base.reports import salesByCategory, dailysales_report, orders_total
+from base.reports import salesByCategory, monthlysales_report, orders_total
 
-from base.serializers import ReportEntrySerializer, DailySalesSerializer, OrdersTotalSerializer
+from base.serializers import ReportEntrySerializer, MonthlySalesSerializer, OrdersTotalSerializer
 from rest_framework import serializers, status
 
 from rest_framework.response import Response
@@ -21,10 +21,9 @@ def categorySalesReport(request):
 
 
 @api_view(['GET'])  # GET REST api method
-def dailySalesReport(request):
-    data = dailysales_report()
-    print(data)
-    serializer = DailySalesSerializer(instance=data, many=True)
+def monthlySalesReport(request):
+    data = monthlysales_report()
+    serializer = MonthlySalesSerializer(instance=data, many=True)
 
     return Response(data=serializer.data)
 

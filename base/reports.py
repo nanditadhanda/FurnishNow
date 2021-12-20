@@ -1,5 +1,5 @@
 from base.models import OrderItem, Category, Order
-from django.db.models import Sum, Count, Avg
+from django.db.models import Sum, Count, Avg, Q
 from django.db.models.functions import TruncMonth, TruncDate
 
 from dataclasses import dataclass
@@ -50,8 +50,6 @@ def orders_total():
     completedOrders = Order.objects.filter(orderStatus='Delivered').count()
     pendingOrders = Order.objects.all().exclude(orderStatus='Delivered').count()
 
-    print("completed:", completedOrders, "pending: ", pendingOrders)
-
     total = Order.objects.all().count()
     report_entry = OrderEntry(
         total,  pendingOrders, completedOrders
@@ -65,17 +63,17 @@ def orders_total():
 
 
 @dataclass
-class DailySalesEntry:
-    order: Order
+class MonthlySalesEntry:
     month: datetime
     totalOrders: int
+    pendingOrders: int
+    shippedOrders: int
     completedOrders: int
-    pending: int
     netSales: Decimal
     avgSales: Decimal
 
 
-def dailysales_report():
+def monthlysales_report():
     data = []
 
     # completedOrders = Order.objects.values(
@@ -86,31 +84,27 @@ def dailysales_report():
         month=TruncMonth('orderDate')
     ).values('month').annotate(
         totalOrders=Count('_id'),
+        pendingOrders=Count("orderStatus", filter=Q(
+            orderStatus__in=['Placed', 'Packaged'])),
+        shippedOrders=Count("orderStatus", filter=Q(
+            orderStatus__in=['Shipped'])),
+        completedOrders=Count("orderStatus", filter=Q(
+            orderStatus='Delivered')),
         netSales=Sum("totalPrice"),
         avgSales=Avg("totalPrice")
     ).order_by()
 
     for entry in queryset:
 
-        order = Order.objects.filter(orderDate__icontains=entry["month"])
-
-        completedOrders = Order.objects.all().count()
-        pending = Order.objects.filter(orderDate__icontains=entry["month"]).exclude(
-            orderStatus='Delivered').count()
-
-        report_entry = DailySalesEntry(
-            order,
+        report_entry = MonthlySalesEntry(
             entry["month"],
             entry["totalOrders"],
-            # entry["completed"],
-
-            pending,
-            completedOrders,
+            entry["pendingOrders"],
+            entry["shippedOrders"],
+            entry["completedOrders"],
             entry["netSales"],
             entry["avgSales"]
         )
-
-        print(report_entry)
         data.append(report_entry)
 
     return data

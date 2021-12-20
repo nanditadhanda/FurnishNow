@@ -151,19 +151,22 @@ class ReportEntrySerializer(serializers.Serializer):
 
 
 class OrderOnlySerializer(serializers.ModelSerializer):
-    # order items, shippingAddress and user serializers will be retrieved and returned as a nested object in OrderSerializer
+    user = UserSerializer(many=False, read_only=True)
+    orderItems = OrderItemSerializer(many=True, read_only=True)
+    payment = PaymentSerializer(many=False, read_only=True)
 
     class Meta:
         model = Order
-        fields = '__all__'  # all fields
+        fields = ('_id', 'user', 'taxRate', 'shippingPrice', 'totalPrice', 'orderStatus', 'orderDate',
+                  'orderItems', 'payment')   # all fields
 
 
-class DailySalesSerializer(serializers.Serializer):
-    order = OrderOnlySerializer()
-    month = serializers.DateTimeField()
+class MonthlySalesSerializer(serializers.Serializer):
+    month = serializers.DateTimeField(read_only=True, format="%B")
     totalOrders = serializers.IntegerField()
+    pendingOrders = serializers.IntegerField()
+    shippedOrders = serializers.IntegerField()
     completedOrders = serializers.IntegerField()
-    pending = serializers.IntegerField()
     netSales = serializers.DecimalField(max_digits=15, decimal_places=2)
     avgSales = serializers.DecimalField(max_digits=15, decimal_places=2)
 

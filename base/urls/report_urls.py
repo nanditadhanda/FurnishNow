@@ -9,6 +9,6 @@ from base.views import report_views as views  # import all from views
 # order URLS
 urlpatterns = [
     path('category_sales', views.categorySalesReport, name='transaction'),
-    path('daily_sales', views.dailySalesReport, name='daily-sales'),
+    path('monthly_sales', views.monthlySalesReport, name='monthly-sales'),
     path('orders_total', views.ordersTotalReport, name='orders-total')
 ]
