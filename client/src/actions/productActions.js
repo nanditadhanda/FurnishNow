@@ -254,10 +254,7 @@ export const createProductReview = (product_id, review) => async(dispatch, getSt
                 Authorization: `Bearer ${userInfo.token}`
             }
 
-        }
-
-        console.log("data: ", review)
-        
+        }        
 
         //send out post api request
         const { data } = await axios.post(

@@ -141,3 +141,35 @@ class OrderSerializer(serializers.ModelSerializer):
         serializer = UserSerializer(user, many=False)
 
         return serializer.data
+
+
+class ReportEntrySerializer(serializers.Serializer):
+    category = CategorySerializer()
+    totalSales = serializers.DecimalField(max_digits=15, decimal_places=2)
+    items = serializers.IntegerField()
+    average = serializers.DecimalField(max_digits=15, decimal_places=2)
+
+
+class OrderOnlySerializer(serializers.ModelSerializer):
+    # order items, shippingAddress and user serializers will be retrieved and returned as a nested object in OrderSerializer
+
+    class Meta:
+        model = Order
+        fields = '__all__'  # all fields
+
+
+class DailySalesSerializer(serializers.Serializer):
+    order = OrderOnlySerializer()
+    month = serializers.DateTimeField()
+    totalOrders = serializers.IntegerField()
+    completedOrders = serializers.IntegerField()
+    pending = serializers.IntegerField()
+    netSales = serializers.DecimalField(max_digits=15, decimal_places=2)
+    avgSales = serializers.DecimalField(max_digits=15, decimal_places=2)
+
+
+class OrdersTotalSerializer(serializers.Serializer):
+    # order = OrderSerializer()
+    total = serializers.IntegerField()
+    pendingOrders = serializers.IntegerField()
+    completedOrders = serializers.IntegerField()

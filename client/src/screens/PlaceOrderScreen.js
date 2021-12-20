@@ -269,8 +269,7 @@ const PlaceOrderScreen = ({history, location}) => {
                                                 <Button variant="outline-secondary"  className="btn-icon"><MdEdit/></Button>
                                             </Link>
                                         </Col>
-                                    </Row>
-                                    
+                                    </Row>                                   
                                     
                                     <ListGroup variant="flush">
                                         {/* Map out items in cart */}
@@ -278,13 +277,17 @@ const PlaceOrderScreen = ({history, location}) => {
                                             <ListGroup.Item key="index">
                                                 <Row>
                                                     {/* Product Image */}
-                                                    <Col md={1} xs={2}>
+                                                    <Col xl={1} lg={2} xs={2}>
                                                         <Image src={item.image} alt={item.name} fluid rounded></Image>
                                                     </Col>
                                                     {/* Product Name */}
-                                                    <Col><Link to={`/product/${item.category_slug}/${item.product}`}>{item.name}</Link></Col>
-                                                    {/* Quantity and Price */}
-                                                    <Col md={4}>{item.qty} x RM {item.price}&nbsp;&nbsp;=&nbsp;&nbsp; RM{(parseFloat(item.qty * item.price)).toFixed(2)}</Col>
+                                                    <Col>
+                                                        <Row>
+                                                            <Col><Link to={`/product/${item.category_slug}/${item.product}`}>{item.name}</Link></Col>
+                                                            {/* Quantity and Price */}
+                                                            <Col md={12} lg={5}>{item.qty} x RM {item.price}&nbsp;&nbsp;=&nbsp;&nbsp; RM{(parseFloat(item.qty * item.price)).toFixed(2)}</Col>
+                                                        </Row>                                                        
+                                                    </Col>
                                                 </Row>
                                             </ListGroup.Item>
                                         ))}

@@ -12,6 +12,7 @@ import { userDetailsReducer, userLoginReducer, userRegisterReducer, updateUserPr
 import { myOrdersReducer, orderCreateReducer, orderDetailsReducer, orderListReducer, orderPaymentReducer, orderStatusReducer } from './reducers/orderReducers'
 import { categoryCreateReducer, categoryDeleteReducer, categoryDetailsReducer, categoryListReducer, categoryUpdateReducer } from './reducers/categoryReducers'
 import { paymentReducer, paymentUpdateReducer } from './reducers/paymentReducers'
+import { reportCategorySalesReducer, reportTotalsReducer } from './reducers/reportReducers'
 
 //register and combine all reducers
 const reducer = combineReducers({
@@ -48,6 +49,9 @@ const reducer = combineReducers({
     orderStatus: orderStatusReducer,
     myOrders: myOrdersReducer,
     orderList: orderListReducer,
+
+    reportTotals: reportTotalsReducer,
+    reportCategorySales: reportCategorySalesReducer,
    
 })
 

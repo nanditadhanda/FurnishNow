@@ -51,7 +51,8 @@ class OrderItemAdmin(admin.ModelAdmin):
                     'price')
 
     # readonly fields
-    readonly_fields = ('order',)
+    readonly_fields = ['order', 'product', 'category', 'name', 'qty',
+                       'price', 'image']
 
 
 # Register your models here.

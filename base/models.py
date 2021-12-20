@@ -121,6 +121,8 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
     product = models.ForeignKey(
         Product, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(
+        Category, blank=False, on_delete=models.SET_DEFAULT, default='5')
     name = models.CharField(max_length=200, null=True, blank=True)
     qty = models.IntegerField(null=True, blank=True, default=0)
     price = models.DecimalField(
