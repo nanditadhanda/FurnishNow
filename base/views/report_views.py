@@ -14,18 +14,35 @@ from rest_framework.response import Response
 
 
 @api_view(['GET'])  # GET REST api method
+@permission_classes([IsAuthenticated])
 def categorySalesReport(request):
-    data = salesByCategory()
-    serializer = ReportEntrySerializer(instance=data, many=True)
-    return Response(data=serializer.data)
+    user = request.user
+
+    if user.is_staff or user.is_storeManager:
+        data = salesByCategory()
+        serializer = ReportEntrySerializer(instance=data, many=True)
+        return Response(data=serializer.data)
+    else:
+        # else return error message
+        return Response({'detail': 'You do not have permission to perform this action.'},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])  # GET REST api method
+@permission_classes([IsAuthenticated])
 def monthlySalesReport(request):
-    data = monthlysales_report()
-    serializer = MonthlySalesSerializer(instance=data, many=True)
+    user = request.user
 
-    return Response(data=serializer.data)
+    if user.is_staff or user.is_storeManager:
+        data = monthlysales_report()
+        serializer = MonthlySalesSerializer(instance=data, many=True)
+
+        return Response(data=serializer.data)
+
+    else:
+        # else return error message
+        return Response({'detail': 'You do not have permission to perform this action.'},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])  # GET REST api method
