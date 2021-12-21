@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     'base.apps.BaseConfig',
     'accounts.apps.AccountsConfig',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 # authentication using JSON web tokens
