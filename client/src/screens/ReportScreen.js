@@ -10,13 +10,15 @@ import { getTotalValues , getCategorySales, getMonthlySales} from '../actions/re
 import SideBar from '../components/SideBar'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-// import BarChart from '../components/BarChart'
+import DateNow from '../components/DateNow'
+
+//charts
 import BarChartGrouped from '../components/BarChartGrouped'
-// import AreaChart from '../components/AreaChart'
 import GraphChart from '../components/GraphChart'
 
 import {Container, Row, Col, Card, Form, Table} from 'react-bootstrap'
 
+//icons
 import {MdOutlinePendingActions} from 'react-icons/md'
 import  {AiOutlineFileDone} from 'react-icons/ai'
 import {BiPackage} from 'react-icons/bi'
@@ -137,7 +139,8 @@ const ReportScreen = ({history}) => {
             <Col>
                 <main>
                     <Container className="py-5">
-                        <h1 className="pb-5">Report</h1>
+                        <h1 className="pb-3">Report</h1>
+                        <h6 className="pb-5 text-secondary text-right"><DateNow/></h6>
                         
                         {/*     total order values */}
                         {loadingTotals ? <Loader />
