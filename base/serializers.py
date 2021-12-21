@@ -88,10 +88,17 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
 
 # Order Item serializer
 class OrderItemSerializer(serializers.ModelSerializer):
+    review = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = OrderItem
-        fields = '__all__'  # all fields
+        fields = ('_id', 'name', 'qty', 'price',
+                  'image', 'order', 'product', 'category', 'review')  # all fields
+
+    def get_review(self, obj):
+        review = obj.review_set.all()
+        serializer = ReviewSerializer(review, many=True)
+        return serializer.data
 
 
 # Order  serializer - main serializer

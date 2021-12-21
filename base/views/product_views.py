@@ -5,7 +5,7 @@ from datetime import datetime
 from django.core import paginator
 from base.serializers import ProductSerializer
 from accounts.models import User
-from base.models import Product, Review
+from base.models import OrderItem, Product, Review, Order
 from django.shortcuts import render
 from rest_framework import serializers, status
 from rest_framework import generics
@@ -92,7 +92,10 @@ def getProducts(request):
     return Response({
         'products': serializer.data,
         'page': page,
-        'pages': paginator.num_pages
+        'pages': paginator.num_pages,
+        # 'start-index': (9 * page)-8,
+        # 'end-index': (9 * page),
+        # 'total': paginator.num_pages * 9
     })
 
 # get all products
@@ -171,8 +174,6 @@ def updateProduct(request, id):
         product.brand = data['brand']
         product.category = Category.objects.get(id=data['category'])
         product.description = data['description']
-        # product.image = data['image']
-        # product.image3D = data['image3D']
         product.countInStock = data['countInStock']
         product.costPrice = data['costPrice']
         product.salePrice = data['salePrice']
@@ -250,7 +251,7 @@ def createProductReview(request, id):
 
     # get order data
     orderID = data['order']
-    order = Product.objects.get(_id=orderID)
+    order = Order.objects.get(_id=orderID)
 
     # ------- Leaving a review------------
 
@@ -276,6 +277,7 @@ def createProductReview(request, id):
             product=product,
             user=user,
             order=order,
+            orderItem=OrderItem.objects.get(_id=data['itemID']),
             title=data['title'],
             rating=data['rating'],
             comment=data['comment'],

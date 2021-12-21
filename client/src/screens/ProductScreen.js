@@ -301,22 +301,11 @@ const ProductScreen = ({ match, history }) => {
                                         </Message>}
                                     <ListGroup variant="flush">
                                         <ListGroup.Item className="px-0 ">
-                                            {userInfo && (!userInfo.isSystemAdmin && !userInfo.isStoreManager) &&
-                                                <h5 className="pb-2">Leave A Review</h5>
-                                            }
-                                            {userInfo ? (
-                                                (!userInfo.isSystemAdmin && !userInfo.isStoreManager) &&
-                                                <Review user={userInfo} product_id={productID} />
-
-                                            ) : (
+                                            {!userInfo  &&
                                                 <Message variant="secondary">
                                                     Please <Link to="/login">Login</Link> to leave a review
                                                 </Message>
-                                            )
-
                                             }
-
-
                                         </ListGroup.Item>
                                         {product.reviews.map((review) => (
 

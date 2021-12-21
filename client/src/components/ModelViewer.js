@@ -23,7 +23,7 @@ import { Card, Button, Modal } from 'react-bootstrap'
 
 const ModelViewer = ({model3D="", ios_model3D = "", product}) => {
 
-     const [show, setShow] = useState(false);
+    const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);

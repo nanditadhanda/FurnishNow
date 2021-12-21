@@ -292,10 +292,8 @@ const PlaceOrderScreen = ({history, location}) => {
                                             </ListGroup.Item>
                                         ))}
                                     </ListGroup>
-                                </ListGroup.Item>
-                            
+                                </ListGroup.Item>                            
                             </ListGroup>
-
                         </Col>
                         <Col md={4} lg={{span: 4 , offset:1}}>
                             <Card>
@@ -331,7 +329,6 @@ const PlaceOrderScreen = ({history, location}) => {
                                             <Elements options={options} stripe={stripePromise}>
                                                 <Checkout amount={amount} paymentID={paymentID} params={params} redirect={redirect}/>
                                             </Elements>
-
                                             :
                                             <Loader/>
                                         }

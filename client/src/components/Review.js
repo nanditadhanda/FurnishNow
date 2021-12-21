@@ -7,12 +7,14 @@ import {useDispatch, useSelector} from 'react-redux'
 //import actions
 import {createProductReview} from '../actions/productActions'
 
+import {PRODUCT_CREATE_REVIEW_RESET} from '../constants/productConstants'
+
 //import UI components
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 
 
-const Review = ({user, product_id}) => {
+const Review = ({user, product_id, order, itemID}) => {
     //set initial states
     const [rating, setRating] = useState(0)
     const [title, setTitle] = useState('')
@@ -34,7 +36,8 @@ const Review = ({user, product_id}) => {
         if(successProductReview){
             setRating(0)
             setComment('')
-            setTitle('')            
+            setTitle('')   
+        
         }
         
     }, [dispatch, successProductReview])
@@ -43,8 +46,10 @@ const Review = ({user, product_id}) => {
         e.preventDefault()
        
         dispatch(createProductReview(
-            product_id, 
+            product_id,      
             {
+                'order': order, 
+                'itemID': itemID,
                 title,
                 rating,            
                 comment
@@ -86,7 +91,6 @@ const Review = ({user, product_id}) => {
                         value={comment}
                         as='textarea' 
                         row="5" 
-                        
                         onChange={(e) => setComment(e.target.value)}                
                     />                
                 </Form.Group>

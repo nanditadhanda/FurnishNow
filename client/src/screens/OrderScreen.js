@@ -17,8 +17,10 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import OrderStatusSteps from '../components/OrderStatusSteps'
 import SideBar from '../components/SideBar'
+import Rating from '../components/Rating'
 
 import { IoArrowBack } from 'react-icons/io5'
+import ReviewModal from '../components/ReviewModal'
 
 
 
@@ -246,15 +248,15 @@ const OrderScreen = ({ match , history }) => {
                                                                 {/* Product Name */}
                                                                 <Col>
                                                                     <Link to={`/product/${item.category_slug}/${item.product}`}>{item.name}</Link>
-                                                                    
+                                                                     {/* Quantity and Price */}
                                                                     <p className="my-2">{item.qty} x ${item.price}&nbsp;&nbsp;=&nbsp;&nbsp; ${(parseFloat(item.qty * item.price)).toFixed(2)}</p>
                                                                 </Col>
-                                                                {/* Quantity and Price */}
-                                                                
-                                                                <Col sm={2}>{((!userInfo.isSystemAdmin || !userInfo.isStoreManager)) && order.isDelivered  && (
-                                            
-                                                                    <Button variant="outline-success" className="btn " type='button' >Rate</Button>
-                                            
+                                                               
+                                                                 {/* If delivered - give rating option */}
+                                                                <Col sm={2}>{((!userInfo.isSystemAdmin || !userInfo.isStoreManager)) && order.isDelivered  && ( 
+                                                                    item.review.length === 0 ? <ReviewModal item={item} order={order._id}/>    
+                                                                    : <Rating value={item.review[0].rating} color="text-primary"/>                       
+                                                                    
                                                             )}</Col>
                                                             </Row>
                                                         </ListGroup.Item>

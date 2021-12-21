@@ -47,7 +47,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ('order', 'name', 'category', 'qty',
+    list_display = ('_id', 'order', 'name', 'category', 'qty',
                     'price')
 
     # readonly fields
