@@ -7,8 +7,6 @@ const GraphChart = ({labels=[], datasetLabel, data=[], color='', type}) => {
     const [bgColor, setBgColor] = useState('')
     const [borderColor, setBorderColor] = useState('')
 
-    console.log(data)
-
     //set properties
     useEffect(()=>{
         if(color==='primary'){
@@ -51,13 +49,11 @@ const GraphChart = ({labels=[], datasetLabel, data=[], color='', type}) => {
         options={{
           maintainAspectRatio: false,
           scales: {
-            yAxes: [
-              {
+            y: {
                 ticks: {
                   beginAtZero: true,
                 },
-              },
-            ],
+            },
           },
           legend: {
             labels: {

@@ -5,10 +5,6 @@ import React from 'react'
 import {Nav}  from 'react-bootstrap'
 import {HiCheckCircle} from 'react-icons/hi'
 import {BiCircle} from 'react-icons/bi'
-import {RiRadioButtonFill} from 'react-icons/ri'
-
-//routing
-import {LinkContainer}  from 'react-router-bootstrap'
 
 //functional component
 const OrderStatusSteps = ({step1, step2, step3, step4}) => {

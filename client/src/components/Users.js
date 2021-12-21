@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 
 //Routing
 import { LinkContainer } from 'react-router-bootstrap'
@@ -37,7 +37,7 @@ const Users = ({type, users, activeStatus}) => {
     //get userUpdateAccount state
     const userUpdateAccount = useSelector(state => state.userUpdateAccount)
     //destructure state
-    const { error: updateError, loading:updateLoading, success:updateSuccess} = userUpdateAccount
+    const { success:updateSuccess} = userUpdateAccount
 
     useEffect(() => {
         if(updateSuccess){

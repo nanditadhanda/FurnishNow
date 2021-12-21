@@ -1,6 +1,5 @@
 //import axios to make api calls
 import axios from 'axios'
-import { CgNpm } from 'react-icons/cg'
 
 //import constants
 import { ORDER_CREATE_REQUEST,

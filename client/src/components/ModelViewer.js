@@ -20,7 +20,6 @@ import "@magicleap/prismatic"
 
 
 import { Card, Button, Modal } from 'react-bootstrap'
-import AR from '../components/AR'
 
 const ModelViewer = ({model3D="", ios_model3D = "", product}) => {
 

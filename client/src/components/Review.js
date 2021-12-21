@@ -7,9 +7,6 @@ import {useDispatch, useSelector} from 'react-redux'
 //import actions
 import {createProductReview} from '../actions/productActions'
 
-//import constants
-import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants'
-
 //import UI components
 import Loader from '../components/Loader'
 import Message from '../components/Message'

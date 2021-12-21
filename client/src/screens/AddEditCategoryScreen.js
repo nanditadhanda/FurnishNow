@@ -7,8 +7,6 @@ import { useDispatch,useSelector } from 'react-redux'
 //
 import {createCategory, updateCategory, listCategoryDetails} from '../actions/categoryActions'
 
-import { CATEGORY_UPDATE_RESET } from '../constants/categoryConstants'
-
 //UI components
 import Loader from '../components/Loader'
 import Message from '../components/Message'
@@ -61,7 +59,7 @@ const AddEditCategoryScreen = ({history}) => {
 
     const submitHandler = (e) => {
         e.preventDefault()
-
+        //validations
         if(name === ''){
             setMessage('Please fill out category name')
         }
@@ -79,7 +77,7 @@ const AddEditCategoryScreen = ({history}) => {
             categoryData.append('name', name)
             categoryData.append('slug', category_slug)
 
-
+            //execute add/update actions
             try{
                 if(page==='add'){
                     //dispatch create action

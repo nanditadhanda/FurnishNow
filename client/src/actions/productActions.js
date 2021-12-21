@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { bindActionCreators } from 'redux'
+
 //import variables for actions
 import {
     PRODUCT_LIST_SUCCESS,
@@ -212,10 +212,7 @@ export const deleteProduct = (id) => async(dispatch, getState) => {
         }
 
         //send out delete api request
-        const { data } = await axios.delete(
-            `/api/products/delete/${id}`,
-            config
-            )
+        await axios.delete(`/api/products/delete/${id}`,config)
 
         //if no error is caught - throw in delete product success action
         dispatch({

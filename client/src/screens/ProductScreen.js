@@ -63,17 +63,8 @@ const ProductScreen = ({ match, history }) => {
     /*------quantity update ---------- */
     //React Hook for product quantity
 
-    const cart = useSelector(state => state.cart)
-    const { cartItems } = cart
+
     const [qty, setQuantity] = useState(0)
-
-    //set quantity value when value in Quantity field is updated
-
-    const reviewStatus = (reviewSuccess) => {
-        if (reviewSuccess) {
-
-        }
-    }
 
     /*------Add To Cart ---------- */
     //message

@@ -18,9 +18,6 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
 
-//icons
-import { IoArrowBack } from 'react-icons/io5'
-
 const EditUserScreen = ({match, history}) => {
     //get id passed in URL
     const user_id = match.params.id

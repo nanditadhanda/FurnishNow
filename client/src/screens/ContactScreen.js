@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { Container, Card, Row, Col, Button} from 'react-bootstrap'
 
 import {MdAlternateEmail, MdOutlinePhoneInTalk, MdMapsHomeWork} from 'react-icons/md'

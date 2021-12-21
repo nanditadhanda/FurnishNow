@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 
 import { LinkContainer } from 'react-router-bootstrap'
 
@@ -6,8 +6,6 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 //Import userList action
 import { listUsers } from '../actions/userActions'
-
-import {USER_UPDATE_RESET} from '../constants/userConstants'
 
 //UI components
 import {Container, Tabs, Tab, Row, Col, Button} from 'react-bootstrap'

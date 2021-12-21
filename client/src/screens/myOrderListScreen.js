@@ -1,8 +1,5 @@
 import React, {useEffect} from 'react'
 
-//Routing
-import { LinkContainer } from 'react-router-bootstrap'
-
 //Redux imports
 import { useDispatch, useSelector } from 'react-redux'
 //Import user details action
@@ -10,7 +7,7 @@ import { myOrdersList } from '../actions/orderActions'
 
 
 //UI components
-import {Container,Row, Col, Card, Table, ListGroup, Button, Image} from 'react-bootstrap'
+import {Container} from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import Paginate from '../components/Paginate'

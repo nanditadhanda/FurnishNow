@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {Link} from 'react-router-dom'
 import {useDispatch , useSelector} from 'react-redux'
 import { Container, Row, Col, ListGroup, Image, Button, Card} from 'react-bootstrap'
 import { IoTrashSharp } from 'react-icons/io5'
 
-import {addToCart, removeFromCart} from '../actions/cartActions'
+import {removeFromCart} from '../actions/cartActions'
 
 //custom components
 import Message from '../components/Message'
@@ -29,27 +29,6 @@ function CartScreen({ match, location, history }) {
 
     //destructure cart
     const {cartItems} = cart     
-
-    
-    //quantity update
-
-    //FIX THIS *****  
-    const updateQty = (qtyUpdate) => {         
-        
-        const initialQty =  qtyUpdate.initQty
-        const updateQty = qtyUpdate.qty
-
-        if( updateQty !== initialQty){
-            const {cartItems} = cart   
-        } 
-    }
-
-    let shippingFee = 0.00
-
-    if(cartItems.length > 0){
-        shippingFee = 25.00
-    }
-
 
     //Remove Item from cart
 
@@ -113,7 +92,7 @@ function CartScreen({ match, location, history }) {
                                                     RM {item.price}
                                                 </Col>
                                                 <Col lg={3} md={4} xs={9} sm={8}>                                      
-                                                    <Quantity  prodQuantity={updateQty} 
+                                                    <Quantity 
                                                             max={item.countInStock} 
                                                             productID={item.product} 
                                                             initQty={item.qty}

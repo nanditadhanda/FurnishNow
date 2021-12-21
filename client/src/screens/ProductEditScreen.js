@@ -199,11 +199,7 @@ const ProductEditScreen = ({match, history}) => {
             }
 
             //send POST request
-            const {data} = await axios.post(
-                '/api/products/upload-file', 
-                formData,
-                config
-            )
+            await axios.post('/api/products/upload-file', formData, config )
 
             //set uploading to true
             setUploading(false)

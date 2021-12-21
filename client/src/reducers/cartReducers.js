@@ -2,9 +2,6 @@
 import {    CART_ADD_PRODUCT, 
             CART_REMOVE_PRODUCT ,
             CART_SAVE_SHIPPING_ADDRESS,
-
-            CART_SAVE_PAYMENT_STATUS,
-
             CART_CLEAR_ITEMS ,
         } from '../constants/cartConstants'
 

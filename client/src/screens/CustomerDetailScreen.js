@@ -8,9 +8,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import {getUserDetails, updateUser } from '../actions/userActions'
 import { listOrders  } from '../actions/orderActions'
 
-//import constants
-import {USER_UPDATE_RESET} from '../constants/userConstants'
-
 //UI components
 import SideBar from '../components/SideBar'
 import Message from '../components/Message'

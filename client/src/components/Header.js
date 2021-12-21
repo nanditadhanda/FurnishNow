@@ -5,9 +5,7 @@ import { useHistory } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import {Container, Navbar, Nav, NavDropdown, Badge} from 'react-bootstrap'
 import Search from './Search'
-
-
-
+    
 //icons
 import {MdPerson} from 'react-icons/md'
 import {TiShoppingCart} from 'react-icons/ti'
@@ -90,7 +88,7 @@ const Header = () => {
                                     <NavDropdown.Divider />
                                     {(!loading && !error) && (
                                         categories.map(category => (
-                                        <LinkContainer key={category._id} to={`/products/${category.slug}`}>
+                                        <LinkContainer key={category.id} to={`/products/${category.slug}`}>
                                             <NavDropdown.Item>{category.name}</NavDropdown.Item>
                                         </LinkContainer>            
                                     ))

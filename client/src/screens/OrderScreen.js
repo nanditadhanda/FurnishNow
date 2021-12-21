@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 //Redux imports
 import { useDispatch, useSelector } from 'react-redux'
 //Import action
-import { getOrderDetails, payOrder, updateOrderStatus } from '../actions/orderActions'
+import { getOrderDetails, updateOrderStatus } from '../actions/orderActions'
 //import constants
 import { ORDER_PAYMENT_RESET, ORDER_STATUS_RESET } from '../constants/orderConstants'
 
@@ -68,7 +68,7 @@ const OrderScreen = ({ match , history }) => {
     // orderDetails state
     const orderPayment = useSelector(state => state.orderPayment)
     //destructure state
-    const {loading: loadingPayment, success: successPayment} = orderPayment
+    const {success: successPayment} = orderPayment
  
 
     //--------------Order Status-------------------//
@@ -76,7 +76,7 @@ const OrderScreen = ({ match , history }) => {
     // orderDetails state
     const orderStatus = useSelector(state => state.orderStatus)
     //destructure state
-    const {loading: loadingStatus, error:errorStatus, success: successStatus, successMessage: updateSuccessMsg} = orderStatus
+    const {loading: loadingStatus, error:errorStatus, success: successStatus} = orderStatus
     
 
     //--------------- Launch Use Effect ---------------//
@@ -97,11 +97,6 @@ const OrderScreen = ({ match , history }) => {
             
         }   
     }, [dispatch,order, orderID, successPayment, successStatus])
-
-    //payment handler on successful payment
-    const successPaymentHandler = (paymentResult) => {
-        dispatch(payOrder(orderID, paymentResult))
-    }
 
     const changeStatus = (e) => {
         const value = e.target.value        

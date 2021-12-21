@@ -3,7 +3,6 @@ import React, {useState, useEffect} from 'react'
 //THREE.js modules and controls
 import * as THREE from 'three/build/three.module'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 
 //UI compontents
 import {Button} from 'react-bootstrap'
@@ -12,9 +11,6 @@ import AddToCart from './AddToCart'
 import Quantity from './Quantity'
 import Message from './Message'
 import Loader from './Loader'
-
-
-
 
 
 const AR = ({model3D="", productID, max, tooltipPlacement="bottom"}) => {
@@ -118,8 +114,6 @@ const AR = ({model3D="", productID, max, tooltipPlacement="bottom"}) => {
     reticle.matrixAutoUpdate = false;
     reticle.visible = false;
     scene.add(reticle);
-
-    console.log("scene initialized")
   }
 
 
@@ -136,7 +130,8 @@ const AR = ({model3D="", productID, max, tooltipPlacement="bottom"}) => {
             requiredFeatures: ['local', 'hit-test'],
             domOverlay: {root: document.getElementById('overlay')}
         }).then((session) => {             
-          onSessionStarted(session)          
+          onSessionStarted(session) 
+          onRequestSessionError()          
         })
         
     } else {    
@@ -196,7 +191,7 @@ const AR = ({model3D="", productID, max, tooltipPlacement="bottom"}) => {
         initScene(gl, session);
    
   }
-
+//TEST THIS
   function onRequestSessionError(ex) {
     setInfo("Failed to start AR session.")
   }
@@ -346,8 +341,6 @@ const AR = ({model3D="", productID, max, tooltipPlacement="bottom"}) => {
         document.getElementById("warning").innerText = "WebXR unavailable for this browser" 
       }
 
-
-  
     
   }, [model3D])
 
@@ -369,7 +362,8 @@ const updateMsg = ({show, error}) => {
   return (
     <div id="overlay" className={`${xrSession !== null && "my-2"}`}>
       <div className="info-area">
-        <div id="info">{info}</div>  
+        <div id="info">{info}</div>
+        <Message id="warning" variant="danger"></Message>  
         {/* If WebXR is supported on device and 3D model is */}
         { model3D !== null && (
           (supported) ?

@@ -1,5 +1,3 @@
-import React from 'react'
-
 const Sort = (order, i, sort) => {
 
     //toggle between assending and descending
