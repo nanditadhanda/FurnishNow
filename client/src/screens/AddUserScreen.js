@@ -82,6 +82,14 @@ const AddUserScreen = ({history}) => {
         if(first_name === "" || last_name === "" || email === "" || phone_number === "" || password === "" || confirmPassword === "" || role === ""){
             setMessage("Please fill out all fields")
         }
+        //email regex validation
+        else if(!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email))){
+            setMessage("Invalid email address entered")
+        }
+        //phone regex validation
+        else if(!/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/i.test(phone_number)){
+            setMessage("Invalid phone entered")
+        }
         else if (password !== confirmPassword){
             setMessage("Passwords entered do not match")
         }

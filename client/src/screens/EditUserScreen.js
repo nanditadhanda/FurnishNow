@@ -29,7 +29,10 @@ const EditUserScreen = ({match, history}) => {
     const [phone_number, setPhone] = useState('')
     const [isSystemAdmin, setAdmin] = useState('false')
     const [isStoreManager, setStoreManager] = useState('false')
+    const [is_active] = useState('')
     const [role, setRole] = useState('')
+ 
+    const [message, setMessage] = useState('')
 
     //define dispatch
     const dispatch = useDispatch()
@@ -105,17 +108,29 @@ const EditUserScreen = ({match, history}) => {
     const submitHandler = (e) => {
         //prevent refresh or redirect to another page
         e.preventDefault()
-        dispatch(
-            updateUser({
-                _id:user._id, 
-                first_name, 
-                last_name,  
-                email, 
-                phone_number, 
-                isStoreManager, 
-                isSystemAdmin
-            })
-        )
+         //validations
+        if( email === "" || role === ""){
+            setMessage("Please fill out all fields")
+        }
+        //email regex validation
+        else if(!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email))){
+            setMessage("Invalid email address entered")
+        }
+        else{
+            dispatch(
+                updateUser({
+                    _id:user._id, 
+                    first_name, 
+                    last_name,  
+                    email, 
+                    phone_number, 
+                    isStoreManager, 
+                    isSystemAdmin,
+                    is_active,
+                })
+            )
+        }
+        
     }
 
     // displayed to user
@@ -149,7 +164,7 @@ const EditUserScreen = ({match, history}) => {
                     {updateLoading && <Loader/>}
 
                     {/* if any error while updating */}
-                    {updateError && <Message variant="danger" dismissable="true">Error:{updateError}</Message>}
+                    {(updateError || message) && <Message variant="danger" dismissable="true">Error: {updateError? updateError : message}</Message>}
 
                     {/* If data is still loading (not update instance), show loader */}
                     {loading ? <Loader />
