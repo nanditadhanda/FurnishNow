@@ -80,13 +80,19 @@ const OrderScreen = ({ match , history }) => {
     //destructure state
     const {loading: loadingStatus, error:errorStatus, success: successStatus} = orderStatus
     
+     //--------------Order Status-------------------//
+
+    // orderDetails state
+    const productCreateReview = useSelector(state => state.productCreateReview)
+    //destructure state
+    const {success: reviewSuccess} = productCreateReview
 
     //--------------- Launch Use Effect ---------------//
 
     //use effect to get order details
     useEffect(() => {
         //if order details not found in state or if order ID match order ID in backend, send dispatch to retrieve order data
-        if(!order || order._id !== Number(orderID) || successPayment || successStatus ){
+        if(!order || order._id !== Number(orderID) || successPayment || successStatus || reviewSuccess ){
             //if payment is made, reset state
             dispatch({type: ORDER_PAYMENT_RESET})
             
@@ -98,7 +104,7 @@ const OrderScreen = ({ match , history }) => {
             
             
         }   
-    }, [dispatch,order, orderID, successPayment, successStatus])
+    }, [dispatch,order, orderID, successPayment, successStatus, reviewSuccess])
 
     const changeStatus = (e) => {
         const value = e.target.value        

@@ -1,9 +1,5 @@
 import React, {useState, useEffect} from 'react'
-
-import { useSelector, useDispatch } from 'react-redux'
-
-import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants'
-import {Modal, Button} from 'react-bootstrap'
+import {Modal, Row, Col, Button, Image} from 'react-bootstrap'
 
 import Review from './Review'
 const ReviewModal = ({item, order}) => {
@@ -13,18 +9,12 @@ const ReviewModal = ({item, order}) => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const dispatch = useDispatch()
-
-    const productCreateReview = useSelector(state => state.state)
-    const {success} =  productCreateReview
 
     useEffect(() => {
-        if(productCreateReview && success){
-            dispatch({type:PRODUCT_CREATE_REVIEW_RESET})
-            setShow(false)
-
+        if(item.review.length !== 0){                   
+            setShow(false)       
         }      
-    }, [dispatch, success, productCreateReview])
+    }, [item])
 
     return (
         <div>
@@ -33,22 +23,31 @@ const ReviewModal = ({item, order}) => {
 
 
             <Modal show={show} onHide={handleClose}
-            size="lg"
+           
             aria-labelledby="contained-modal-title-vcenter"
             centered
             >
             <Modal.Header closeButton>    
                 <div className="d-flex justify-content-between w-100">
-                    <h5 className="m-0">{item.name}</h5>
-                    <h5 className="m-0 pe-2 text-success">RM {item.salePrice}</h5>  
+                    <h5 className="m-0">Leave A Rating</h5>
                 </div>
             </Modal.Header>
-            <Modal.Body>      
-                <Review product_id={item.product} order={order} itemID={item._id}/>
+            <Modal.Body>  
+                <Row className="pb-3 p-2 mb-3 border-bottom">
+                    <Col xs={3} lg={2}><Image fluid src={item.image}/></Col>
+                    <Col>
+                        <h5>{item.name}</h5>
+                        <h6 className="text-success">RM {item.price}</h6>          
+                    </Col>            
+                </Row>  
+                <Row className="p-2">
+                    <Col>
+                        <Review product_id={item.product} order={order} itemID={item._id}/>
+                    </Col>
+                </Row>  
+                
             </Modal.Body>
-            <Modal.Footer >
-                <Button onClick={handleClose}>Close</Button>  
-            </Modal.Footer>
+
         </Modal>
             
         </div>

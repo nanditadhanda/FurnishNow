@@ -37,10 +37,12 @@ const Review = ({user, product_id, order, itemID}) => {
             setRating(0)
             setComment('')
             setTitle('')   
+
+            dispatch({type:PRODUCT_CREATE_REVIEW_RESET})
         
         }
-        
-    }, [dispatch, successProductReview])
+
+    }, [dispatch, successProductReview, rating])
 
     const reviewSubmitHandler = (e) => {
         e.preventDefault()
@@ -62,20 +64,13 @@ const Review = ({user, product_id, order, itemID}) => {
             {successProductReview && <Message variant="success">Product Review Submitted</Message>}
             {errorProductReview && <Message variant="danger">{errorProductReview}</Message>}
             <Form onSubmit={reviewSubmitHandler}>
-                <Form.Group controlId='rating' className="mb-3">
-                    <Form.Label className="mb-1">Rating</Form.Label> 
-                    <Form.Select
-                        value={rating} 
-                        onChange={(e) => setRating(e.target.value)}
-                    >
-                        <option >Select</option>
-                        <option value="1">Poor</option>
-                        <option value="2">Fair</option>
-                        <option value="3">Good</option>
-                        <option value="4">Very Good</option>
-                        <option value="5">Excellent</option>
-                    
-                    </Form.Select>
+                <Form.Label className="m-0 d-block">Rate Product</Form.Label> 
+                <Form.Group controlId='rating' className=" stars"  onChange={(e) => setRating(e.target.value)}>              
+                    <input value="5" inline name="rating" type="radio" id="rating5" /><label for="rating5" title="5 Stars"></label>
+                    <input value="4" inline name="rating" type="radio" id="rating4" /><label for="rating4"></label>
+                    <input value="3" inline name="rating" type="radio" id="rating3" /><label for="rating3"></label>
+                    <input value="2" inline name="rating" type="radio" id="rating2" /><label for="rating2"></label>
+                    <input value="1" inline name="rating" type="radio" id="rating1" /><label for="rating1"></label>
                 </Form.Group>
                 <Form.Group controlId='title' className="mb-3">
                     <Form.Label className="mb-1">Title</Form.Label> 

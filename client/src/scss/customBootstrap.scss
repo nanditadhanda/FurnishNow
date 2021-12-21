@@ -409,3 +409,47 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 }
 
+
+//rating
+.stars {
+  display: inline-block;
+  border: 0;
+
+  > input{
+    display: none;
+  }
+
+  > label{
+    float:right;
+
+    &::before {
+      display: inline-block;
+      font-size: 1.1rem;
+      font-family: FontAwesome;
+      content: "\f006";
+      color: $primary;
+      margin: 0;
+      padding: 0.3rem 0.1rem;
+      cursor: pointer;
+    }
+    
+  }
+
+  input:checked~label,
+  input:hover~label {
+    color: $primary; 
+
+    &::before {
+      content: "\f005";
+    }   
+  }
+
+
+  input:checked + label:hover, input:checked ~ label:hover, input:checked ~ label:hover ~ label,
+  label:hover ~ input:checked ~ label {
+    color: darken($primary, 50%);
+  }
+
+}
+
+

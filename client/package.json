@@ -15,6 +15,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^5.1.0",
     "chart.js": "^3.6.2",
+    "font-awesome": "^4.7.0",
     "fullscreen-polyfill": "^1.0.4",
     "gl-react": "^5.0.0",
     "intersection-observer": "^0.12.0",
