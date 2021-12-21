@@ -2,6 +2,7 @@ import React from 'react'
 
 //routing and redirecting
 import { BrowserRouter as Router, Route, Switch, Link} from 'react-router-dom'
+import ScrollToTop from './functions/ScrollToTop'
 
 //import header-footer components
 import Header from './components/Header'
@@ -29,8 +30,6 @@ import ManageCatalogScreen from './screens/ManageCatalogScreen'
 import ProductEditScreen from './screens/ProductEditScreen'
 import ManageOrdersScreen from './screens/ManageOrdersScreen'
 import CatalogScreen from './screens/CatalogScreen'
-import StoreManagerDashboard from './screens/StoreManagerDashboard'
-import AdminDashboard from './screens/AdminDashboard'
 import AddUserScreen from './screens/AddUserScreen'
 import AddEditCategoryScreen from './screens/AddEditCategoryScreen'
 import ReportScreen from './screens/ReportScreen'
@@ -39,6 +38,7 @@ import AboutUsScreen from './screens/AboutUsScreen'
 import ContactScreen from './screens/ContactScreen'
 import PrivacyScreen from './screens/PrivacyScreen'
 import TnCScreen from './screens/TnCScreen'
+import Dashboard from './screens/Dashboard'
 
 
 const NoMatchPage = () => {
@@ -59,59 +59,61 @@ function App() {
       {/* app body screens*/}
       <main >
         {/* register routing to different screens based on URL path */}
+        <ScrollToTop>
+            <Switch>
+              {/* paths without logging in */}     
+              <Route path="/" component={HomeScreen} exact/>            
+              <Route  path="/products/:category" component={CatalogScreen}/>        
+              <Route  path="/product/:category/:id" component={ProductScreen}/>
 
-        <Switch>
-          {/* paths without logging in */}     
-          <Route path="/" component={HomeScreen} exact/>            
-          <Route  path="/products/:category" component={CatalogScreen}/>        
-          <Route  path="/product/:category/:id" component={ProductScreen}/>
+              {/* User account screens */}
+              <Route path="/login" component={LoginScreen}/>
+              <Route path="/register" component={RegisterScreen} />
+              <Route path="/profile" component={ProfileScreen}/>
 
-          {/* User account screens */}
-          <Route path="/login" component={LoginScreen}/>
-          <Route path="/register" component={RegisterScreen} />
-          <Route path="/profile" component={ProfileScreen}/>
+              {/* Order and cart screens */}
+              <Route  path="/cart" component={CartScreen}/>
+              <Route  path="/shipping" component={ShippingScreen}/>
+              <Route  path={`/placeorder`} component={PlaceOrderScreen}/>
+              <Route  path="/my-orders" component={MyOrderListScreen}/>
+              <Route  path="/order/:id" component={OrderScreen}/>
+              
+              {/* Store Manager Screens */}
+              <Route  path="/store-manager/dashboard" component={Dashboard}/>
+              <Route  path="/store-manager/manageCatalog" component={ManageCatalogScreen}/>
+              <Route  path="/store-manager/category/add" component={AddEditCategoryScreen}/>     
+              <Route  path="/store-manager/category/:slug/edit" component={AddEditCategoryScreen}/>
+              <Route  path="/store-manager/product/:id/edit" component={ProductEditScreen}/>         
+              <Route  path="/store-manager/customers" component={ManageUsersScreen}/>       
+              <Route  path="/store-manager/customer/:id" component={CustomerDetailScreen}/>
+              <Route  path="/store-manager/orderlist" component={ManageOrdersScreen}/>
+              <Route  path="/store-manager/reports" component={ReportScreen}/>
 
-          {/* Order and cart screens */}
-          <Route  path="/cart" component={CartScreen}/>
-          <Route  path="/shipping" component={ShippingScreen}/>
-          <Route  path={`/placeorder`} component={PlaceOrderScreen}/>
-          <Route  path="/my-orders" component={MyOrderListScreen}/>
-          <Route  path="/order/:id" component={OrderScreen}/>
+              {/* Admin Screens */}
+              <Route  path="/admin/dashboard" component={Dashboard}/>
+              <Route  path="/admin/userlist" component={ManageUsersScreen}/>
+              <Route  path="/admin/user/:id/edit" component={EditUserScreen}/>
+              <Route  path="/admin/user/add" component={AddUserScreen}/>
+              <Route  path="/admin/customer/:id" component={CustomerDetailScreen}/>
+              <Route  path="/admin/manageCatalog" component={ManageCatalogScreen}/>
+              <Route  path="/admin/orderlist" component={ManageOrdersScreen}/>
+              <Route  path="/admin/order/:id" component={OrderScreen}/>          
+              <Route  path="/admin/reports" component={ReportScreen}/>
+
+              {/* Extra pages */}
+              <Route  path="/about" component={AboutUsScreen}/>
+              <Route  path="/contact" component={ContactScreen}/>
+              <Route  path="/privacy" component={PrivacyScreen}/>
+              <Route  path="/tnc" component={TnCScreen}/>
           
-          {/* Store Manager Screens */}
-          <Route  path="/store-manager/dashboard" component={StoreManagerDashboard}/>
-          <Route  path="/store-manager/manageCatalog" component={ManageCatalogScreen}/>
-          <Route  path="/store-manager/category/add" component={AddEditCategoryScreen}/>     
-          <Route  path="/store-manager/category/:slug/edit" component={AddEditCategoryScreen}/>
-          <Route  path="/store-manager/product/:id/edit" component={ProductEditScreen}/>         
-          <Route  path="/store-manager/customers" component={ManageUsersScreen}/>       
-          <Route  path="/store-manager/customer/:id" component={CustomerDetailScreen}/>
-          <Route  path="/store-manager/orderlist" component={ManageOrdersScreen}/>
-          <Route  path="/store-manager/reports" component={ReportScreen}/>
+              {/* Unauthorized access redirect screen */}
+              <Route  path="/accessdenied" component={AuthorizationErrorScreen}/>
+              {/* If unmatching URL is found */}
+              <Route component={NoMatchPage} />
 
-          {/* Admin Screens */}
-          <Route  path="/admin/dashboard" component={AdminDashboard}/>
-          <Route  path="/admin/userlist" component={ManageUsersScreen}/>
-          <Route  path="/admin/user/:id/edit" component={EditUserScreen}/>
-          <Route  path="/admin/user/add" component={AddUserScreen}/>
-          <Route  path="/admin/customer/:id" component={CustomerDetailScreen}/>
-          <Route  path="/admin/manageCatalog" component={ManageCatalogScreen}/>
-          <Route  path="/admin/orderlist" component={ManageOrdersScreen}/>
-          <Route  path="/admin/order/:id" component={OrderScreen}/>          
-          <Route  path="/admin/reports" component={ReportScreen}/>
-
-          {/* Extra pages */}
-          <Route  path="/about" component={AboutUsScreen}/>
-          <Route  path="/contact" component={ContactScreen}/>
-          <Route  path="/privacy" component={PrivacyScreen}/>
-          <Route  path="/tnc" component={TnCScreen}/>
-      
-          {/* Unauthorized access redirect screen */}
-          <Route  path="/accessdenied" component={AuthorizationErrorScreen}/>
-          {/* If unmatching URL is found */}
-          <Route component={NoMatchPage} />
-
-        </Switch>
+            </Switch>  
+        </ScrollToTop>
+        
       </main>
        {/* Footer */}
       <Footer />

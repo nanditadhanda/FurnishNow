@@ -95,6 +95,21 @@ def getProducts(request):
         'pages': paginator.num_pages
     })
 
+# get all products
+
+
+@api_view(['GET'])  # GET REST api method
+def getTopProducts(request):
+
+    # get products from database - filter based on query sent - by name with case insenstive
+    products = Product.objects.order_by('-rating')[:4]
+
+    # serialize into JSON format
+    serializer = ProductSerializer(products, many=True)
+
+    # return serialized data along with pagination as an object
+    return Response(serializer.data)
+
 
 # retrieve single products
 # GET REST api method

@@ -9,8 +9,8 @@ import Search from './Search'
 //icons
 import {MdPerson} from 'react-icons/md'
 import {TiShoppingCart} from 'react-icons/ti'
-import {RiShoppingBasketLine, RiMoneyDollarBoxLine, RiDashboardFill} from 'react-icons/ri'
-import {BiLogOutCircle, BiPackage} from 'react-icons/bi'
+import {RiShoppingBasketLine, RiMoneyDollarBoxLine, RiDashboardFill, RiStore3Fill} from 'react-icons/ri'
+import {BiLogOutCircle} from 'react-icons/bi'
 import {GoGraph} from 'react-icons/go'
 import {FiUsers} from 'react-icons/fi'
 
@@ -142,7 +142,7 @@ const Header = () => {
                                             </LinkContainer>
                                         )}
                                         <LinkContainer to={userType+"/manageCatalog"}>
-                                            <NavDropdown.Item ><BiPackage className="fs-2 pe-2 mb-1 "/>Products</NavDropdown.Item>
+                                            <NavDropdown.Item ><RiStore3Fill className="fs-2 pe-2 mb-1"/>Catalog</NavDropdown.Item>
                                         </LinkContainer>
 
                                         <LinkContainer to={userType+"/orderlist"}>

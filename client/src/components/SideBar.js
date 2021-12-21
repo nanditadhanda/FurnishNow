@@ -6,8 +6,8 @@ import { Col, Nav } from 'react-bootstrap'
 
 //icons
 import {MdPerson} from 'react-icons/md'
-import { RiMoneyDollarBoxLine, RiDashboardFill} from 'react-icons/ri'
-import {BiLogOutCircle, BiPackage} from 'react-icons/bi'
+import { RiMoneyDollarBoxLine, RiDashboardFill, RiStore3Fill} from 'react-icons/ri'
+import {BiLogOutCircle} from 'react-icons/bi'
 import {GoGraph} from 'react-icons/go'
 import {FiUsers} from 'react-icons/fi'
 
@@ -62,7 +62,7 @@ const SideBar = ({activeTab}) => {
                     </Nav.Link>
                 }
                 <Nav.Link href={userType+"/manageCatalog"} active={activeTab === "product"} className="px-4 ">
-                    <BiPackage className="fs-2 pe-2 mb-1 "/>Catalog
+                    <RiStore3Fill className="fs-2 pe-2 mb-1 "/>Catalog
                 </Nav.Link>
                 <Nav.Link href={userType+"/orderlist"} active={activeTab === "order"} className="px-4 ">
                     <RiMoneyDollarBoxLine className=" fs-2 pe-2 mb-1 "/>Orders

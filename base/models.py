@@ -20,7 +20,7 @@ class Category(models.Model):
                             blank=False, unique=True)
     slug = models.CharField(max_length=100, unique=True, null=False)
     image = models.ImageField(
-        upload_to='images/categories', null=True, blank=True)
+        upload_to='images/categories', null=False, blank=False, default='/images/categories/placeholder.jpg')
     # _id = models.AutoField(primary_key=True, editable=False)
 
     # fix plural form in django admin panel

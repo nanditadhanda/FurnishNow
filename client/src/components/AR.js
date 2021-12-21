@@ -363,7 +363,7 @@ const updateMsg = ({show, error}) => {
     <div id="overlay" className={`${xrSession !== null && "my-2"}`}>
       <div className="info-area">
         <div id="info">{info}</div>
-        <Message id="warning" variant="danger"></Message>  
+
         {/* If WebXR is supported on device and 3D model is */}
         { model3D !== null && (
           (supported) ?

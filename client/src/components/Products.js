@@ -37,8 +37,6 @@ const Products = ({l, xl, val={}, ordering='_id', filter=''}) => {
     //declare history
     const history = useHistory()
 
-    console.log("order:", ordering)
-
     //set keyword for search results
     let keyword = history.location.search
 
