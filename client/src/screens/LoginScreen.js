@@ -70,7 +70,7 @@ const LoginScreen = ({location, history}) => {
     }
 
     return (
-        <FormContainer title="Sign In" lg="5" shadow="shadow">
+        <FormContainer title="Sign In" md="8" xl="5" shadow="shadow">
             {loading && <Loader />}
             {(error || message)&& <Message variant="danger" dismissable="true" show={error ? true : false}>Error: {error ? error : message}</Message>}
                 <Form onSubmit={loginHandler}>

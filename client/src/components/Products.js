@@ -19,7 +19,7 @@ import Message from './Message'
 
 
 //Products function
-const Products = ({l, xl, val={}, ordering='_id', filter=''}) => {
+const Products = ({l, xl, md="6", val={}, ordering='_id', filter=''}) => {
     let count = 0
 
     const dispatch = useDispatch()
@@ -65,7 +65,7 @@ const Products = ({l, xl, val={}, ordering='_id', filter=''}) => {
                              <Message variant='warning'>No products found matching the parameters passed.</Message>
                              :
                              products.map(product => (                        
-                                <Col className="d-flex" key={product._id} sm={12} md={6} lg={l} xl={xl}>
+                                <Col className="d-flex" key={product._id} xs={12} sm={6} md={md} lg={l} xl={xl}>
                                     <Product product={product} />
                                 </Col>                   
                             ))

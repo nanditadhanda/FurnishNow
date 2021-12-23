@@ -218,7 +218,7 @@ const PlaceOrderScreen = ({history, location}) => {
             :
                 <Container >
                     <Row>
-                        <Col md={8} lg={7}>
+                        <Col lg={7}>
                             {/* Shipping */}
                             <ListGroup variant='flush'>
                                 <ListGroup.Item className="py-3">
@@ -258,7 +258,7 @@ const PlaceOrderScreen = ({history, location}) => {
                                 </ListGroup.Item>
 
                                 {/* Order Items */}
-                                <ListGroup.Item className="py-3">
+                                <ListGroup.Item className="py-3 mb-3">
                                     <Row>
                                         <Col xs={10} md={11}>
                                             <h3 className="mb-4">Order Items</h3>
@@ -277,7 +277,7 @@ const PlaceOrderScreen = ({history, location}) => {
                                             <ListGroup.Item key="index">
                                                 <Row>
                                                     {/* Product Image */}
-                                                    <Col xl={1} lg={2} xs={2}>
+                                                    <Col xl={1} lg={2} xs={2}  className="p-0">
                                                         <Image src={item.image} alt={item.name} fluid rounded></Image>
                                                     </Col>
                                                     {/* Product Name */}
@@ -295,7 +295,7 @@ const PlaceOrderScreen = ({history, location}) => {
                                 </ListGroup.Item>                            
                             </ListGroup>
                         </Col>
-                        <Col md={4} lg={{span: 4 , offset:1}}>
+                        <Col lg={5} xl={{span: 4 , offset:1}}>
                             <Card>
                                 <ListGroup variant="flush">
                                     <ListGroup.Item>

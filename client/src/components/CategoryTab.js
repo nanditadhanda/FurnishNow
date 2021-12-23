@@ -113,10 +113,12 @@ const CategoryTab = ({userInfo, searchPath, history, timer, timedMessage}) => {
                                 <td>{category.slug}</td>                                    
                                 {userInfo && userInfo.isStoreManager &&
                                     <td className="text-center">
-                                        <LinkContainer to={`/store-manager/category/${category.slug}/edit`}>
-                                            <Button variant="outline-success"   className="btn-icon me-2"><MdEdit/></Button>
-                                        </LinkContainer>
-                                        <Button variant="outline-danger"  className="btn-icon" onClick={() => deleteHandler(category.id)}><IoTrashSharp /></Button>
+                                        <div className='d-flex no-wrap'>
+                                            <LinkContainer to={`/store-manager/category/${category.slug}/edit`}>
+                                                <Button variant="outline-success"   className="btn-icon me-2"><MdEdit/></Button>
+                                            </LinkContainer>
+                                            <Button variant="outline-danger"  className="btn-icon" onClick={() => deleteHandler(category.id)}><IoTrashSharp /></Button>
+                                        </div>
                                     </td>
                                 }                                      
                             </tr>

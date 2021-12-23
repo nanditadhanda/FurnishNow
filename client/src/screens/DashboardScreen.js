@@ -8,12 +8,11 @@ import DateNow from '../components/DateNow'
 import {Row, Col, Container, Card} from 'react-bootstrap'
 
 //icons
-import {MdPerson} from 'react-icons/md'
-import { RiMoneyDollarBoxLine, RiDashboardFill, RiStore3Fill} from 'react-icons/ri'
+import { RiMoneyDollarBoxLine, RiStore3Fill} from 'react-icons/ri'
 import {GoGraph} from 'react-icons/go'
 import {FiUsers} from 'react-icons/fi'
 
-const Dashboard = ({history}) => {
+const DashboardScreen = ({history}) => {
     const dispatch = useDispatch()
     const [path, setPath] = useState('')
 
@@ -45,20 +44,21 @@ const Dashboard = ({history}) => {
             <Col>
                 <main>
                     <Container className="py-5">
-                        <Row className="mb-3">
-                            <Col>
+                        <Row className="mb-3 d-flex">
+                            <Col sm={6}>
                                 <h4>
                                     Hi {userInfo && <>{userInfo.first_name}&nbsp;{userInfo.last_name} </>}!
                                 </h4>
+                                <p>Role: {userInfo && userInfo.isSystemAdmin ? "System Admin" : "Store Manager"}</p>
                             </Col>
-                            <Col className="text-right">
+                            <Col sm={6} className='d-flex justify-content-sm-end'>
                                 <h6><DateNow/></h6>
                             </Col>
                         </Row>
                         <Row>
-                            <Col xs={6} className="my-3">
+                            <Col sm={6} className="my-3 d-flex">
                                 <LinkContainer to={`${path}${userInfo.isSystemAdmin ? "/userlist" : "/customers"}`}>
-                                    <Card className="hover">
+                                    <Card className="hover w-100">
                                         <Card.Body className="text-center bg-light p-4">
                                             <FiUsers className="display-2 mb-2 text-success"/>
                                             <h4>{userInfo.isSystemAdmin ? "Manage Users" : "View Customers"}</h4>
@@ -66,9 +66,9 @@ const Dashboard = ({history}) => {
                                     </Card>
                                 </LinkContainer>                                
                             </Col>
-                            <Col xs={6} className="my-3">
+                            <Col sm={6} className="my-3 d-flex">
                                 <LinkContainer to={`${path}/manageCatalog`}>
-                                    <Card className="hover">
+                                    <Card className="hover w-100">
                                         <Card.Body className="text-center bg-light p-4">
                                             <RiStore3Fill className="display-2 mb-2 text-primary"/>
                                             <h4>Manage Catalog</h4>
@@ -76,20 +76,20 @@ const Dashboard = ({history}) => {
                                     </Card>
                                 </LinkContainer>                                
                             </Col>
-                            <Col xs={6} className="my-3">
+                            <Col sm={6} className="my-3 d-flex">
                                 <LinkContainer to={`${path}/orderlist`}>
-                                    <Card className="hover">
-                                        <Card.Body className="text-center bg-light p-4">
+                                    <Card className="hover w-100">
+                                        <Card.Body className="text-center bg-light p-4 ">
                                             <RiMoneyDollarBoxLine className="display-2 mb-2 text-danger"/>
                                             <h4>Manage Orders</h4>
                                         </Card.Body>
                                     </Card>
                                 </LinkContainer>                                
                             </Col>
-                            <Col xs={6} className="my-3">
+                            <Col sm={6} className="my-3 d-flex">
                                 <LinkContainer to={`${path}/report`}>
-                                    <Card className="hover"> 
-                                        <Card.Body className="text-center bg-light p-4">
+                                    <Card className="hover w-100 d-flex align-items-center bg-light"> 
+                                        <Card.Body className="text-center  p-4 ">
                                             <GoGraph className="display-2 mb-2 text-info"/>
                                             <h4>Reports</h4>
                                         </Card.Body>
@@ -98,12 +98,10 @@ const Dashboard = ({history}) => {
                             </Col>
                         </Row>
                     </Container>
-
                 </main>
             </Col> 
-        </Row>                   
-        
+        </Row>                          
     )
 }
 
-export default Dashboard
+export default DashboardScreen

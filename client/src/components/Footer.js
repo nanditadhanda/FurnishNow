@@ -6,15 +6,15 @@ const Footer = () => {
         <footer className="py-3">
             <Container fluid>
                 <Row>
-                    <Col xs="12" md="5" className="text-left">&copy; 2021 FurnishNow</Col>
-                    <Col className="d-flex justify-content-end">
+                    <Col className=" footer-links">
                         <Nav className="text-secondary">     
                             <Nav.Link className="py-0" href="/about">About</Nav.Link>
                             <Nav.Link className="py-0" href="/contact">Contact</Nav.Link>
                             <Nav.Link className="py-0" href="/privacy">Privacy</Nav.Link>
                             <Nav.Link className="py-0" href="/tnc">T&amp;C</Nav.Link>
                         </Nav>
-                    </Col>             
+                    </Col>      
+                    <Col xs="12" md="5" className="copyright">&copy; 2021 FurnishNow</Col>       
                 </Row>
             </Container>
         </footer>

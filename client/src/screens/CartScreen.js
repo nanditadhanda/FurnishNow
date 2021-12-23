@@ -50,7 +50,7 @@ function CartScreen({ match, location, history }) {
     })
 
     return (
-        <Container className="py-5">
+        <Container  className="py-5 cart">
             {/* //Page Heading */}
             <Row>
                 <Col>
@@ -58,8 +58,8 @@ function CartScreen({ match, location, history }) {
                 </Col>
             </Row>
             
-            <Row className="py-3">
-                <Col md={8} xs={12}>
+            <Row >
+                <Col  lg={8} xs={12} className="py-3">
                     {/* //cart items */}
 
                     {/* If there are no items in cart */}
@@ -85,13 +85,13 @@ function CartScreen({ match, location, history }) {
                                         {/* product name */}
                                         <Col md={10} xs={9}>
                                             <Row>
-                                                <Col md={5} sm={8} >
+                                                <Col lg={5} md={8} className="pb-2">
                                                     <Link to={`/product/${item.category_slug}/${item.product}`}>{item.name}</Link>
                                                 </Col>
-                                                <Col md={3} sm={4} >
+                                                <Col lg={3} xl={2} md={4} >
                                                     RM {item.price}
                                                 </Col>
-                                                <Col lg={3} md={4} xs={9} sm={8}>                                      
+                                                <Col xl={3} xs={9} md={8} className="pb-2">                                      
                                                     <Quantity 
                                                             max={item.countInStock} 
                                                             productID={item.product} 
@@ -103,8 +103,8 @@ function CartScreen({ match, location, history }) {
                                                 <Col md={1} xs={2}>
                                                     <Button type="button" className="btn-icon" variant="outline" onClick={() => removeFromCartHandler(item.product)}><IoTrashSharp className="text-success" style={{verticalAlign: "top"}}/></Button>
                                                 </Col>
-                                                    </Row>
-                                                </Col>
+                                            </Row>
+                                        </Col>
                                         
                                     </Row>
 
@@ -114,17 +114,17 @@ function CartScreen({ match, location, history }) {
 
                     )}
                 </Col>
-                <Col md={4}  xs={12}>
+                <Col  lg={4} xs={12} className="py-3">
                     <Card>
                         <ListGroup variant="flush">
                             <ListGroup.Item><h4>Order Summary</h4></ListGroup.Item>
                             <ListGroup.Item>
                                 <Row className="py-1">
-                                    <Col md={4}>Total Items:</Col>
+                                    <Col md={5} lg={5}>Total Items:</Col>
                                     <Col className="text-right">{cartItems.reduce((acc, item) => acc + item.qty, 0)}</Col>
                                 </Row>
                                  <Row className="py-1">
-                                    <Col md={4}>Subtotal:</Col>
+                                    <Col md={5} lg={5}>Subtotal:</Col>
                                     <Col className="text-right">
                                         <strong>
                                              RM {cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2)}

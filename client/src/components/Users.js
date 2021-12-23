@@ -83,12 +83,12 @@ const Users = ({type, users, activeStatus}) => {
                                     : <RiCloseFill className="text-danger"/>}</td>
                             <td className="text-center">
                                 {!(userInfo._id === user._id) &&
-                                <>
+                                <div className='d-flex no-wrap'>
                                     <LinkContainer to={`/admin/user/${user._id}/edit`}>
                                         <Button variant="outline-success"   className="btn-icon me-2"><MdEdit/></Button>
                                     </LinkContainer>                                    
                                     <Button variant="outline-danger"  className="btn-icon" onClick={() => deleteHandler(user._id)}><IoTrashSharp /></Button>
-                                </>
+                                </div>
                                 }
                             </td>       
                         </tr>
@@ -109,10 +109,11 @@ const Users = ({type, users, activeStatus}) => {
                             }     
                         </td>  
                         <td className="text-center">
-                            <LinkContainer to={`/admin/customer/${user._id}`}>
-                                <Button variant="outline-primary"   className="btn-icon me-2"><AiFillEye/></Button>
-                            </LinkContainer>
-                            
+                            <div className='d-flex no-wrap'>
+                                <LinkContainer to={`/admin/customer/${user._id}`}>
+                                    <Button variant="outline-primary"   className="btn-icon me-2"><AiFillEye/></Button>
+                                </LinkContainer>
+                            </div>
                         </td>           
                     </tr>
 

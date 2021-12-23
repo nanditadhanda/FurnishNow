@@ -129,13 +129,17 @@ const ProductEditScreen = ({match, history}) => {
         
         }
         //if incorrect 3D model or incorrect image extension
-        else if((file3D !== "" &&  typeof(file3D) != 'undefined' && file3D.name.split('.').pop() !== 'glb') 
-            || (file !== "" && typeof(file) != 'undefined' && (file.name.split('.').pop() !== 'jpg' 
-            || file.name.split('.').pop() !== 'png'))) {
-            setFile('')
-            setFile3D('')
+        else if((file3D !== "" &&  typeof(file3D) != 'undefined') && file3D.name.split('.').pop() !== 'glb') 
+         {
+           
             setValError(true)      
-            setMessage("Error: Incorrect file format uploaded. Acceptable image extensions: '.jpg', '.png'. Acceptable 3D model formats: '.glb'")
+            setMessage("Error: Incorrect 3D model format uploaded. Acceptable 3D model formats: '.glb'")
+        }
+        else if(file !== "" && typeof(file) != 'undefined' && (file.name.split('.').pop() !== 'jpg' 
+            && file.name.split('.').pop() !== 'png'))
+        {
+            setValError(true)   
+            setMessage("Error: Incorrect image format uploaded. Acceptable image extensions: '.jpg', '.png'")
         }
         else if(isNaN(parseFloat(costPrice))
                  || isNaN(parseFloat(salePrice))

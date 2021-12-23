@@ -8,7 +8,7 @@ const Rating = ({value, text, color, size=''}) => {
        
     
        <div >
-          <span className={`${color} ${size}`} title={`${value} out of 5 stars`}>
+          <span className={`${color} ${size} d-flex no-wrap`} title={`${value} out of 5 stars`}>
             {value >= 1 
                 ? <RiStarSFill className={`${color} ${size}`}/>
                 : value >= 0.5 

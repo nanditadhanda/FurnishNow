@@ -17,11 +17,8 @@ function Product({product}) {
                 {/* product details */}
                 <Card.Body>
                     <Card.Title className="fw-normal" as="h5">{product.name}</Card.Title>
-                    <Card.Text> 
-                        <Rating value={product.rating} text={`${product.numReviews} reviews`} color="text-primary"/>
-                    </Card.Text>
-                    
-                    <Card.Text as="h4" className="fw-bold ">${product.salePrice}</Card.Text>
+                    <Rating value={product.rating} text={`${product.numReviews} reviews`} color="text-primary"/> 
+                    <Card.Text as="h4" className="fw-bold mt-2">RM {product.salePrice}</Card.Text>
                     {/* do add to cart function */}                        
                 </Card.Body>
             </Link>

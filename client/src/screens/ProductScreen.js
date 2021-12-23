@@ -8,7 +8,6 @@ import AddToCart from '../components/AddToCart'
 import Rating from '../components/Rating'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import Review from '../components/Review'
 import AR from '../components/AR'
 import ModelViewer from '../components/ModelViewer'
 // import products from '../products'
@@ -123,8 +122,6 @@ const ProductScreen = ({ match, history }) => {
                     Product has been added to your shopping cart
                 </Message>
             }
-
-
 
             {/* loading condition */}
             {loading ?
@@ -292,7 +289,7 @@ const ProductScreen = ({ match, history }) => {
                         <section>
                             <hr class="bg-secondary border-1 border-top border-secondary" />
                             <Row className="py-2">
-                                <Col sm={12} md={6} xl={5}>
+                                <Col sm={12} xl={5}>
                                     <h4 className="text-uppercase my-3">Product Reviews</h4>
                                     {/* If no reviews are present, display message */}
                                     {product.reviews.length === 0 &&

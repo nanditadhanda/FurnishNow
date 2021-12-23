@@ -22,6 +22,7 @@ import { IoArrowBack } from 'react-icons/io5'
 
 const CustomerDetailScreen = ({history,match}) => {
     const [path, setPath] = useState('')
+    const [pageLoad, setPageLoad] = useState(true)
 
     //define necessary hooks
     const dispatch = useDispatch()
@@ -44,6 +45,7 @@ const CustomerDetailScreen = ({history,match}) => {
         if(userInfo && (userInfo.isSystemAdmin || userInfo.isStoreManager)){ 
             //get customer details
             dispatch(getUserDetails(id))
+            setPageLoad(false)
             
             if(userInfo.isSystemAdmin){
                 setPath('/admin')
@@ -101,8 +103,8 @@ const CustomerDetailScreen = ({history,match}) => {
             <Col>
                 <main>
                     <Container className='py-5'>
-                        {userLoading ? <Loader />
-                            : (userError || ( user.isStoreManager ||user.isSystemAdmin)) ? 
+                        {pageLoad || userLoading ? <Loader />
+                            : (userError || ( user.isStoreManager || user.isSystemAdmin)) ? 
                                 <>
                                     <Link to={userInfo.isStoreManager ? "/store-manager/customers" 
                                             : userInfo.isSystemAdmin ? "/admin/userlist"

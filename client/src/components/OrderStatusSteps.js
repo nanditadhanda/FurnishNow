@@ -20,7 +20,7 @@ const OrderStatusSteps = ({step1, step2, step3, step4}) => {
                         <div className="steps">
                            <HiCheckCircle className="text-success" />
                         </div>          
-                        Order Placed
+                        <span className="d-none d-lg-inline-block">Order&nbsp;</span>Placed
                     </Nav.Link>       
                 )}
             </Nav.Item>
@@ -33,7 +33,7 @@ const OrderStatusSteps = ({step1, step2, step3, step4}) => {
                             : <BiCircle className="text-secondary" />
                         }
                     </div>
-                    Order Packaged
+                    <span className="d-none d-lg-inline-block">Order&nbsp;</span>Packaged
                 </Nav.Link>                
             </Nav.Item>
             {/* Step 3 */}
@@ -45,7 +45,7 @@ const OrderStatusSteps = ({step1, step2, step3, step4}) => {
                             : <BiCircle className="text-secondary" />
                         }
                     </div>
-                    Order Shipped
+                    <span className="d-none d-lg-inline-block">Order&nbsp;</span>Shipped
                 </Nav.Link>                
             </Nav.Item>
             {/* Step 4 */}
@@ -57,7 +57,7 @@ const OrderStatusSteps = ({step1, step2, step3, step4}) => {
                             : <BiCircle className="text-secondary" />
                         }
                     </div>
-                    Order Delivered
+                    <span className="d-none d-lg-inline-block">Order&nbsp;</span>Delivered
                 </Nav.Link>                
             </Nav.Item>
            

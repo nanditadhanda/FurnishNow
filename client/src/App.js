@@ -38,7 +38,7 @@ import AboutUsScreen from './screens/AboutUsScreen'
 import ContactScreen from './screens/ContactScreen'
 import PrivacyScreen from './screens/PrivacyScreen'
 import TnCScreen from './screens/TnCScreen'
-import Dashboard from './screens/Dashboard'
+import DashboardScreen from './screens/DashboardScreen'
 
 
 const NoMatchPage = () => {
@@ -79,7 +79,7 @@ function App() {
               <Route  path="/order/:id" component={OrderScreen}/>
               
               {/* Store Manager Screens */}
-              <Route  path="/store-manager/dashboard" component={Dashboard}/>
+              <Route  path="/store-manager/dashboard" component={DashboardScreen}/>
               <Route  path="/store-manager/manageCatalog" component={ManageCatalogScreen}/>
               <Route  path="/store-manager/category/add" component={AddEditCategoryScreen}/>     
               <Route  path="/store-manager/category/:slug/edit" component={AddEditCategoryScreen}/>
@@ -90,7 +90,7 @@ function App() {
               <Route  path="/store-manager/reports" component={ReportScreen}/>
 
               {/* Admin Screens */}
-              <Route  path="/admin/dashboard" component={Dashboard}/>
+              <Route  path="/admin/dashboard" component={DashboardScreen}/>
               <Route  path="/admin/userlist" component={ManageUsersScreen}/>
               <Route  path="/admin/user/:id/edit" component={EditUserScreen}/>
               <Route  path="/admin/user/add" component={AddUserScreen}/>

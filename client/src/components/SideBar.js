@@ -5,8 +5,8 @@ import { useHistory } from 'react-router-dom'
 import { Col, Nav } from 'react-bootstrap'
 
 //icons
-import {MdPerson} from 'react-icons/md'
-import { RiMoneyDollarBoxLine, RiDashboardFill, RiStore3Fill} from 'react-icons/ri'
+import {MdPerson, MdMenuBook} from 'react-icons/md'
+import { RiMoneyDollarBoxLine, RiDashboardFill} from 'react-icons/ri'
 import {BiLogOutCircle} from 'react-icons/bi'
 import {GoGraph} from 'react-icons/go'
 import {FiUsers} from 'react-icons/fi'
@@ -47,7 +47,7 @@ const SideBar = ({activeTab}) => {
         history.push("/login");
     }   
     return (
-        <Col md={3} xl={2} className="px-0 bg-light position-relative" >    
+        <Col md={3} xl={2} className="px-0 bg-light position-relative shadow d-none d-lg-block" style={{'z-index': '0'}} >    
             <Nav className="flex-column py-2 nav-side sticky-top" variant="pills" style={{'top':'60px'}}>   
                 <Nav.Link href={userType+"/dashboard"} className="px-4 " active={activeTab === "dashboard"}>
                     <RiDashboardFill className="fs-3 pe-2 ms-1 mb-1 "/>Dashboard
@@ -62,7 +62,7 @@ const SideBar = ({activeTab}) => {
                     </Nav.Link>
                 }
                 <Nav.Link href={userType+"/manageCatalog"} active={activeTab === "product"} className="px-4 ">
-                    <RiStore3Fill className="fs-2 pe-2 mb-1 "/>Catalog
+                    <MdMenuBook className="fs-2 pe-2 mb-1 "/>Catalog
                 </Nav.Link>
                 <Nav.Link href={userType+"/orderlist"} active={activeTab === "order"} className="px-4 ">
                     <RiMoneyDollarBoxLine className=" fs-2 pe-2 mb-1 "/>Orders

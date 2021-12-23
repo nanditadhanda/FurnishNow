@@ -138,17 +138,21 @@ const ProductTab  = ({userInfo, searchPath, history, keyword}) => {
                                     <td>{product.category}</td>
                                     <td>{product.salePrice}</td>
                                     <td className="text-center">
-                                        <LinkContainer to={`/product/${product.category_slug}/${product._id}`}>
-                                            <Button variant="outline-primary"   className="btn-icon me-2"><AiFillEye/></Button>
-                                        </LinkContainer>
-                                        {userInfo && userInfo.isStoreManager &&
-                                            <>
-                                                <LinkContainer to={`/store-manager/product/${product._id}/edit`}>
-                                                    <Button variant="outline-success"   className="btn-icon me-2"><MdEdit/></Button>
-                                                </LinkContainer>
-                                                <Button variant="outline-danger"  className="btn-icon" onClick={() => deleteHandler(product._id)}><IoTrashSharp /></Button>
-                                            </>
-                                        }
+                                        <div className='d-flex no-wrap'>
+                                            <LinkContainer to={`/product/${product.category_slug}/${product._id}`}>
+                                                <Button variant="outline-primary"   className="btn-icon me-2"><AiFillEye/></Button>
+                                            </LinkContainer>
+                                            {userInfo && userInfo.isStoreManager &&
+                                                <>
+                                                    <LinkContainer to={`/store-manager/product/${product._id}/edit`}>
+                                                        <Button variant="outline-success"   className="btn-icon me-2"><MdEdit/></Button>
+                                                    </LinkContainer>
+                                                    <Button variant="outline-danger"  className="btn-icon" onClick={() => deleteHandler(product._id)}><IoTrashSharp /></Button>
+                                                </>
+                                            }
+
+                                        </div>
+                                        
                                     </td>                                        
                                 </tr>
                             ))}

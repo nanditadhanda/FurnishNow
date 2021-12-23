@@ -130,8 +130,7 @@ const AR = ({model3D="", productID, max, tooltipPlacement="bottom"}) => {
             requiredFeatures: ['local', 'hit-test'],
             domOverlay: {root: document.getElementById('overlay')}
         }).then((session) => {             
-          onSessionStarted(session) 
-          onRequestSessionError()          
+          onSessionStarted(session)       
         })
         
     } else {    
@@ -191,11 +190,6 @@ const AR = ({model3D="", productID, max, tooltipPlacement="bottom"}) => {
         initScene(gl, session);
    
   }
-//TEST THIS
-  function onRequestSessionError(ex) {
-    setInfo("Failed to start AR session.")
-  }
-
 
   //once immersive-ar session ends
   const onSessionEnded = (event) => {
@@ -228,14 +222,10 @@ const AR = ({model3D="", productID, max, tooltipPlacement="bottom"}) => {
           // instead of placing an object we will just toggle animation state
           document
             .getElementById("overlay")
-            .removeEventListener("click", placeObject);
-
-          
+            .removeEventListener("click", placeObject);     
         }
-
         
       }
-
 
       function onXRFrame(t, frame) {
         let session = frame.session;

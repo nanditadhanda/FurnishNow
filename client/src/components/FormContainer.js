@@ -1,11 +1,11 @@
 import React from 'react'
 import {Container, Row, Col, Card} from 'react-bootstrap'
 
-const FormContainer = ({children, title = "", lg=6 , shadow="", bg="light", border="border-0"}) => {
+const FormContainer = ({children, title = "", md=10, lg=6 , xl=7, shadow="", bg="light", border="border-0"}) => {
     return (
          <Container className="py-5 px-3">      
             <Row className="justify-content-md-center">
-                <Col xs={12} md={6} lg={lg}>
+                <Col xs={12} md={md} lg={lg} xl={lg}>
                     <Card className={`p-5  ${shadow} ${border}`} bg={bg}>
                     {title !== "" ?<h1 className="text-center pb-3">{title}</h1> : ""}
                     {children} 

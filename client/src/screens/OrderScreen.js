@@ -158,7 +158,90 @@ const OrderScreen = ({ match , history }) => {
                             }
                             <Container className="py-2"> 
                                 <Row>
-                                    <Col md={8} lg={7}>
+                                    
+                                    <Col lg={5} >
+                                        <Card>
+                                            <ListGroup variant="flush">
+                                                <ListGroup.Item>
+                                                    <h4>Order Summary</h4>
+                                                </ListGroup.Item>
+                                                <ListGroup.Item>
+                                                    <Row className="py-1">
+                                                        <Col >Payment Method:</Col>
+                                                        <Col className="text-right text-capitalize">{order.payment.method}</Col>
+                                                    </Row>
+                                                    <Row className="py-1">
+                                                        <Col xs={5} >Payment Date:</Col>
+                                                        <Col className="text-right">
+                                                            <p className="text-success">
+                                                                {order && order.payment.lastUpdated !== null && (
+                                                                    <>
+                                                                        {order.payment.lastUpdated.substring(0,10)} ,&nbsp; 
+                                                                        {order.payment.lastUpdated.substring(11,19)}
+                                                                    </>
+                                                                )}
+                                                                
+                                                            </p>
+                                                            </Col>
+                                                    </Row>
+                                                </ListGroup.Item> 
+                                                <ListGroup.Item>
+                                                    <Row className="py-1">
+                                                        <Col md={4}>Subtotal:</Col>
+                                                        <Col className="text-right">RM {order.itemsPrice}</Col>
+                                                    </Row>
+                                                    <Row className="py-1">
+                                                        <Col >Shipping:</Col>
+                                                        <Col className="text-right">RM {order.shippingPrice}</Col>
+                                                    </Row>
+                                                    <Row className="py-1">
+                                                        <Col >Tax (SST - 6%):</Col>
+                                                        <Col className="text-right">RM {order.taxRate}</Col>
+                                                    </Row>
+                                                </ListGroup.Item>
+                                                <ListGroup.Item>
+                                                    <Row className="py-1">
+                                                        <Col ><strong>Grand Total:</strong></Col>
+                                                        <Col className="text-right"><strong>RM {order.totalPrice}</strong></Col>
+                                                    </Row>
+                                                </ListGroup.Item>  
+                                            
+                                                
+                                                {/* Update Order Status -  Store Manager */}
+                                                {((userInfo.isStoreManager)) 
+                                                    
+                                                    && (
+                                                        !order.isDelivered ? (
+                                                            <ListGroup.Item>
+                                                                {loadingStatus && <Loader />}
+                                                                {errorStatus && <Message variant="danger">{errorStatus}</Message>}
+                                                                
+                                                                <Form>
+                                                                    <Form.Select aria-label="Order Status" defaultValue={order.orderStatus} onChange={changeStatus}>
+                                                                        <option>Order Status</option>
+                                                                        <option value="Placed">Placed</option>
+                                                                        <option value="Packaged">Packaged</option>
+                                                                        <option value="Shipped">Shipped Out</option>
+                                                                        <option value="Delivered">Delivered</option>
+                                                                    </Form.Select>
+                                                                    <div className="d-grid my-3">
+                                                                        <Button type="button" className="btn-primary btn" onClick={orderStatusHandler}>Update Order Status</Button>
+                                                                    </div>
+                                                                </Form>
+                                                            </ListGroup.Item>   
+                                                        )
+                                                        : (
+                                                            <ListGroup.Item> 
+                                                                <Message variant="success" >Order Completed</Message>
+                                                            </ListGroup.Item>
+                                                        )
+
+                                                        )}
+                        
+                                            </ListGroup>
+                                        </Card>
+                                    </Col>
+                                    <Col lg={7}  md={{order: 'first'}}>
                                         {/* Shipping */}
                                         <ListGroup variant='flush'>
                                             <ListGroup.Item className="py-3"> 
@@ -252,18 +335,24 @@ const OrderScreen = ({ match , history }) => {
                                                                     <Image src={item.image} alt={item.name} fluid rounded></Image>
                                                                 </Col>
                                                                 {/* Product Name */}
-                                                                <Col>
-                                                                    <Link to={`/product/${item.category_slug}/${item.product}`}>{item.name}</Link>
+                                                                <Col className="d-flex justify-content-between flex-wrap">
+                                                                    <div>
+                                                                        <Link to={`/product/${item.category_slug}/${item.product}`}>{item.name}</Link>
                                                                      {/* Quantity and Price */}
-                                                                    <p className="my-2">{item.qty} x ${item.price}&nbsp;&nbsp;=&nbsp;&nbsp; ${(parseFloat(item.qty * item.price)).toFixed(2)}</p>
+                                                                    <p className="my-2">{item.qty} x RM{item.price}&nbsp;&nbsp;=&nbsp;&nbsp; RM{(parseFloat(item.qty * item.price)).toFixed(2)}</p>
+
+                                                                    </div>
+                                                                    
+                                                                    {/* If order is delivered and no rating*/}
+                                                                    <div  >{ order.isDelivered  && item.review.length === 0 ? ( 
+                                                                        /* If user is not store manager or system admin, show rating option*/
+                                                                        (!userInfo.isSystemAdmin && !userInfo.isStoreManager) ? <ReviewModal item={item} order={order._id}/>  : <small>not rated</small>)  
+                                                                        : <Rating value={item.review[0].rating} color="text-primary"/>  
+                                                                    }</div>
+                                                                    
                                                                 </Col>
                                                                
-                                                                 {/* If delivered - give rating option */}
-                                                                <Col sm={2}>{((!userInfo.isSystemAdmin || !userInfo.isStoreManager)) && order.isDelivered  && ( 
-                                                                    item.review.length === 0 ? <ReviewModal item={item} order={order._id}/>    
-                                                                    : <Rating value={item.review[0].rating} color="text-primary"/>                       
-                                                                    
-                                                            )}</Col>
+                                                                
                                                             </Row>
                                                         </ListGroup.Item>
                                                     ))}
@@ -272,90 +361,6 @@ const OrderScreen = ({ match , history }) => {
                                         
                                         </ListGroup>
 
-                                    </Col>
-                                    <Col md={4}>
-                                        <Card>
-                                            <ListGroup variant="flush">
-                                                <ListGroup.Item>
-                                                    <h4>Order Summary</h4>
-                                                </ListGroup.Item>
-                                                <ListGroup.Item>
-                                                    <Row className="py-1">
-                                                        <Col >Payment Method:</Col>
-                                                        <Col className="text-right text-capitalize">{order.payment.method}</Col>
-                                                    </Row>
-                                                    <Row className="py-1">
-                                                        <Col md={4}>Payment Status:</Col>
-                                                        <Col className="text-right">
-                                                            <p className="text-success">Paid on&nbsp;
-                                                                {order && order.payment.lastUpdated !== null && (
-                                                                    <>
-                                                                        {order.payment.lastUpdated.substring(0,10)} ,&nbsp; 
-                                                                        {order.payment.lastUpdated.substring(11,19)}
-                                                                    </>
-                                                                )}
-                                                                
-                                                            </p>
-                                                            </Col>
-                                                    </Row>
-                                                </ListGroup.Item> 
-                                                <ListGroup.Item>
-                                                    <Row className="py-1">
-                                                        <Col md={4}>Subtotal:</Col>
-                                                        <Col className="text-right">${order.itemsPrice}</Col>
-                                                    </Row>
-                                                    <Row className="py-1">
-                                                        <Col >Shipping:</Col>
-                                                        <Col className="text-right">${order.shippingPrice}</Col>
-                                                    </Row>
-                                                    <Row className="py-1">
-                                                        <Col >Tax (SST - 6%):</Col>
-                                                        <Col className="text-right">${order.taxRate}</Col>
-                                                    </Row>
-                                                </ListGroup.Item>
-                                                <ListGroup.Item>
-                                                    <Row className="py-1">
-                                                        <Col ><strong>Grand Total:</strong></Col>
-                                                        <Col className="text-right"><strong>${order.totalPrice}</strong></Col>
-                                                    </Row>
-                                                </ListGroup.Item>  
-                                            
-                                                
-                                                {/* Update Order Status -  Store Manager */}
-                                                {((userInfo.isStoreManager)) 
-                                                    
-                                                    && (
-                                                        !order.isDelivered ? (
-                                                            <ListGroup.Item>
-                                                                {loadingStatus && <Loader />}
-                                                                {errorStatus && <Message variant="danger">{errorStatus}</Message>}
-                                                                
-                                                                <Form>
-                                                                    <Form.Select aria-label="Order Status" defaultValue={order.orderStatus} onChange={changeStatus}>
-                                                                        <option>Order Status</option>
-                                                                        <option value="Placed">Placed</option>
-                                                                        <option value="Packaged">Packaged</option>
-                                                                        <option value="Shipped">Shipped Out</option>
-                                                                        <option value="Delivered">Delivered</option>
-                                                                    </Form.Select>
-                                                                    <div className="d-grid my-3">
-                                                                        <Button type="button" className="btn-primary btn" onClick={orderStatusHandler}>Update Order Status</Button>
-                                                                    </div>
-                                                                </Form>
-                                                            </ListGroup.Item>   
-                                                        )
-                                                        : (
-                                                            <ListGroup.Item> 
-                                                                <Message variant="success" >Order Completed</Message>
-                                                            </ListGroup.Item>
-                                                        )
-
-                                                        )}
-                        
-                                            </ListGroup>
-                                        </Card>
-                                        
-                                        
                                     </Col>
                                 </Row>
                             </Container>

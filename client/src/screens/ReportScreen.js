@@ -16,7 +16,7 @@ import DateNow from '../components/DateNow'
 import BarChartGrouped from '../components/BarChartGrouped'
 import GraphChart from '../components/GraphChart'
 
-import {Container, Row, Col, Card, Form, Table} from 'react-bootstrap'
+import {Container, Row, Col, Card, Table} from 'react-bootstrap'
 
 //icons
 import {MdOutlinePendingActions} from 'react-icons/md'
@@ -147,8 +147,8 @@ const ReportScreen = ({history}) => {
                         : errorTotals ? <Message variant="danger">{errorTotals}</Message>
                         : dataTotal &&
                         <Row>
-                            <Col md={4}>
-                                <Card className="bg-info text-white p-4">
+                            <Col md={4} className="d-flex align-items-stretch">
+                                <Card className="bg-info text-white p-4 w-100">
                                     <div className='d-flex'>
                                         <BiPackage className='display-3 text-white'/>
                                         <div className='ms-3'>
@@ -156,11 +156,12 @@ const ReportScreen = ({history}) => {
                                             <div className='mb-0 h1'>{dataTotal.total}</div>
                                         </div>
                                     </div>
+                                    
                                 </Card>
                             </Col>
-                            <Col md={4}>
-                                <Card className="bg-success text-white p-4">
-                                     <div className='d-flex'>
+                            <Col md={4} className="d-flex align-items-stretch">
+                                <Card className="bg-success text-white p-4 w-100">
+                                    <div className='d-flex'>
                                         <AiOutlineFileDone className='display-3'/>
                                         <div className='ms-3'>
                                             <h6>Orders Fullfilled: </h6>
@@ -170,8 +171,8 @@ const ReportScreen = ({history}) => {
                                 </Card>
                             </Col>
                             
-                            <Col md={4}>
-                                <Card className="bg-primary text-white  p-4">
+                            <Col md={4} className="d-flex align-items-stretch">
+                                <Card className="bg-primary text-white w-100 p-4">
                                     <div className='d-flex'>
                                         <MdOutlinePendingActions className='display-3'/>
                                         <div className='ms-3'>
@@ -188,15 +189,7 @@ const ReportScreen = ({history}) => {
                         <Card  className="my-5">
                             <Card.Body>
                                 <h4 className='py-3'>Sales By Category</h4>
-                                <Row>
-                                    <Col>
-                                        <Form>
-                                            <Row>
-
-                                            </Row>
-                                        </Form>
-                                    </Col>
-                                </Row>
+                                
                                 {loadingCategorySales ? <Loader />
                                     : errorCategorySales ? <Message variant="danger">{errorCategorySales}</Message>
                                     : dataCategorySales &&
@@ -236,12 +229,12 @@ const ReportScreen = ({history}) => {
                                             </Table> 
                                         </Col>
                                     </Row>
-                                    <Row className="py-5">
-                                        <Col md='6'>
+                                    <Row className="py-2">
+                                        <Col lg='6' className="py-3">
                                             <h4 className="mb-4">Items Sold By Category</h4>
                                             <GraphChart type="bar" color='info' labels={categoryLabels} datasetLabel='# of items sold' data={itemsDataSet}/>         
                                         </Col>
-                                        <Col md='6'> 
+                                        <Col lg='6' className="py-3"> 
                                             <h4 className="mb-4">Net Revenue By Category</h4>
                                             <GraphChart type="bar" color='primary' labels={categoryLabels} datasetLabel='Revenue Generated' data={revenueDataSet}/>
                                         </Col>
@@ -299,13 +292,13 @@ const ReportScreen = ({history}) => {
                                         </Table>
                                         <small>* Sales figures include tax and other expenses calculated</small>
 
-                                        <Row className="py-5">
-                                            <Col md="6">
+                                        <Row className="py-2">
+                                            <Col lg="6" className="py-3">
                                                 <h4 className='py-3'>Monthly Orders Progress</h4>
                                                 <BarChartGrouped type="line" color='success' labels={monthLabel} datasetLabel={ordersDataSetLabel} data={groupedDataSet}/>   
 
                                             </Col>
-                                            <Col md="6">
+                                            <Col lg="6" className="py-3">
                                                 <h4 className='py-3'>Monthly Gross Sales</h4>
                                                 <GraphChart type="line" color='success' labels={monthLabel} datasetLabel='Revenue Generated' data={grossSalesDataSet}/>                                                
                                             </Col>

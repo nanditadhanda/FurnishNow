@@ -72,12 +72,11 @@ table {
 
 //header
 header {
-  nav {
+  nav, .sub-header {
     .search {
       height: 36px;
 
       input {
-        width: 35vw;
         border-radius: 19px 0 0 19px;
       }
       button {
@@ -85,6 +84,17 @@ header {
         line-height: 0.75;
       }
     }
+  }
+  nav {
+    z-index: 999;
+    input {
+      width: 35vw;
+    }
+  }
+  .sub-header{
+     input {
+       width: 100%;
+     }
   }
   .nav-link {
     line-height: 35px;
@@ -108,10 +118,39 @@ header {
       border-color: transparent;
       border-bottom: 3px solid $success;
       color: $success;
-    }
-
-    
+    }  
   }
+}
+.navbar-nav .dropdown-menu[data-bs-popper] {
+    right: 0;
+}
+
+//custom user account header nav
+
+.accountDropdown{
+  .dropdown-toggle {
+    &::before{
+      padding-right: 5px;
+      font-size: 1.1rem;
+      font-family: 'FontAwesome';
+      content:'\f2c0';
+    }
+  }
+}
+
+.search-header {
+  width:100%;
+  position: absolute;
+  top: -13px;
+  transition: ease-in-out 0.8s;
+
+  .sub-header{
+    padding: 10px;
+  }
+}
+
+.search-header.visible{
+  transform: translateY(56px);
 }
 
 .banner{
@@ -121,31 +160,38 @@ header {
   img{
     width:100%;
     max-width: 100%;
-    max-height: calc(100vh - 59px);
-    object-position: center;
+    max-height: 55vh;
+    object-position: bottom;
     object-fit: cover;
   }
   
 }
 
-.thumbnailContainer{
-  width:100%;
+.category-thumbnails{
+  .thumbnailContainer {
+    width: 100%;
 
-  img { 
-    height:200px;
-    width:100%;
-    object-fit: cover;
-    object-position: center;
+    img {
+      height: 112px;
+      width: 122px;
+      padding: 5px 10px;
+      object-fit: cover;
+      object-position: center;
 
-    &:hover{
-      cursor: pointer;
-      opacity:80%;
+      &:hover {
+        cursor: pointer;
+        opacity: 80%;
+      }
     }
   }
+
 }
+
 
 //footer
 footer{
+  position: relative;
+  z-index: 2;
   background-color: #eef1f4;
 
   .nav-link {
@@ -424,7 +470,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
     &::before {
       display: inline-block;
-      font-size: 1.1rem;
+      font-size: 1.08rem;
       font-family: FontAwesome;
       content: "\f006";
       color: $primary;
@@ -443,8 +489,6 @@ input[type="number"]::-webkit-outer-spin-button {
       content: "\f005";
     }   
   }
-
-
   input:checked + label:hover, input:checked ~ label:hover, input:checked ~ label:hover ~ label,
   label:hover ~ input:checked ~ label {
     color: darken($primary, 50%);
@@ -452,4 +496,84 @@ input[type="number"]::-webkit-outer-spin-button {
 
 }
 
+//off-canvas menu
+.offcanvas{
+  z-index: 10000;
+  overflow-y: scroll;
+
+  &-backdrop{
+    z-index: 9999;
+  }
+  &-start{
+    max-width: 80vw;
+  }
+}
+
+//responsive style
+
+//lg and above
+@media screen and (min-width: 1199.98px) {
+  .category-thumbnails{
+    .col-lg-1{
+      width:10%;
+    }
+  }
+}
+
+//md and below
+@media screen and (max-width: 1199.98px) {
+  header{
+    .nav-link {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  .container.cart {
+    max-width:100%;
+  }
+
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+  .copyright {
+    text-align: right;
+  }
+}
+
+//sm and below
+@media screen and (max-width: 767.98px) {
+
+  .copyright {
+    text-align: center;
+  }
+  .footer-links{
+    margin: 0 auto;
+  }
+  .container {
+    width: 100%;
+    max-width: 100% !important;
+  }
+  .p-5{
+    padding:2rem !important;
+  }
+  .accountDropdown {
+    .dropdown-toggle {
+      &::before {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+// Small devices (landscape phones, less than 768px)
+@media (max-width: 575.98px) {
+
+  footer{
+    .container{
+      justify-content: center;
+    }   
+  }
+}
 
