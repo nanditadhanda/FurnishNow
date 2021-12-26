@@ -178,6 +178,14 @@ def updateProduct(request, id):
         product.costPrice = data['costPrice']
         product.salePrice = data['salePrice']
 
+        # upload image to product
+        if(data['image'] != ''):
+            product.image = request.FILES.get('image')
+        if(data['model3D'] != ''):
+            product.model3D = request.FILES.get('model3D')
+
+        product.save()
+
         # save data
         product.save()
 

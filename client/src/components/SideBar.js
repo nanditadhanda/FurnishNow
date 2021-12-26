@@ -1,4 +1,5 @@
 import React , {useState, useEffect} from 'react'
+import { LinkContainer } from 'react-router-bootstrap'
 import {useDispatch , useSelector} from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
@@ -49,36 +50,55 @@ const SideBar = ({activeTab}) => {
     return (
         <Col md={3} xl={2} className="px-0 bg-light position-relative shadow d-none d-lg-block" style={{'z-index': '0'}} >    
             <Nav className="flex-column py-2 nav-side sticky-top" variant="pills" style={{'top':'60px'}}>   
-                <Nav.Link href={userType+"/dashboard"} className="px-4 " active={activeTab === "dashboard"}>
-                    <RiDashboardFill className="fs-3 pe-2 ms-1 mb-1 "/>Dashboard
-                </Nav.Link>
+                <LinkContainer to={userType+"/dashboard"}>
+                    <Nav.Link  className="px-4 " active={activeTab === "dashboard"}>
+                        <RiDashboardFill className="fs-3 pe-2 ms-1 mb-1 "/>Dashboard
+                    </Nav.Link>
+                </LinkContainer>
                 {userInfo && userInfo.isSystemAdmin ? (
-                    <Nav.Link href="/admin/userlist" active={activeTab === "user"} className="px-4 ">
-                        <FiUsers className="fs-3 pe-2 ms-1 mb-1 "/>Users
-                    </Nav.Link>
+                    <LinkContainer to="/admin/userlist">
+                        <Nav.Link active={activeTab === "user"} className="px-4 ">
+                            <FiUsers className="fs-3 pe-2 ms-1 mb-1 "/>Users
+                        </Nav.Link>                    
+                    </LinkContainer>
+                    
                 ) : 
-                    <Nav.Link href="/store-manager/customers" active={activeTab === "user"} className="px-4 ">
-                        <FiUsers className="fs-3 pe-2 ms-1 mb-1 "/>Customers
-                    </Nav.Link>
+                    <LinkContainer to="/store-manager/customers">
+                        <Nav.Link active={activeTab === "user"} className="px-4 ">
+                            <FiUsers className="fs-3 pe-2 ms-1 mb-1 "/>Customers
+                        </Nav.Link>            
+                    </LinkContainer>
+                    
                 }
-                <Nav.Link href={userType+"/manageCatalog"} active={activeTab === "product"} className="px-4 ">
-                    <MdMenuBook className="fs-2 pe-2 mb-1 "/>Catalog
-                </Nav.Link>
-                <Nav.Link href={userType+"/orderlist"} active={activeTab === "order"} className="px-4 ">
-                    <RiMoneyDollarBoxLine className=" fs-2 pe-2 mb-1 "/>Orders
-                </Nav.Link>
-                <Nav.Link href={userType+"/reports"} active={activeTab === "report"} className="px-4 ">
-                    <GoGraph className=" fs-3 pe-2 ms-1 mb-1 "/>Reports
-                </Nav.Link>
+                <LinkContainer to={userType+"/manageCatalog"}>
+                    <Nav.Link active={activeTab === "product"} className="px-4 ">
+                        <MdMenuBook className="fs-2 pe-2 mb-1 "/>Catalog
+                    </Nav.Link>                
+                </LinkContainer>
+                <LinkContainer to={userType+"/orderlist"}>
+                    <Nav.Link  active={activeTab === "order"} className="px-4 ">
+                        <RiMoneyDollarBoxLine className=" fs-2 pe-2 mb-1 "/>Orders
+                    </Nav.Link>   
+                </LinkContainer>
+                <LinkContainer to={userType+"/reports"}>
+                    <Nav.Link active={activeTab === "report"} className="px-4 ">
+                        <GoGraph className=" fs-3 pe-2 ms-1 mb-1 "/>Reports
+                    </Nav.Link>       
+                </LinkContainer>
+                
                 <hr className="m-0"/>
-                <Nav.Link href="/profile" className="px-4 " active={activeTab === "profile"}>
-                    <MdPerson className=" fs-3 pe-2 ms-1 mb-1 "/>My Profile
-                </Nav.Link>
+                
+                <LinkContainer to="/profile">
+                    <Nav.Link className="px-4 " active={activeTab === "profile"}>
+                        <MdPerson className=" fs-3 pe-2 ms-1 mb-1 "/>My Profile
+                    </Nav.Link>
+                </LinkContainer>
+                
                 <hr className="m-0"/>
                 <Nav.Link onClick={logoutHandler} className="px-4 ">
                     <BiLogOutCircle className="fs-2 pe-2 mb-1 "/>Logout
                 </Nav.Link>                          
-            </Nav>     
+            </Nav>         
         </Col>
     )
 }

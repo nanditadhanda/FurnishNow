@@ -211,10 +211,10 @@ const PlaceOrderScreen = ({history, location}) => {
 
             {orderError && <Message variant="danger">Error:{orderError}. Failed to place order</Message>}
             {orderLoading ?
-            <>
+            <Container>
                 <Message variant="success">Payment has been received. Please sit tight while we place your order</Message>
                 <Loader />
-            </>
+            </Container>
             :
                 <Container >
                     <Row>
@@ -325,7 +325,7 @@ const PlaceOrderScreen = ({history, location}) => {
                                         <h5>Payment</h5>
                                     
                                         
-                                        {clientSecret && !loading ?
+                                        {clientSecret && (!loading || !orderLoading) ?
                                             <Elements options={options} stripe={stripePromise}>
                                                 <Checkout amount={amount} paymentID={paymentID} params={params} redirect={redirect}/>
                                             </Elements>

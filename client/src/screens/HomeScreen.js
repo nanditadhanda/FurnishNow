@@ -27,24 +27,21 @@ const HomeScreen = () => {
 
     //useEffect is triggered when component loads
     useEffect(() => {
-       dispatch(listTopProducts())
-
-       if(!categories){
-           dispatch(listCategories())
-       }
-    }, [dispatch, categories])
+        dispatch(listTopProducts())
+        dispatch(listCategories())
+    }, [dispatch])
 
     return (
         <>
         <div className="banner">
-            <Image src="/banner.png" fluid/>
+            <Image src="/static/images/banner.png" fluid/>
         </div> 
         <div className="bg-light">
             <Container className="py-4">
                 <h3 className="mb-4 text-center text-success">Shop By Category</h3>
                 {   
                     loadingCategory ? <Loader />
-                    : errorCategory ? <Message >{errorCategory}</Message>
+                    : errorCategory ? <Message variant="danger" >{errorCategory}</Message>
                     : categories &&
                     <div>
                         <Category categories={categories} />    
@@ -56,7 +53,7 @@ const HomeScreen = () => {
             <h3 className="mb-4 text-center text-success">Top Rated Products</h3>
             {   
                 loadingProduct ? <Loader />
-                : errorProduct ? <Message >{errorProduct}</Message>
+                : errorProduct ? <Message variant="danger">{errorProduct}</Message>
                 : products &&
                 <>
                     <Row>{

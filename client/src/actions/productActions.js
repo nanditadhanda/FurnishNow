@@ -175,7 +175,7 @@ export const createProduct = () => async(dispatch, getState) => {
 }
 
 //action to update product
-export const updateProduct = (product) => async(dispatch, getState) => {
+export const updateProduct = (product, id) => async(dispatch, getState) => {
      //try-catch exception
     try {
         //dispatch action to throw request to update product
@@ -187,7 +187,7 @@ export const updateProduct = (product) => async(dispatch, getState) => {
         //configuration of put request with user authentication token
         const config = {
             headers : {
-                'Content-type' : 'application/json',
+                'Content-type' : 'multipart/form-data',
                 //authorization token to allow us to retrieve user info
                 Authorization: `Bearer ${userInfo.token}`
             }
@@ -196,7 +196,7 @@ export const updateProduct = (product) => async(dispatch, getState) => {
 
         //send out put api request
         const { data } = await axios.put(
-            `/api/products/update/${product._id}`,
+            `/api/products/update/${id}`,
             product,
             config
             )

@@ -201,7 +201,7 @@ def registerUser(request):
             last_name=data['last_name'],
             username=data['email'],
             email=data['email'],
-            phone_number=data['phone'],
+            phone_number=data['phone_number'],
             password=make_password(data['password'])
         )
 

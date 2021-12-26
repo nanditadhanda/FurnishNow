@@ -87,7 +87,7 @@ const DashboardScreen = ({history}) => {
                                 </LinkContainer>                                
                             </Col>
                             <Col sm={6} className="my-3 d-flex">
-                                <LinkContainer to={`${path}/report`}>
+                                <LinkContainer to={`${path}/reports`}>
                                     <Card className="hover w-100 d-flex align-items-center bg-light"> 
                                         <Card.Body className="text-center  p-4 ">
                                             <GoGraph className="display-2 mb-2 text-info"/>

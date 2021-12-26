@@ -1,8 +1,5 @@
 import React, {useState, useEffect} from 'react'
 
-//axios
-import axios from 'axios'
-
 //Routing
 import { Link } from 'react-router-dom'
 
@@ -39,7 +36,6 @@ const ProductEditScreen = ({match, history}) => {
     const [countInStock, setCountInStock] = useState('')
     const [costPrice, setCostPrice] = useState(0.00)
     const [salePrice, setSalePrice] = useState(0.00)
-    const [uploading, setUploading] = useState(false)
     const [file, setFile] = useState('')
     const [file3D, setFile3D] = useState('')
 
@@ -78,6 +74,8 @@ const ProductEditScreen = ({match, history}) => {
             if(updateSuccess){
                 setMessage('Product Updated Successfully')
                 dispatch({type: PRODUCT_UPDATE_RESET})
+                setFile('')
+                setFile3D('')
                 // history.push("/store-manager/productList")
             }
             //else - information not updated
@@ -112,7 +110,7 @@ const ProductEditScreen = ({match, history}) => {
              history.push("/accessdenied")
         }
      
-    }, [categoryList, dispatch, userInfo, updateSuccess, product, productID, history, file])
+    }, [categoryList, dispatch, userInfo, updateSuccess, product, productID, history])
 
     const submitHandler = (e) => {
         //prevent refresh or redirect to another page
@@ -155,63 +153,27 @@ const ProductEditScreen = ({match, history}) => {
             setValError(false)
             setMessage('')
 
-            if(file !== "" || file3D !== ""){
-                uploadFileHandler()
-                setFile('')
-                setFile3D('')
-            } 
-            dispatch(updateProduct({
-                _id: productID,
-                name: productName,
-                brand,
-                category,
-                description,
-                // model3D,
-                countInStock,
-                costPrice,
-                salePrice
-            }))
+            //create FormData() function
+            const productData = new FormData()
 
-        }
-    }
+            productData.append('name', productName)
+            productData.append('brand', brand)
+            productData.append('category', category)
+            productData.append('description', description)
+            productData.append('countInStock', countInStock)
+            productData.append('costPrice', costPrice)
+            productData.append('salePrice', salePrice)
 
-    // function to upload images
-    const uploadFileHandler = async (e) => {
-
-        //create FormData() function
-        const formData = new FormData()
-
-        //add file + product ID to FormData function (same names as backend variables)
-        if(file !== null ){
-            formData.append('image', file)
-        }
-        if(file3D !== null){
-            formData.append('model3D', file3D)
-        }    
-        formData.append('product_id', productID)
-
-        //set uploading to true
-        setUploading(true)
-
-        //upload image to backend - send POST request
-        try{
-            //configure headers
-            const config = {
-                headers:{
-                    'Content-Type' : 'multipart/form-data'
-                }
+            //add file + product ID to FormData function (same names as backend variables)
+            if(file !== null || file !== ''){
+                productData.append('image', file)
             }
+            if(file3D !== null || file3D !== ''){
+                productData.append('model3D', file3D)
+            }  
 
-            //send POST request
-            await axios.post('/api/products/upload-file', formData, config )
+            dispatch(updateProduct(productData, productID))
 
-            //set uploading to true
-            setUploading(false)
-
-        }
-        catch(error){
-            //set uploading to false
-            setUploading(false)
         }
     }
 
@@ -275,7 +237,7 @@ const ProductEditScreen = ({match, history}) => {
                                                         <option 
                                                             key={category.id}
                                                             value={category.id}
-                                                            selected={category === category.id} >                                                            
+                                                            selected={category.id === product.category_id} >                                                            
                                                             {category.name}
                                                         </option>
                                                     )))}                                            
@@ -342,8 +304,6 @@ const ProductEditScreen = ({match, history}) => {
                                                     custom
                                                     onChange={(e) => setFile(e.target.files[0])}
                                                 />
-                                                {/* if image is uploading */}
-                                                {uploading && <Loader />}
                                             
                                             </Form.Group>                                                 
                                         </Col>                                        
@@ -369,9 +329,7 @@ const ProductEditScreen = ({match, history}) => {
                                                     onChange={(e) => setFile3D(e.target.files[0])}
                                                 />
                                                 <small>Note: Please upload 3D model with .glb extension only</small>
-                                                {/* if image is uploading */}
-                                                {uploading && <Loader />}
-                                            
+                                               
                                             </Form.Group> 
                                                 
                                         </Col>

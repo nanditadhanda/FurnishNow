@@ -144,7 +144,7 @@ const AddEditCategoryScreen = ({history}) => {
             <SideBar activeTab="product"/>
             <Col>
                 <main>                    
-                    <FormContainer title={page ==='add' ? "Add Catalog" : "Edit Catalog"} lg="6"  shadow="shadow-sm">
+                    <FormContainer title={page ==='add' ? "Add Category" : "Edit Category"} lg="6"  shadow="shadow-sm">
                         {/* Error */}
                 
                         {(errorCreate || errorDetails || errorUpdate || message) && 

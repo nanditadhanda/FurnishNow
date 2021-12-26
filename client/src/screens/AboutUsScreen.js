@@ -7,7 +7,7 @@ const AboutUsScreen = () => {
         <Container className='py-5'>
             <Row>
                 <Col md={6} xs={12}>
-                    <Image fluid src="/ar_demo.png" alt="Furnish Now Demo" className="shadow-sm border mb-4"/>
+                    <Image fluid src="/static/images/ar_demo.png" alt="Furnish Now Demo" className="shadow-sm border mb-4"/>
                 </Col>
                 <Col>
                     <h1 >About Us</h1>

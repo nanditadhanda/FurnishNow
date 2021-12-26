@@ -87,23 +87,25 @@ const ManageCatalogScreen = ({history}) => {
         <Row className='w-100'>
             <SideBar activeTab="product"></SideBar>
             <Col>
-                <Container className="py-5">
-                    <h1>Catalog</h1>
-                    <Tabs  className="my-4">
-                        {/* Products Tab */}                            
-                        <Tab eventKey="products" title="Products">                                        
-                            <div className=" my-5">   
-                                <ProductTab userInfo={userInfo} searchPath={searchPath} history={history} keyword={keyword}/>
-                            </div>            
-                        </Tab>
-                        {/* Category Tab */}
-                        <Tab eventKey="categories" title="Categories" > 
-                            <div className=" my-5">                                            
-                                <CategoryTab userInfo={userInfo} history={history} searchPath={searchPath} timedMessage={timedMessage} timer={timer}/>  
-                            </div>                     
-                        </Tab>
-                    </Tabs>     
-                </Container>            
+                <main>
+                    <Container className="py-5">
+                        <h1>Catalog</h1>
+                        <Tabs  className="my-4">
+                            {/* Products Tab */}                            
+                            <Tab eventKey="products" title="Products">                                        
+                                <div className=" my-5">   
+                                    <ProductTab userInfo={userInfo} searchPath={searchPath} history={history} keyword={keyword}/>
+                                </div>            
+                            </Tab>
+                            {/* Category Tab */}
+                            <Tab eventKey="categories" title="Categories" > 
+                                <div className=" my-5">                                            
+                                    <CategoryTab userInfo={userInfo} history={history} searchPath={searchPath} timedMessage={timedMessage} timer={timer}/>  
+                                </div>                     
+                            </Tab>
+                        </Tabs>     
+                    </Container>  
+                </main>                 
             </Col>
         </Row>      
     )

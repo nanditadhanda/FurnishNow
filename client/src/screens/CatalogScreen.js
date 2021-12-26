@@ -13,6 +13,7 @@ import Message from '../components/Message'
 //Icons
 import {AiOutlineLine} from 'react-icons/ai'
 import{RiFilter2Line} from 'react-icons/ri'
+import { LinkContainer } from 'react-router-bootstrap'
 
 const CatalogScreen = ({match}) => {
     
@@ -58,39 +59,43 @@ const CatalogScreen = ({match}) => {
                 </Col>
                 
                 <Col lg={8} xl={9}>
-                    <Container fluid className="py-5">
-                        <Row>
-                            <Col xs={12} lg={8}><h1 className='mb-3'>Products</h1></Col>
-                            <Col xs={12} lg={4} className="align-items-center ">
-                                <div className='d-flex justify-content-between'>
-                                    <div>
-                                        <Button variant="outline-secondary" onClick={handleShow} className="d-lg-none my-3 me-3" style={{'minWidth':"90px"}}>
-                                            <RiFilter2Line /> Filter
-                                        </Button> 
-                                    </div>                                     
-                                    <Form.Group className="d-flex align-items-center justify-content-end">
-                                        <Form.Label className="me-2">Sort:</Form.Label>
-                                        <Form.Select aria-label="Sort" className="w-100 d-inline-block" onChange={orderingHandler}>
-                                            <option value='_id'>Select</option>
-                                            <option value="-salePrice">Price: High to Low</option>
-                                            <option value="salePrice">Price: Low to High</option>
-                                            <option value="name">Name: A-Z</option>
-                                            <option value="-name">Name: Z-A</option>
-                                            <option value="rating">Rating: 0-5</option>
-                                            <option value="-rating">Rating: 5-0</option>
-                                                                                    
-                                        </Form.Select>
-                                    </Form.Group>
+                    <main>
+                        <Container fluid className="py-5">
+                            <Row>
+                                <Col xs={12} lg={8}><h1 className='mb-3'>Products</h1></Col>
+                                <Col xs={12} lg={4} className="align-items-center ">
+                                    <div className='d-flex justify-content-between'>
+                                        <div>
+                                            <Button variant="outline-secondary" onClick={handleShow} className="d-lg-none my-3 me-3" style={{'minWidth':"90px"}}>
+                                                <RiFilter2Line /> Filter
+                                            </Button> 
+                                        </div>                                     
+                                        <Form.Group className="d-flex align-items-center justify-content-end">
+                                            <Form.Label className="me-2">Sort:</Form.Label>
+                                            <Form.Select aria-label="Sort" className="w-100 d-inline-block" onChange={orderingHandler}>
+                                                <option value='_id'>Select</option>
+                                                <option value="-salePrice">Price: High to Low</option>
+                                                <option value="salePrice">Price: Low to High</option>
+                                                <option value="name">Name: A-Z</option>
+                                                <option value="-name">Name: Z-A</option>
+                                                <option value="rating">Rating: 0-5</option>
+                                                <option value="-rating">Rating: 5-0</option>
+                                                                                        
+                                            </Form.Select>
+                                        </Form.Group>
 
-                                </div>
-                                
-                            </Col>
-                        </Row>
-                        <Products md="4" l="6" xl="4" val={getData} ordering={ordering} filter={
-                                        filter !== '' ? filter : categoryActive !== 'all'? ('category='+categoryActive) : ''}/> 
-                        <Paginate path={`/products/${categoryActive}`} type="products" page={page} pages={pages} keyword={keyword} filter={ filter !== '' ? filter : categoryActive !== 'all'? ('category='+categoryActive) : ''}/>
+                                    </div>
+                                    
+                                </Col>
+                            </Row>
+                            <Products md="4" l="6" xl="4" val={getData} ordering={ordering} filter={
+                                            filter !== '' ? filter : categoryActive !== 'all'? ('category='+categoryActive) : ''}/> 
+                            <Paginate path={`/products/${categoryActive}`} type="products" page={page} pages={pages} keyword={keyword} />
 
-                    </Container>
+                        </Container>
+
+                    </main>
+                    
                     
                 </Col>
             </Row>
@@ -128,21 +133,31 @@ const FilterMenu = ({categoryActive, filterHandler}) => {
     const applyFilterHandler = (e) => {
         e.preventDefault()
         
+        //min price entered is less than max
         if((Number(price_max)<=Number(price_min)) && (price_max !=='' && price_min !== '')){
             setErrorFilter("Min price cannot be greater than or equal to max price")
+        }  
+        //only one price filter is entered   
+        else if((price_max === '' && price_min !== '') || (price_max !== '' && price_min === '')){
+            if(price_max === '' && price_min !== ''){
+                setErrorFilter("Please enter max price")
+            }else{
+                setErrorFilter("Please enter min price")
+            }
         }
+        //no errors
         else if((price_max !== '' && price_min !== '') || rating !== '' ){
             setErrorFilter("")
             if(categoryActive === 'all'){
                 setFilter(`&price_max=${price_max}&price_min=${price_min}&rating_min=${rating}`)   
             }
             else{
-                setFilter(`category=${categoryActive}&price_max=${price_max}&price_min=${price_min}&rating_min=${rating}`)
-            }
-                 
+                setFilter(`&category=${categoryActive}&price_max=${price_max}&price_min=${price_min}&rating_min=${rating}`)
+            }        
         }
+        // button pressed without passing parameters
         else{
-            setErrorFilter("Please select filters to apply")                 
+            setErrorFilter("No filter parameters passed")                 
         }
     }
 
@@ -150,6 +165,9 @@ const FilterMenu = ({categoryActive, filterHandler}) => {
     const clearFilterHandler = () => {
         setErrorFilter("")  
         setFilter('') 
+        setRating('')
+        setPriceMax('')
+        setPriceMin('')
     }
 
     useEffect(()=> {      
@@ -164,21 +182,25 @@ const FilterMenu = ({categoryActive, filterHandler}) => {
     <aside className='py-3'>
         <h5 className="px-5">Categories</h5>
         <Nav className="flex-column py-2 nav-side" variant="pills">
-            <Nav.Link href="/products/all" 
-                className="px-5 "
-                active={categoryActive === 'all' }>
-                All Categories
-            </Nav.Link>
-            {categories !=='' && (categories.map((category)=> (
-                <Nav.Link  
-                    className="px-5 "          
-                    href={`/products/${category.slug}`}
-                    key={category.id}
-                    id= {category.id}
-                    active={categoryActive === category.slug }>
-                    {category.name}  
+            <LinkContainer  to="/products/all">
+                 <Nav.Link 
+                    className="px-5 "
+                    active={categoryActive === 'all' }>
+                    All Categories
                 </Nav.Link>
-                    )))}
+            
+            </LinkContainer>
+           
+            {categories !=='' && (categories.map((category)=> (
+                <LinkContainer to={`/products/${category.slug}`} key={category.id}>
+                    <Nav.Link  
+                        className="px-5 "        
+                        id= {category.id}
+                        active={categoryActive === category.slug }>
+                        {category.name}  
+                    </Nav.Link>                
+                </LinkContainer>                
+            )))}
                 
             </Nav>
             <h5 className="px-5 pt-2">Filters</h5>

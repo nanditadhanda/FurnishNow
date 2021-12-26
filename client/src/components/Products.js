@@ -48,7 +48,6 @@ const Products = ({l, xl, md="6", val={}, ordering='_id', filter=''}) => {
     useEffect(() => {
         //fire off listProduct() action
        dispatch(listProducts(keyword, ordering, filter))
-
     }, [dispatch, keyword, ordering, filter])
 
     return (

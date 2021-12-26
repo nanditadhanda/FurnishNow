@@ -9,6 +9,7 @@ import { saveShippingAddress } from '../actions/cartActions'
 import {Container, Form, Row, Col, Button} from 'react-bootstrap'
 import FormContainer from '../components/FormContainer'
 import CheckoutSteps from '../components/CheckoutSteps'
+import Message from '../components/Message'
 
 const ShippingScreen = ({history}) => {
 
@@ -47,30 +48,44 @@ const ShippingScreen = ({history}) => {
     const [zipCode, setZipCode] = useState(shippingAddress.zipCode)
     const [country, setCountry] = useState(shippingAddress.country)
 
+    //error state
+    const [message, setMessage] = useState('')
+
     //submit handler
     const submitHandler = (e) => {
         //prevent default page redirect
         e.preventDefault()
 
-        //dispatch to save shipping address
-        dispatch(saveShippingAddress({name, phone, address, city, state, zipCode, country}))
+         if(name === '' || phone === '' || address === '' || city === '' || state === '' || zipCode === '' || country === ''){
+            setMessage('Please fill out all fields')
+        }
+        //phone regex validation
+        else if(!/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/i.test(phone)){
+            setMessage("Invalid phone entered")
+        }
+        else{
+             //dispatch to save shipping address
+            dispatch(saveShippingAddress({name, phone, address, city, state, zipCode, country}))
 
-        //redirect to payment page
-        history.push('/placeorder')
+            //redirect to payment page
+            history.push('/placeorder')
+        }    
     }
 
 
     return (
         <Container className="py-5">
 
-            <FormContainer  bg="white" border="border" >
+            <FormContainer  bg="white" border="border" px="0" >
                 {/* Checkout Steps */}
                 <CheckoutSteps step1 step2/>
 
-                <h2 className="my-4 text-center">Shipping</h2>
+                <h2 className="my-4 text-center px-3">Shipping</h2>
+
+                {message && <Message variant='danger' className="mb-3 mx-3">{message}</Message>}
                 
-                <Form onSubmit={submitHandler}>
-                    <h6 className="text-success py-3">Recepient Information</h6>
+                <Form onSubmit={submitHandler} className="px-3">
+                    <h6 className="text-success py-3">Recepient Information</h6>       
                     <Row>
                         <Col md="6" xs="12">
                             {/* City Field */}

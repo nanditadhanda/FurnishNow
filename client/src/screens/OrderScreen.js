@@ -344,10 +344,11 @@ const OrderScreen = ({ match , history }) => {
                                                                     </div>
                                                                     
                                                                     {/* If order is delivered and no rating*/}
-                                                                    <div  >{ order.isDelivered  && item.review.length === 0 ? ( 
+                                                                    <div  >{ order.isDelivered  && 
+                                                                        (item.review.length === 0 ? ( 
                                                                         /* If user is not store manager or system admin, show rating option*/
                                                                         (!userInfo.isSystemAdmin && !userInfo.isStoreManager) ? <ReviewModal item={item} order={order._id}/>  : <small>not rated</small>)  
-                                                                        : <Rating value={item.review[0].rating} color="text-primary"/>  
+                                                                        : <Rating value={item.review[0].rating} color="text-primary"/>  )
                                                                     }</div>
                                                                     
                                                                 </Col>

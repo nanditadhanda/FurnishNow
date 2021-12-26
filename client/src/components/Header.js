@@ -82,8 +82,8 @@ const Header = () => {
                     <div className="d-flex align-items-center">            
                         <LinkContainer to={!userInfo || (userInfo && !userInfo.isSystemAdmin) ? "/" : "/admin/dashboard"}>
                             <Navbar.Brand>
-                                <img alt="Furnish Now" src="/logo.svg" width="150px" className="d-none d-lg-block"/>
-                                <img alt="Furnish Now" src="/logo-icon.svg" width="30px" className="d-block d-lg-none p-0"/>
+                                <img alt="Furnish Now" src="/static/images/logo.svg" width="150px" className="d-none d-lg-block"/>
+                                <img alt="Furnish Now" src="/static/images/logo-icon.svg" width="30px" className="d-block d-lg-none p-0"/>
                             </Navbar.Brand> 
                         </LinkContainer>
 

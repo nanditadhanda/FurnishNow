@@ -3,7 +3,7 @@ import React,{useState, useEffect} from 'react'
 import {Pagination} from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 
-const Paginate = ({path='', pages, page, keyword='', filter='', isSystemAdmin=false , type=""}) => {
+const Paginate = ({path='', pages, page, keyword='', type=""}) => {
     
     const [search, setSearch] = useState('')
 

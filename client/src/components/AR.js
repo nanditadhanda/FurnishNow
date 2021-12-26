@@ -74,7 +74,7 @@ const AR = ({model3D="", productID, max, tooltipPlacement="bottom"}) => {
       model3D,
       (gltf) => {
         model = gltf.scene;
-        model.scale.set(0.5, 0.5, 0.5);
+        model.scale.set(1, 1, 1);
         model.castShadow = true;
         model.receiveShadow = true;
         // mixer = new THREE.AnimationMixer(model);
